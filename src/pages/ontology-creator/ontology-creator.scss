@@ -1,0 +1,43 @@
+page-ontology-creator {
+  .list-container {
+    /**
+    * Override select button which otherwise takes 100% of the screen
+    */
+    ion-select button {
+      width: auto!important;
+      height: auto!important;
+    }
+    .topNodeDef-select {
+      padding: 8px 8px 8px 8px;
+    }
+    .col {
+      padding: 0;
+      .nodeDef-header {
+        background-color: #80CBC4;
+        .nodeDef-title {
+          padding-left: 8px;
+          font-size: 1.4em;
+          color: #212121;
+          font-weight: 400;
+        }
+      }
+      .nodeList-container {
+          margin-right: 2px;
+        .node-searchbar {
+          padding: 0;
+          border-bottom: 2px solid #d4d4d4;
+          input {
+            box-shadow: none;
+            -webkit-box-shadow: none;
+          }
+        }
+        .node-item {
+          padding-left: 8px;
+        }
+        .node-item-selected {
+            background-color: #BBDEFB;
+        }
+      }
+    }
+  }
+}
