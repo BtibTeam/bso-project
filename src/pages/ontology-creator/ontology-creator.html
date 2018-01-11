@@ -1,0 +1,43 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Ontology Creator</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <div class="list-container">
+
+    <ion-grid>
+      <ion-row>
+        <ion-select [(ngModel)]="topNodeDef" (ionChange)="topNodeDefChange($event)" interface="popover" class="topNodeDef-select">
+          <ion-option *ngFor="let topNodeDefElt of topNodeDefList" [value]="topNodeDefElt">{{topNodeDefElt | friendlyCase}}</ion-option>
+        </ion-select>
+      </ion-row>
+      <ion-row>
+        <span *ngFor="let nodeDef of nodeDefinitions">
+          <ion-col *ngIf="nodeDef.treeIndex === topNodeDefTreeIndex">
+            <ion-row>
+              <ion-col class="nodeDef-header">
+                <p class="nodeDef-title">{{nodeDef.name}}</p>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col *ngFor="let list of nodeDef.lists" class="nodeList-container">
+                <ion-searchbar (ionInput)="filterNodes($event, list)" class="node-searchbar"></ion-searchbar>
+                <ion-list>
+                  <span *ngFor="let node of list.nodes">
+                    <ion-item *ngIf="!(node.isFilteredOut || node.isHidden)" (click)="selectNode(node, nodeDef.treeIndex)" [ngClass]="{'node-item': true, 'node-item-selected': node.isSelected}">{{node.name}}</ion-item>
+                  </span>
+                </ion-list>
+              </ion-col>
+            </ion-row>
+          </ion-col>
+        </span>
+      </ion-row>
+    </ion-grid>
+
+  </div>
+</ion-content>
