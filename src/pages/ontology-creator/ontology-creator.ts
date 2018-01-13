@@ -1,6 +1,6 @@
 // Framework
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, LoadingController, Loading, ToastController } from 'ionic-angular';
 
 // Models
 import { Node, NodeSnapshot } from '../../model/node-model';
@@ -15,6 +15,7 @@ import { Observable } from 'rxjs/Observable';
 
 // Utils
 import { ListUtil } from '../../utils/list-util';
+import { ViewUtil } from '../../utils/view-util';
 
 @IonicPage()
 @Component({
@@ -29,9 +30,14 @@ export class OntologyCreatorPage {
 
   nodeDefinitions: NodeDefinition[] = []; // UI list that can be manipulated
 
+  loading: Loading;
+
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
+    public alertCtrl: AlertController,
+    public loadingCtrl: LoadingController,
+    public toastCtrl: ToastController,
     public nodeHandlerPvd: NodeHandlerProvider,
     public nodeDataPvd: NodeDataProvider) {
   }
@@ -42,10 +48,13 @@ export class OntologyCreatorPage {
 
   ngOnInit() {
 
-    this.nodeDataPvd.generateFakeNodes().subscribe(nodeDefinitions => {
+    /*this.nodeDataPvd.generateFakeNodes().subscribe(nodeDefinitions => {
+      this.nodeDefinitions = nodeDefinitions;
+    });*/
+    this.nodeDataPvd.loadNodeDefinitions();
+    this.nodeDataPvd.nodeDefinitions$.subscribe(nodeDefinitions => {
       this.nodeDefinitions = nodeDefinitions;
     });
-
   }
 
   ////////////////////////////////////////////////////////////////
@@ -69,7 +78,6 @@ export class OntologyCreatorPage {
     if (val && val.trim() !== '') {
       for (let node of list.nodes) {
         node.isFilteredOut = node.name.toLowerCase().indexOf(val.toLowerCase()) == -1;
-        console.log(node);
       }
     } else {
       for (let node of list.nodes) {
@@ -90,7 +98,7 @@ export class OntologyCreatorPage {
     if (node.isSelected) {
 
       node.isSelected = false;
-      this.nodeHandlerPvd.unselectNode(treeIndex);
+      this.nodeHandlerPvd.unselectNode(node, treeIndex);
 
     } else {
 
@@ -99,4 +107,78 @@ export class OntologyCreatorPage {
     }
 
   }
+
+  /**
+   * Add a new node
+   * @param nodeDefinitionIndex 
+   * @param listIndex 
+   */
+  addNode(nodeDefIndex: number, listIndex: number) {
+    // Present an alert to the user to get the name of the node to create
+    let alert = this.alertCtrl.create({
+      title: 'Add node',
+      inputs: [
+        {
+          name: 'name',
+          placeholder: 'Choose a succinct name'
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+        {
+          text: 'Add',
+          handler: data => {
+            this.loading = this.createLoadingCtrl('Creating the node');
+            this.handleTimeout(10000, 'Creating Node');
+            this.loading.present();
+
+            // Create the node in the database and update related node
+            this.nodeDataPvd.createNode(data.name, nodeDefIndex, listIndex).then(() => {
+              this.loading.dismiss();
+              this.loading = null;
+            });
+          }
+        }
+      ]
+    });
+    alert.present();
+
+  }
+
+  addList(nodeDefinition: NodeDefinition) {
+    nodeDefinition.lists.push(new NodeDefinitionList());
+  }
+
+  ////////////////////////////////////////////////////////////////
+  // Utils
+  ////////////////////////////////////////////////////////////////
+
+  /**
+   * Return a Loading Ctrl
+   * @param message 
+   */
+  createLoadingCtrl(message: string) {
+    return this.loadingCtrl.create({
+      content: message
+    });
+  }
+
+  /**
+   * Kill a displayed loading and display a message automatically if it takes too long
+   * @param loading 
+   * @param timeout 
+   * @param error 
+   */
+  handleTimeout(timeout: number, error?: string) {
+    setTimeout(() => {
+      if (this.loading) {
+        this.loading.dismiss()
+        ViewUtil.presentToast(this.toastCtrl, error + 'Timeout. Error 1000');
+      }
+    }, timeout)
+  }
+
 }
