@@ -1,13 +1,13 @@
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>Ontology Creator</ion-title>
+  <ion-navbar color="headerBG" class="ontology-navbar">
+    <ion-title class="title">Haystack Semantic Ontology Project</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
-<ion-content padding>
+<ion-content>
   <div class="list-container">
 
     <ion-grid>
@@ -21,7 +21,8 @@
           <ion-col *ngIf="nodeDef.treeIndex === topNodeDefTreeIndex">
             <ion-row>
               <ion-col class="nodeDef-header">
-                <p class="nodeDef-title">{{nodeDef.name}}</p>
+                <div class="nodeDef-header-container">
+                  <p class="nodeDef-title">{{nodeDef.name}}</p>
                   <button ion-button color="light" class="add-list-button" (click)="addList(nodeDef)">
                     <ion-icon name="add"></ion-icon>
                   </button>
