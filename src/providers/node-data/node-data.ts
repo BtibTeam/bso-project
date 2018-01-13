@@ -1,22 +1,152 @@
 // Framework
 import { Injectable } from '@angular/core';
 
+// Firestore
+import { AngularFirestore, AngularFirestoreDocument } from 'angularfire2/firestore';
+
+// Librairies
+import { plainToClass } from "class-transformer";
+
 // Models
-import { NodeDefinition, NodeDefinitionList } from '../../model/node-definition-model';
+import { NodeDefinition, NodeDefinitionList, TopNodeDefinitionEnum } from '../../model/node-definition-model';
 import { Node, NodeSnapshot } from '../../model/node-model';
 
+// Providers
+import { FirestoreProvider } from '../firestore/firestore';
+import { NodeHandlerProvider } from '../node-handler/node-handler';
+
 // RxJs
+import Rx from 'rxjs/Rx';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
+
+// Utils
+import { DataUtil } from '../../utils/data-util';
 
 @Injectable()
 export class NodeDataProvider {
 
-  constructor() {
+  constructor(
+    public firestorePvd: FirestoreProvider,
+    public nodeHandlerPvd: NodeHandlerProvider) {
+  }
+
+  public nodeDefinitions$: Observable<NodeDefinition[]> = Rx.Observable.empty();
+
+  ////////////////////////////////////////////////////////////////
+  // Public
+  ////////////////////////////////////////////////////////////////
+
+  /**
+   * Start a subscription to read the entire list of NodeDefinition and Nodes at the first call
+   * Update automatically the nodeDefinitions$ variable at every update
+   */
+  loadNodeDefinitions() {
+
+    // Read all NodeDefinition
+    this.nodeDefinitions$ = this.firestorePvd.readCollection('nodeDefinition', ref => ref.orderBy('index', 'asc'))
+      .mergeMap(nodeDefinitions => { // nodeDefinitions: NodeDefinition[]
+
+        // For each nodeDefinition
+        let ndfObsArray$: Observable<NodeDefinition>[] = nodeDefinitions.map(nodeDef => { // nodeDef: NodeDefinition
+
+          // Transform the plain object into a NodeDefinition type
+          let ndf: NodeDefinition = plainToClass(NodeDefinition, nodeDef as Object);
+
+          if (ndf.lists.length == 0) {
+            let list = new NodeDefinitionList();
+            for (let id in TopNodeDefinitionEnum) {
+              if (ndf.id === id) {
+                list.showAddNode = true;
+                break;
+              }
+            }
+            ndf.lists.push(list);
+          }
+
+          // Get its associated nodes
+          let nodeObs$: Observable<NodeDefinition> = this.firestorePvd.readCollection('nodeDefinition/' + ndf.id + '/nodes')
+            .map(nodes => { // nodes : Node []
+
+              nodes.map(_node => { // _node : Node
+
+                // Transform the plain object into a NodeType
+                let node: Node = plainToClass(Node, _node as Object);
+
+                // Check if the list is already created in the Node Definition. Create it if not
+                if (node.listIndex >= ndf.lists.length) {
+                  ndf.lists.push(new NodeDefinitionList());
+                } else { // Check if the node is not already in an existing list. Update it if so.
+                  for (let existingNode of ndf.lists[node.listIndex].nodes) {
+                    if (existingNode.id === node.id) {
+                      existingNode = node;
+                      return node;
+                    }
+                  }
+                }
+                ndf.lists[node.listIndex].nodes.push(node);
+
+                return node;
+
+              });
+
+              return ndf;
+
+            });
+
+          return nodeObs$;
+
+        });
+
+        // Transform Observable<NodeDefinition>[] in Observable<NodeDefinition[]>
+        return Rx.Observable.combineLatest(...ndfObsArray$);
+
+      });
+
+  }
+
+  createNode(name: string, nodeDefIndex: number, listIndex: number): Promise<void> {
+
+    // Create a new node if it doesn't already exist
+    let node = new Node();
+    node.id = this.firestorePvd.generateId(); // Generate a new id for this node
+
+
+    // Update the node
+    node.name = name;
+    node.nodeDefIndex = nodeDefIndex;
+    node.listIndex = listIndex;
+
+    // Generate the isIn relation based on the current selection if the node is not at the uppest level
+    if (!(nodeDefIndex == 0 && listIndex == 0)) {
+      let parentIsInNode = this.nodeHandlerPvd.getSelectedParentNode(node);
+      if (parentIsInNode) {
+        node.isIn.push(NodeSnapshot.generateSnapshot(parentIsInNode));
+
+        // Update the contains relation
+        parentIsInNode.contains.push(NodeSnapshot.generateSnapshot(node));
+        this.updateNode(parentIsInNode);
+      }
+    }
+
+    let nodeDefinitionId = this.nodeHandlerPvd.getNodeDefinitionId(nodeDefIndex);
+
+    // Push the node to the cloud
+    return this.firestorePvd.set(DataUtil.cleanUndefinedValues(Node.encode(node)), 'nodeDefinition/' + nodeDefinitionId + '/nodes/' + node.id);
+
+  }
+
+  /**
+   * Update a node
+   * @param node 
+   */
+  updateNode(node: Node) {
+    let nodeDefinitionId = this.nodeHandlerPvd.getNodeDefinitionId(node.nodeDefIndex);
+    return this.firestorePvd.set(DataUtil.cleanUndefinedValues(Node.encode(node)), 'nodeDefinition/' + nodeDefinitionId + '/nodes/' + node.id);
   }
 
   ////////////////////////////////////////////////////////////////
-  // TODO: Delete
+  // Fake methods
   ////////////////////////////////////////////////////////////////
 
   generateFakeNodes(): Observable<Array<NodeDefinition>> {

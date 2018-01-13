@@ -19,6 +19,8 @@ export class NodeDefinitionList {
 
     nodes: Node[] = [];
 
+    // UI Specific
+    showAddNode: boolean; // Define the visibility of a AddNode button
 }
 
 /**
