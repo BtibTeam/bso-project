@@ -107,7 +107,7 @@ export class NodeDataProvider {
 
   createNode(name: string, nodeDefIndex: number, listIndex: number): Promise<void> {
 
-    // Create a new node if it doesn't already exist
+    // Create a new node
     let node = new Node();
     node.id = this.firestorePvd.generateId(); // Generate a new id for this node
 

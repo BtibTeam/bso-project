@@ -28,13 +28,14 @@ export class FirestoreProvider {
     return this.db.collection(path, query)
       .snapshotChanges()
       .map(actions => {
-        return actions.map(action => {
-          if (action.payload.doc.exists) {
-            const id = action.payload.doc.id;
-            const data = action.payload.doc.data();
+        return actions
+          .filter(({ payload }) => payload.doc.exists)
+          .map(({ payload }) => {
+            const { id } = payload.doc;
+            const data = payload.doc.data()
             return { id, ...data };
           }
-        });
+          );
       });
   }
 
@@ -45,9 +46,9 @@ export class FirestoreProvider {
   public readDocument(path: string): Observable<any> {
 
     return this.db.doc(path).snapshotChanges()
-      .map(action => {
-        const data = action.payload.data();
-        const id = action.payload.id;
+      .map(({ payload }) => {
+        const data = payload.data();
+        const { id } = payload;
         return { id, ...data };
       });
   }
