@@ -51,7 +51,7 @@ export class NodeHandlerProvider {
       this.updateNodesState(discoveredNodes, treeIndex, this.applyHiddenStateToDiscoveredNodes);
     });
 
-    if(node.listIndex != 0){
+    if (node.listIndex != 0) {
       this.handleNodeAddButtons(node, false);
     }
     // Display the button at the top anyway
@@ -90,13 +90,13 @@ export class NodeHandlerProvider {
 
     // Search among the direct parent inside its own NodeDefinition
     if (node.listIndex > 0) {
-      for (let _node of this.nodeDefinitions[node.nodeDefIndex].lists[node.listIndex - 1].nodes) {
+      for (const _node of this.nodeDefinitions[node.nodeDefIndex].lists[node.listIndex - 1].nodes) {
         if (_node.isSelected)
           return _node;
       }
-    } else if (node.nodeDefIndex > 0) { // We didn't not find it in the same NodeDefinition. We try in the parent NodeDefinition
+    } else if (node.nodeDefIndex > 0) { // We didn't find it in the same NodeDefinition. We try in the parent NodeDefinition
       let lastListIndex = this.nodeDefinitions[node.nodeDefIndex - 1].lists.length - 1;
-      for (let _node of this.nodeDefinitions[node.nodeDefIndex - 1].lists[lastListIndex].nodes) {
+      for (const _node of this.nodeDefinitions[node.nodeDefIndex - 1].lists[lastListIndex].nodes) {
         if (_node.isSelected)
           return _node;
       }
