@@ -1,6 +1,9 @@
 // Framework
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController, LoadingController, Loading, ToastController } from 'ionic-angular';
+
+// Components
+import { NodeEditor } from '../../components/node-editor/node-editor';
 
 // Models
 import { Node, NodeSnapshot } from '../../model/node-model';
@@ -23,6 +26,8 @@ import { ViewUtil } from '../../utils/view-util';
   templateUrl: 'ontology-creator.html',
 })
 export class OntologyCreatorPage {
+
+  @ViewChild(NodeEditor) nodeEditor: NodeEditor;
 
   topNodeDefList: string[] = ListUtil.buildTopNodeDefinitionList();
   topNodeDef: string = 'category';
@@ -106,6 +111,8 @@ export class OntologyCreatorPage {
       this.nodeHandlerPvd.selectNode(node, treeIndex);
     }
 
+    this.editNode(node);
+
   }
 
   /**
@@ -150,6 +157,14 @@ export class OntologyCreatorPage {
 
   addList(nodeDefinition: NodeDefinition) {
     nodeDefinition.lists.push(new NodeDefinitionList());
+  }
+
+  ////////////////////////////////////////////////////////////////
+  // Private methods
+  ////////////////////////////////////////////////////////////////
+
+  editNode(node: Node) {
+    this.nodeEditor.setNode(node);
   }
 
   ////////////////////////////////////////////////////////////////
