@@ -12,12 +12,15 @@
     "ionic:serve": "ionic-app-scripts serve"
   },
   "dependencies": {
+    "@angular/animations": "^5.2.1",
+    "@angular/cdk": "^5.1.0",
     "@angular/common": "5.0.3",
     "@angular/compiler": "5.0.3",
     "@angular/compiler-cli": "5.0.3",
     "@angular/core": "5.0.3",
     "@angular/forms": "5.0.3",
     "@angular/http": "5.0.3",
+    "@angular/material": "^5.1.0",
     "@angular/platform-browser": "5.0.3",
     "@angular/platform-browser-dynamic": "5.0.3",
     "@ionic-native/core": "4.4.0",
@@ -34,6 +37,9 @@
   "devDependencies": {
     "@ionic/app-scripts": "3.1.6",
     "typescript": "2.4.2"
+  },
+  "config": {
+    "ionic_sass": "./config/custom-sass.config.js"
   },
   "description": "An Ionic project"
 }

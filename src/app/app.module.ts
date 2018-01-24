@@ -2,6 +2,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 // Firestore
 import { AngularFireModule } from 'angularfire2';
@@ -34,6 +35,7 @@ const config = {
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     IonicModule.forRoot(MyApp),
     AngularFireModule.initializeApp(config),
     AngularFirestoreModule, // enablePersistence(): Offline data
