@@ -1,0 +1,21 @@
+addons-editor {
+    .addons-container {
+        display: flex;
+        flex-direction: column;
+      }
+      .addons-header {
+        min-height: 64px;
+        padding: 8px 24px 0;
+      }
+      .mat-form-field {
+        font-size: 14px;
+        width: 100%;
+      }
+      .mat-table {
+        overflow: auto;
+        max-height: 500px;
+      }
+      .select-button {
+        padding: 0.8em;
+      }
+}
