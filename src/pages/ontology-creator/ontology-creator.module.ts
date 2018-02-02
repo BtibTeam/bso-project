@@ -5,7 +5,7 @@ import { IonicPageModule } from 'ionic-angular';
 // Components
 import { ComponentsModule } from '../../components/components.module';
 
-// Page
+// Pages
 import { OntologyCreatorPage } from './ontology-creator';
 
 // Pipes
