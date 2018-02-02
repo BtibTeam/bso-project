@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpClientModule } from '@angular/common/http'
 
 // Firestore
 import { AngularFireModule } from 'angularfire2';
@@ -17,6 +18,7 @@ import { HomePage } from '../pages/home/home';
 import { NodeHandlerProvider } from '../providers/node-handler/node-handler';
 import { NodeDataProvider } from '../providers/node-data/node-data';
 import { FirestoreProvider } from '../providers/firestore/firestore';
+import { AddonsDataProvider } from '../providers/addons-data/addons-data';
 
 // Firestore config
 const config = {
@@ -34,6 +36,7 @@ const config = {
     HomePage
   ],
   imports: [
+    HttpClientModule,
     BrowserModule,
     BrowserAnimationsModule,
     IonicModule.forRoot(MyApp),
@@ -50,7 +53,8 @@ const config = {
     { provide: ErrorHandler, useClass: IonicErrorHandler },
     NodeHandlerProvider,
     NodeDataProvider,
-    FirestoreProvider
+    FirestoreProvider,
+    AddonsDataProvider,
   ]
 })
 export class AppModule { }
