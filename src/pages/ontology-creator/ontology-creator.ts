@@ -1,9 +1,11 @@
-// Framework
-import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController, LoadingController, Loading, ToastController } from 'ionic-angular';
+// Angular
+import { Component, ViewChild, OnInit } from '@angular/core';
 
 // Components
 import { NodeEditor } from '../../components/node-editor/node-editor';
+
+// Ionic
+import { IonicPage, NavController, NavParams, AlertController, LoadingController, Loading, ToastController } from 'ionic-angular';
 
 // Models
 import { Node, NodeSnapshot } from '../../model/node-model';
@@ -25,17 +27,17 @@ import { ViewUtil } from '../../utils/view-util';
   selector: 'page-ontology-creator',
   templateUrl: 'ontology-creator.html',
 })
-export class OntologyCreatorPage {
+export class OntologyCreatorPage implements OnInit {
 
-  @ViewChild(NodeEditor) nodeEditor: NodeEditor;
+  public topNodeDefList: string[] = ListUtil.buildTopNodeDefinitionList();
+  public topNodeDef: string = 'category';
+  public topNodeDefTreeIndex: number = 0;
 
-  topNodeDefList: string[] = ListUtil.buildTopNodeDefinitionList();
-  topNodeDef: string = 'category';
-  topNodeDefTreeIndex: number = 0;
+  public nodeDefinitions: NodeDefinition[] = []; // UI list that can be manipulated
 
-  nodeDefinitions: NodeDefinition[] = []; // UI list that can be manipulated
+  public selectedNode: Node;
 
-  loading: Loading;
+  public loading: Loading;
 
   constructor(
     public navCtrl: NavController,
@@ -48,18 +50,16 @@ export class OntologyCreatorPage {
   }
 
   ////////////////////////////////////////////////////////////////
-  // Framework
+  // Life Cycle
   ////////////////////////////////////////////////////////////////
 
-  ngOnInit() {
+  ngOnInit(): void {
 
-    /*this.nodeDataPvd.generateFakeNodes().subscribe(nodeDefinitions => {
-      this.nodeDefinitions = nodeDefinitions;
-    });*/
     this.nodeDataPvd.loadNodeDefinitions();
     this.nodeDataPvd.nodeDefinitions$.subscribe(nodeDefinitions => {
       this.nodeDefinitions = nodeDefinitions;
     });
+
   }
 
   ////////////////////////////////////////////////////////////////
@@ -69,7 +69,7 @@ export class OntologyCreatorPage {
   /**
    * Update the topNodeDefTreeIndex based on the user selection of the top nodeNodeDefinition
    */
-  topNodeDefChange(selection: string) {
+  public topNodeDefChange(selection: string): void {
     this.topNodeDefTreeIndex = ListUtil.getTopNodeDefTreeIndex(selection);
   }
 
@@ -77,7 +77,7 @@ export class OntologyCreatorPage {
    * Reduce the list of displayed nodes depending on the given input
    * @param input 
    */
-  filterNodes(ev: any, list: NodeDefinitionList) {
+  public filterNodes(ev: any, list: NodeDefinitionList): void {
     let val = ev.target.value;
     // if the value is an empty string don't filter the items
     if (val && val.trim() !== '') {
@@ -96,7 +96,7 @@ export class OntologyCreatorPage {
    * @param node 
    * @param treeIndex 
    */
-  selectNode(node: Node, treeIndex: number) {
+  public selectNode(node: Node, treeIndex: number): void {
 
     this.nodeHandlerPvd.setNodeDefinitions(this.nodeDefinitions);
 
@@ -111,7 +111,7 @@ export class OntologyCreatorPage {
       this.nodeHandlerPvd.selectNode(node, treeIndex);
     }
 
-    this.editNode(node);
+    this.selectedNode = node;
 
   }
 
@@ -120,7 +120,7 @@ export class OntologyCreatorPage {
    * @param nodeDefinitionIndex 
    * @param listIndex 
    */
-  addNode(nodeDefIndex: number, listIndex: number) {
+  public addNode(nodeDefIndex: number, listIndex: number): void {
     // Present an alert to the user to get the name of the node to create
     let alert = this.alertCtrl.create({
       title: 'Add node',
@@ -155,6 +155,27 @@ export class OntologyCreatorPage {
 
   }
 
+  /**
+   * Update node data
+   * @param node 
+   */
+  public updateNode(node): void {
+    this.nodeDataPvd.updateNode(node);
+  }
+
+  /**
+   * Delete node from the database
+   * At this point, we already got the confirmation from the user
+   * @param node 
+   */
+  public deleteNode(node): void {
+    this.nodeDataPvd.deleteNode(node);
+  }
+
+  public cancelEditNode(node): void {
+    // TODO: What do we do ?
+  }
+
   addList(nodeDefinition: NodeDefinition) {
     nodeDefinition.lists.push(new NodeDefinitionList());
   }
@@ -163,19 +184,16 @@ export class OntologyCreatorPage {
   // Private methods
   ////////////////////////////////////////////////////////////////
 
-  editNode(node: Node) {
-    this.nodeEditor.setNode(node);
-  }
-
   ////////////////////////////////////////////////////////////////
   // Utils
   ////////////////////////////////////////////////////////////////
 
   /**
    * Return a Loading Ctrl
-   * @param message 
+   * @param message
+   * @return the created loading controller
    */
-  createLoadingCtrl(message: string) {
+  private createLoadingCtrl(message: string): any {
     return this.loadingCtrl.create({
       content: message
     });
@@ -187,7 +205,7 @@ export class OntologyCreatorPage {
    * @param timeout 
    * @param error 
    */
-  handleTimeout(timeout: number, error?: string) {
+  private handleTimeout(timeout: number, error?: string): void {
     setTimeout(() => {
       if (this.loading) {
         this.loading.dismiss()
