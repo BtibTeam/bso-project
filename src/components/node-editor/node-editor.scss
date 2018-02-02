@@ -1,3 +1,46 @@
 node-editor {
-
+  .editor-card {
+    animation: fade 1s;
+    .node-grid {
+      padding: 0px;
+      .header-row {
+        background-color: map-get($colors, headerBG);
+        padding: 16px 16px 16px 0px;
+        position: relative;
+        .delete-button {
+          position: absolute;
+          z-index: 1;
+          right: 0px;
+          font-size: 1.6em;
+        }
+        .header-label {
+          color: white;
+        }
+        .header-segment {
+          margin: 16px 0px 0px 16px;
+          padding-right: 16px;
+          ion-segment-button {
+            font-weight: 400;
+          }
+        }
+      }
+      .content-segment {
+        margin: 16px;
+      }
+      .saving-row {
+        margin: 16px;
+        .add-button {
+          font-size: 0.8em;
+        }
+      }
+    }
+  }
+  @keyframes fade {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
 }
