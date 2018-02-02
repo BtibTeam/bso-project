@@ -1,4 +1,4 @@
-// Framework
+// Angular
 import { Injectable } from '@angular/core';
 
 // Firestore
@@ -41,7 +41,7 @@ export class NodeDataProvider {
    * Start a subscription to read the entire list of NodeDefinition and Nodes at the first call
    * Update automatically the nodeDefinitions$ variable at every update
    */
-  loadNodeDefinitions() {
+  public loadNodeDefinitions(): void {
 
     // Read all NodeDefinition
     this.nodeDefinitions$ = this.firestorePvd.readCollection('nodeDefinition', ref => ref.orderBy('index', 'asc'))
@@ -68,6 +68,9 @@ export class NodeDataProvider {
           let nodeObs$: Observable<NodeDefinition> = this.firestorePvd.readCollection('nodeDefinition/' + ndf.id + '/nodes')
             .map(nodes => { // nodes : Node []
 
+              ndf.lists = [];
+              ndf.lists.push(new NodeDefinitionList());
+
               nodes.map(_node => { // _node : Node
 
                 // Transform the plain object into a NodeType
@@ -76,13 +79,6 @@ export class NodeDataProvider {
                 // Check if the list is already created in the Node Definition. Create it if not
                 if (node.listIndex >= ndf.lists.length) {
                   ndf.lists.push(new NodeDefinitionList());
-                } else { // Check if the node is not already in an existing list. Update it if so.
-                  for (let existingNode of ndf.lists[node.listIndex].nodes) {
-                    if (existingNode.id === node.id) {
-                      existingNode = node;
-                      return node;
-                    }
-                  }
                 }
                 ndf.lists[node.listIndex].nodes.push(node);
 
@@ -105,7 +101,14 @@ export class NodeDataProvider {
 
   }
 
-  createNode(name: string, nodeDefIndex: number, listIndex: number): Promise<void> {
+  /**
+   * Create a new node and push it to the database
+   * @param name 
+   * @param nodeDefIndex 
+   * @param listIndex
+   * @return a void promise
+   */
+  public createNode(name: string, nodeDefIndex: number, listIndex: number): Promise<void> {
 
     // Create a new node
     let node = new Node();
@@ -129,7 +132,7 @@ export class NodeDataProvider {
       }
     }
 
-    let nodeDefinitionId = this.nodeHandlerPvd.getNodeDefinitionId(nodeDefIndex);
+    const nodeDefinitionId = this.nodeHandlerPvd.getNodeDefinitionId(nodeDefIndex);
 
     // Push the node to the cloud
     return this.firestorePvd.set(DataUtil.cleanUndefinedValues(Node.encode(node)), 'nodeDefinition/' + nodeDefinitionId + '/nodes/' + node.id);
@@ -139,10 +142,20 @@ export class NodeDataProvider {
   /**
    * Update a node
    * @param node 
+   * @return a void promise
    */
-  updateNode(node: Node) {
-    let nodeDefinitionId = this.nodeHandlerPvd.getNodeDefinitionId(node.nodeDefIndex);
+  public updateNode(node: Node): Promise<void> {
+    const nodeDefinitionId = this.nodeHandlerPvd.getNodeDefinitionId(node.nodeDefIndex);
     return this.firestorePvd.set(DataUtil.cleanUndefinedValues(Node.encode(node)), 'nodeDefinition/' + nodeDefinitionId + '/nodes/' + node.id);
+  }
+
+  /**
+   * Delete a node
+   * @param node 
+   */
+  deleteNode(node: Node) {
+    const nodeDefinitionId = this.nodeHandlerPvd.getNodeDefinitionId(node.nodeDefIndex);
+    this.firestorePvd.delete('nodeDefinition/' + nodeDefinitionId + '/nodes/' + node.id);
   }
 
   ////////////////////////////////////////////////////////////////
