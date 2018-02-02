@@ -33,7 +33,7 @@
       </div>
       <div [ngSwitch]="segment" class="content-segment">
         <div *ngSwitchCase="'tags'">
-          <addons-manager [addons]="node.tags" type="relations" (onChange)="updateTags($event)">
+          <addons-manager [addons]="node.tags" type="tags" (onChange)="updateTags($event)">
           </addons-manager>
         </div>
         <div *ngSwitchCase="'relations'">
