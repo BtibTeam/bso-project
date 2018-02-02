@@ -1,13 +1,13 @@
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>Ontology Creator</ion-title>
+  <ion-navbar color="headerBG" class="ontology-navbar">
+    <ion-title class="title">Haystack Semantic Ontology Project</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
-<ion-content padding>
+<ion-content>
   <div class="list-container">
 
     <ion-grid>
@@ -17,20 +17,28 @@
         </ion-select>
       </ion-row>
       <ion-row>
-        <span *ngFor="let nodeDef of nodeDefinitions">
+        <span *ngFor="let nodeDef of nodeDefinitions;let nodeDefIndex=index">
           <ion-col *ngIf="nodeDef.treeIndex === topNodeDefTreeIndex">
             <ion-row>
               <ion-col class="nodeDef-header">
-                <p class="nodeDef-title">{{nodeDef.name}}</p>
+                <div class="nodeDef-header-container">
+                  <p class="nodeDef-title">{{nodeDef.name}}</p>
+                  <button ion-button color="light" class="add-list-button" (click)="addList(nodeDef)">
+                    <ion-icon name="add"></ion-icon>
+                  </button>
+                </div>
               </ion-col>
             </ion-row>
             <ion-row>
-              <ion-col *ngFor="let list of nodeDef.lists" class="nodeList-container">
+              <ion-col *ngFor="let list of nodeDef.lists;let listIndex=index" class="nodeList-container">
                 <ion-searchbar (ionInput)="filterNodes($event, list)" class="node-searchbar"></ion-searchbar>
                 <ion-list>
                   <span *ngFor="let node of list.nodes">
                     <ion-item *ngIf="!(node.isFilteredOut || node.isHidden)" (click)="selectNode(node, nodeDef.treeIndex)" [ngClass]="{'node-item': true, 'node-item-selected': node.isSelected}">{{node.name}}</ion-item>
                   </span>
+                  <button *ngIf="list.showAddNode" ion-button color="light" class="add-node-button" (click)="addNode(nodeDefIndex, listIndex)">
+                    <ion-icon name="add"></ion-icon>
+                  </button>
                 </ion-list>
               </ion-col>
             </ion-row>

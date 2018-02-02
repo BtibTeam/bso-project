@@ -23,6 +23,17 @@ export class Node {
     printStates() {
         console.log('isHidden: ' + this.isHidden + '; isSelected: ' + this.isSelected + '; isFilteredOut: ' + this.isFilteredOut);
     }
+
+    /**
+     * Remove specific application attributes which are not necessary in the database
+     * @param node 
+     */
+    static encode(node: Node): Node {
+        node.isHidden = undefined;
+        node.isFilteredOut = undefined;
+        node.isSelected = undefined;
+        return node;
+    }
 }
 
 /**
@@ -46,4 +57,22 @@ export class NodeSnapshot {
     id: string;
     nodeDefIndex: number;
     listIndex: number;
+
+
+    ////////////////////////////////////////////////////////////////
+    // Static methods
+    ////////////////////////////////////////////////////////////////
+
+    /**
+     * Generate a nodeSnapshot based on the given node
+     * @param node 
+     */
+    static generateSnapshot(node: Node): NodeSnapshot {
+        let snapshot = new NodeSnapshot();
+        snapshot.id = node.id;
+        snapshot.listIndex = node.listIndex;
+        snapshot.name = node.name;
+        snapshot.nodeDefIndex = node.nodeDefIndex;
+        return snapshot;
+    }
 }

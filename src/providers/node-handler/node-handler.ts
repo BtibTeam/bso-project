@@ -5,16 +5,12 @@ import { Injectable } from '@angular/core';
 import { Node, NodeSnapshot } from '../../model/node-model';
 import { NodeDefinition, NodeDefinitionList } from '../../model/node-definition-model';
 
-// Providers
-import { NodeDataProvider } from '../node-data/node-data';
-
 @Injectable()
 export class NodeHandlerProvider {
 
   nodeDefinitions: NodeDefinition[];
 
-  constructor(
-    public nodeData: NodeDataProvider) {
+  constructor() {
   }
 
   ////////////////////////////////////////////////////////////////
@@ -33,7 +29,7 @@ export class NodeHandlerProvider {
    * Update every node when one is selected 
    * @param treeIndex the index of the tree to work one to speed up the algorithm
    */
-  unselectNode(treeIndex: number) {
+  unselectNode(node: Node, treeIndex: number) {
 
     let discoveredNodes: Node[] = [];
 
@@ -54,6 +50,13 @@ export class NodeHandlerProvider {
       // Apply the hidden state to every node which is not contained in the discoveredNodes array
       this.updateNodesState(discoveredNodes, treeIndex, this.applyHiddenStateToDiscoveredNodes);
     });
+
+    if (node.listIndex != 0) {
+      this.handleNodeAddButtons(node, false);
+    }
+    // Display the button at the top anyway
+    this.nodeDefinitions[0].lists[0].showAddNode = true;
+
   }
 
   /**
@@ -74,6 +77,41 @@ export class NodeHandlerProvider {
 
     // Auto-select every single displayed node
     this.updateNodesState(discoveredNodes, treeIndex, this.autoSelectNodes);
+
+    this.handleNodeAddButtons(node, true);
+  }
+  /**
+   * Return the selected node among either the first parent list
+   * or if it is the first list among the last list of the parent NodeDefinition
+   * Return null otherwise
+   * @param node
+   */
+  getSelectedParentNode(node: Node) {
+
+    // Search among the direct parent inside its own NodeDefinition
+    if (node.listIndex > 0) {
+      for (const _node of this.nodeDefinitions[node.nodeDefIndex].lists[node.listIndex - 1].nodes) {
+        if (_node.isSelected)
+          return _node;
+      }
+    } else if (node.nodeDefIndex > 0) { // We didn't find it in the same NodeDefinition. We try in the parent NodeDefinition
+      let lastListIndex = this.nodeDefinitions[node.nodeDefIndex - 1].lists.length - 1;
+      for (const _node of this.nodeDefinitions[node.nodeDefIndex - 1].lists[lastListIndex].nodes) {
+        if (_node.isSelected)
+          return _node;
+      }
+    }
+
+    // We did not find any selected node. This case shouldn't happen --> UI issue
+    return null;
+  }
+
+  /**
+   * Return the NodeDefinition id based on the given index
+   * @param index 
+   */
+  getNodeDefinitionId(index: number): string {
+    return this.nodeDefinitions[index].id;
   }
 
   ////////////////////////////////////////////////////////////////
@@ -109,6 +147,16 @@ export class NodeHandlerProvider {
     }
   }
 
+  handleNodeAddButtons(node: Node, selected: boolean) {
+    // Handle the add node button appearance on next lists
+    if (this.nodeDefinitions[node.nodeDefIndex].lists[node.listIndex + 1]) {
+      this.nodeDefinitions[node.nodeDefIndex].lists[node.listIndex].showAddNode = selected;
+    }
+    if (this.nodeDefinitions[node.nodeDefIndex + 1]) {
+      this.nodeDefinitions[node.nodeDefIndex + 1].lists[0].showAddNode = selected;
+    }
+  }
+
   ////////////////////////////////////////////////////////////////
   // State functions
   ////////////////////////////////////////////////////////////////
@@ -134,6 +182,7 @@ export class NodeHandlerProvider {
    */
   private resetHiddenState = (discoveredNodes: Node[], node: Node) => {
     node.isHidden = false;
+    this.handleNodeAddButtons(node, false);
   }
 
   /**
@@ -145,6 +194,7 @@ export class NodeHandlerProvider {
     if (!node.isHidden) {
       if (this.isSingleSiblingsDisplayed(node)) {
         node.isSelected = true;
+        this.handleNodeAddButtons(node, true);
       }
     }
   }
