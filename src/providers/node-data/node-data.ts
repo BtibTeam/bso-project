@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 // Firestore
 import { AngularFirestore, AngularFirestoreDocument } from 'angularfire2/firestore';
 
-// Librairies
+// Libraries
 import { plainToClass } from "class-transformer";
 
 // Models
@@ -153,7 +153,7 @@ export class NodeDataProvider {
    * Delete a node
    * @param node 
    */
-  deleteNode(node: Node) {
+  public deleteNode(node: Node): void {
     const nodeDefinitionId = this.nodeHandlerPvd.getNodeDefinitionId(node.nodeDefIndex);
     this.firestorePvd.delete('nodeDefinition/' + nodeDefinitionId + '/nodes/' + node.id);
   }

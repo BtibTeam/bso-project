@@ -7,20 +7,20 @@ import { NodeSnapshot, Node } from "./node-model";
 export class NodeDefinition {
 
     // General
-    id: string;
-    name: string;
-    treeIndex: number; // id commoned to a single tree
+    public id: string;
+    public name: string;
+    public treeIndex: number; // id commoned to a single tree
 
-    lists: NodeDefinitionList[] = [];
+    public lists: NodeDefinitionList[] = [];
 
 }
 
 export class NodeDefinitionList {
 
-    nodes: Node[] = [];
+    public nodes: Node[] = [];
 
     // UI Specific
-    showAddNode: boolean; // Define the visibility of a AddNode button
+    public showAddNode: boolean; // Define the visibility of a AddNode button
 }
 
 /**

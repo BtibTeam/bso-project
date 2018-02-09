@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 // Firestore
 import { AngularFirestore, AngularFirestoreDocument } from 'angularfire2/firestore';
 
-// Librairies
+// Libraries
 import { plainToClass } from "class-transformer";
 
 // Models
@@ -32,8 +32,8 @@ export class AddonsDataProvider {
   ////////////////////////////////////////////////////////////////
 
   /**
-   * Start a subscription to read the entire list of NodeDefinition and Nodes at the first call
-   * Update automatically the nodeDefinitions$ variable at every update
+   * Start a subscription to read the entire list of tags at the first call
+   * Update automatically the tags$ variable at every update
    */
   public loadTags(): void {
 

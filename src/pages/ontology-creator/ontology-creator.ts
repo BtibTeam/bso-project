@@ -29,31 +29,31 @@ import { ViewUtil } from '../../utils/view-util';
 })
 export class OntologyCreatorPage implements OnInit {
 
-  public topNodeDefList: string[] = ListUtil.buildTopNodeDefinitionList();
-  public topNodeDef: string = 'category';
-  public topNodeDefTreeIndex: number = 0;
+  private topNodeDefList: string[] = ListUtil.buildTopNodeDefinitionList();
+  private topNodeDef: string = 'category';
+  private topNodeDefTreeIndex: number = 0;
 
-  public nodeDefinitions: NodeDefinition[] = []; // UI list that can be manipulated
+  private nodeDefinitions: NodeDefinition[] = []; // UI list that can be manipulated
 
-  public selectedNode: Node;
+  private selectedNode: Node;
 
-  public loading: Loading;
+  private loading: Loading;
 
   constructor(
-    public navCtrl: NavController,
-    public navParams: NavParams,
-    public alertCtrl: AlertController,
-    public loadingCtrl: LoadingController,
-    public toastCtrl: ToastController,
-    public nodeHandlerPvd: NodeHandlerProvider,
-    public nodeDataPvd: NodeDataProvider) {
+    private navCtrl: NavController,
+    private navParams: NavParams,
+    private alertCtrl: AlertController,
+    private loadingCtrl: LoadingController,
+    private toastCtrl: ToastController,
+    private nodeHandlerPvd: NodeHandlerProvider,
+    private nodeDataPvd: NodeDataProvider) {
   }
 
   ////////////////////////////////////////////////////////////////
   // Life Cycle
   ////////////////////////////////////////////////////////////////
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
 
     this.nodeDataPvd.loadNodeDefinitions();
     this.nodeDataPvd.nodeDefinitions$.subscribe(nodeDefinitions => {
@@ -69,7 +69,7 @@ export class OntologyCreatorPage implements OnInit {
   /**
    * Update the topNodeDefTreeIndex based on the user selection of the top nodeNodeDefinition
    */
-  public topNodeDefChange(selection: string): void {
+  protected topNodeDefChange(selection: string): void {
     this.topNodeDefTreeIndex = ListUtil.getTopNodeDefTreeIndex(selection);
   }
 
@@ -77,7 +77,7 @@ export class OntologyCreatorPage implements OnInit {
    * Reduce the list of displayed nodes depending on the given input
    * @param input 
    */
-  public filterNodes(ev: any, list: NodeDefinitionList): void {
+  protected filterNodes(ev: any, list: NodeDefinitionList): void {
     let val = ev.target.value;
     // if the value is an empty string don't filter the items
     if (val && val.trim() !== '') {
@@ -96,7 +96,7 @@ export class OntologyCreatorPage implements OnInit {
    * @param node 
    * @param treeIndex 
    */
-  public selectNode(node: Node, treeIndex: number): void {
+  protected selectNode(node: Node, treeIndex: number): void {
 
     this.nodeHandlerPvd.setNodeDefinitions(this.nodeDefinitions);
 
@@ -120,7 +120,7 @@ export class OntologyCreatorPage implements OnInit {
    * @param nodeDefinitionIndex 
    * @param listIndex 
    */
-  public addNode(nodeDefIndex: number, listIndex: number): void {
+  protected addNode(nodeDefIndex: number, listIndex: number): void {
     // Present an alert to the user to get the name of the node to create
     let alert = this.alertCtrl.create({
       title: 'Add node',
@@ -159,7 +159,7 @@ export class OntologyCreatorPage implements OnInit {
    * Update node data
    * @param node 
    */
-  public updateNode(node): void {
+  protected updateNode(node): void {
     this.nodeDataPvd.updateNode(node);
   }
 
@@ -168,21 +168,25 @@ export class OntologyCreatorPage implements OnInit {
    * At this point, we already got the confirmation from the user
    * @param node 
    */
-  public deleteNode(node): void {
+  protected deleteNode(node): void {
     this.nodeDataPvd.deleteNode(node);
   }
 
-  public cancelEditNode(node): void {
+  /**
+   * Cancel the edition of the node
+   * @param node
+   */
+  protected cancelEditNode(node): void {
     // TODO: What do we do ?
   }
 
-  addList(nodeDefinition: NodeDefinition) {
+  /**
+   * Add a new list
+   * @param nodeDefinition
+   */
+  protected addList(nodeDefinition: NodeDefinition) {
     nodeDefinition.lists.push(new NodeDefinitionList());
   }
-
-  ////////////////////////////////////////////////////////////////
-  // Private methods
-  ////////////////////////////////////////////////////////////////
 
   ////////////////////////////////////////////////////////////////
   // Utils
