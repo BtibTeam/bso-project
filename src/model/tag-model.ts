@@ -3,11 +3,11 @@ import { Addon } from './addon-model';
 
 export class Tag extends Addon {
 
-    kind: TagKind = 0;
+    public kind: TagKind = 0;
 
     // Optional
-    defaultValue: string = ''; // The default value. TODO: Handle different kinds of default values
-    units: string = ''; // TODO: Units nomenclature must follow a standard.
+    public defaultValue: string = ''; // The default value. TODO: Handle different kinds of default values
+    public units: string = ''; // TODO: Units nomenclature must follow a standard.
 
 }
 

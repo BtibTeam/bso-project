@@ -1,4 +1,4 @@
-// Librairies
+// Libraries
 import { plainToClass } from "class-transformer";
 
 // Models
@@ -11,24 +11,24 @@ import { Relation } from "./relation-model";
 export class Node {
 
     // General
-    name: string;
-    id: string;
-    description: string;
-    nodeDefIndex: number;
-    listIndex: number;
+    public name: string;
+    public id: string;
+    public description: string;
+    public nodeDefIndex: number;
+    public listIndex: number;
 
     // Node relations
-    isIn: NodeSnapshot[] = [];
-    contains: NodeSnapshot[] = [];
+    public isIn: NodeSnapshot[] = [];
+    public contains: NodeSnapshot[] = [];
 
     // UI specific
-    isHidden: boolean = false;
-    isFilteredOut: boolean = false;
-    isSelected: boolean = false;
+    public isHidden: boolean = false;
+    public isFilteredOut: boolean = false;
+    public isSelected: boolean = false;
 
     // Addons
-    tags: Tag[] = [];
-    relations: Relation[] = [];
+    public tags: Tag[] = [];
+    public relations: Relation[] = [];
 
     ////////////////////////////////////////////////////////////////
     // Static methods
