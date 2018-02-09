@@ -7,45 +7,51 @@
 </ion-header>
 
 
-<ion-content>
-  <div class="list-container">
+<ion-content padding>
 
-    <ion-grid>
-      <ion-row>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
         <ion-select [(ngModel)]="topNodeDef" (ionChange)="topNodeDefChange($event)" interface="popover" class="topNodeDef-select">
           <ion-option *ngFor="let topNodeDefElt of topNodeDefList" [value]="topNodeDefElt">{{topNodeDefElt | friendlyCase}}</ion-option>
         </ion-select>
-      </ion-row>
-      <ion-row>
-        <span *ngFor="let nodeDef of nodeDefinitions;let nodeDefIndex=index">
-          <ion-col *ngIf="nodeDef.treeIndex === topNodeDefTreeIndex">
-            <ion-row>
-              <ion-col class="nodeDef-header">
-                <div class="nodeDef-header-container">
-                  <p class="nodeDef-title">{{nodeDef.name}}</p>
-                  <button ion-button color="light" class="add-list-button" (click)="addList(nodeDef)">
-                    <ion-icon name="add"></ion-icon>
-                  </button>
-                </div>
-              </ion-col>
-            </ion-row>
-            <ion-row>
-              <ion-col *ngFor="let list of nodeDef.lists;let listIndex=index" class="nodeList-container">
-                <ion-searchbar (ionInput)="filterNodes($event, list)" class="node-searchbar"></ion-searchbar>
-                <ion-list>
-                  <span *ngFor="let node of list.nodes">
-                    <ion-item *ngIf="!(node.isFilteredOut || node.isHidden)" (click)="selectNode(node, nodeDef.treeIndex)" [ngClass]="{'node-item': true, 'node-item-selected': node.isSelected}">{{node.name}}</ion-item>
-                  </span>
-                  <button *ngIf="list.showAddNode" ion-button color="light" class="add-node-button" (click)="addNode(nodeDefIndex, listIndex)">
-                    <ion-icon name="add"></ion-icon>
-                  </button>
-                </ion-list>
-              </ion-col>
-            </ion-row>
-          </ion-col>
-        </span>
-      </ion-row>
-    </ion-grid>
+      </ion-col>
+      <ion-col>
+        <p class="update-text">Last update 01/01/2019</p>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <span *ngFor="let nodeDef of nodeDefinitions;let nodeDefIndex=index" class="nodeDef-container">
+        <ion-col *ngIf="nodeDef.treeIndex === topNodeDefTreeIndex">
+          <ion-row>
+            <ion-col class="nodeDef-header">
+              <div class="nodeDef-header-container">
+                <p ion-text color="light" class="nodeDef-title">{{nodeDef.name}}</p>
+                <button ion-button class="add-list-button" (click)="addList(nodeDef)">
+                  <ion-icon name="add" color="light"></ion-icon>
+                </button>
+              </div>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col *ngFor="let list of nodeDef.lists;let listIndex=index" class="nodeList-container">
+              <ion-searchbar (ionInput)="filterNodes($event, list)" class="node-searchbar"></ion-searchbar>
+              <ion-list>
+                <span *ngFor="let node of list.nodes">
+                  <ion-item *ngIf="!(node.isFilteredOut || node.isHidden)" (click)="selectNode(node, nodeDef.treeIndex)" [ngClass]="{'node-item': true, 'node-item-selected': node.isSelected}">{{node.name}}</ion-item>
+                </span>
+                <button *ngIf="list.showAddNode" ion-button color="light" class="add-node-button" (click)="addNode(nodeDefIndex, listIndex)">
+                  <ion-icon name="add"></ion-icon>
+                </button>
+              </ion-list>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+      </span>
+    </ion-row>
+    <ion-row class="node-editor-container">
+      <node-editor class="node-editor" [node]="selectedNode" (onDelete)="deleteNode($event)" (onSave)="updateNode($event)" (onCancel)="cancelEditNode($event)"></node-editor>
+    </ion-row>
+  </ion-grid>
 
-  </div>
 </ion-content>

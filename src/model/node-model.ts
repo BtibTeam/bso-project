@@ -1,3 +1,9 @@
+// Libraries
+import { plainToClass } from "class-transformer";
+
+// Models
+import { Tag } from "./tag-model";
+import { Relation } from "./relation-model";
 
 /**
  * Support class for representing a node
@@ -5,34 +11,48 @@
 export class Node {
 
     // General
-    name: string;
-    id: string;
-    description: string;
-    nodeDefIndex: number;
-    listIndex: number;
+    public name: string;
+    public id: string;
+    public description: string;
+    public nodeDefIndex: number;
+    public listIndex: number;
 
     // Node relations
-    isIn: NodeSnapshot[] = [];
-    contains: NodeSnapshot[] = [];
+    public isIn: NodeSnapshot[] = [];
+    public contains: NodeSnapshot[] = [];
 
     // UI specific
-    isHidden: boolean = false;
-    isFilteredOut: boolean = false;
-    isSelected: boolean = false;
+    public isHidden: boolean = false;
+    public isFilteredOut: boolean = false;
+    public isSelected: boolean = false;
 
-    printStates() {
-        console.log('isHidden: ' + this.isHidden + '; isSelected: ' + this.isSelected + '; isFilteredOut: ' + this.isFilteredOut);
-    }
+    // Addons
+    public tags: Tag[] = [];
+    public relations: Relation[] = [];
+
+    ////////////////////////////////////////////////////////////////
+    // Static methods
+    ////////////////////////////////////////////////////////////////
 
     /**
      * Remove specific application attributes which are not necessary in the database
-     * @param node 
+     * @param node
+     * @return the conded node
      */
-    static encode(node: Node): Node {
+    public static encode(node: Node): Node {
         node.isHidden = undefined;
         node.isFilteredOut = undefined;
         node.isSelected = undefined;
         return node;
+    }
+
+    /**
+    * Create a deep copy of a node
+    * @param node
+    * @return the copied node
+    */
+    public static deepCopy(node: Node): Node {
+        return plainToClass(Node, JSON.parse(JSON.stringify(node)) as Object);
     }
 }
 
@@ -67,7 +87,7 @@ export class NodeSnapshot {
      * Generate a nodeSnapshot based on the given node
      * @param node 
      */
-    static generateSnapshot(node: Node): NodeSnapshot {
+    public static generateSnapshot(node: Node): NodeSnapshot {
         let snapshot = new NodeSnapshot();
         snapshot.id = node.id;
         snapshot.listIndex = node.listIndex;

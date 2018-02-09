@@ -1,5 +1,10 @@
-// Framework
-import { Component } from '@angular/core';
+// Angular
+import { Component, ViewChild, OnInit } from '@angular/core';
+
+// Components
+import { NodeEditor } from '../../components/node-editor/node-editor';
+
+// Ionic
 import { IonicPage, NavController, NavParams, AlertController, LoadingController, Loading, ToastController } from 'ionic-angular';
 
 // Models
@@ -22,39 +27,39 @@ import { ViewUtil } from '../../utils/view-util';
   selector: 'page-ontology-creator',
   templateUrl: 'ontology-creator.html',
 })
-export class OntologyCreatorPage {
+export class OntologyCreatorPage implements OnInit {
 
-  topNodeDefList: string[] = ListUtil.buildTopNodeDefinitionList();
-  topNodeDef: string = 'category';
-  topNodeDefTreeIndex: number = 0;
+  private topNodeDefList: string[] = ListUtil.buildTopNodeDefinitionList();
+  private topNodeDef: string = 'category';
+  private topNodeDefTreeIndex: number = 0;
 
-  nodeDefinitions: NodeDefinition[] = []; // UI list that can be manipulated
+  private nodeDefinitions: NodeDefinition[] = []; // UI list that can be manipulated
 
-  loading: Loading;
+  private selectedNode: Node;
+
+  private loading: Loading;
 
   constructor(
-    public navCtrl: NavController,
-    public navParams: NavParams,
-    public alertCtrl: AlertController,
-    public loadingCtrl: LoadingController,
-    public toastCtrl: ToastController,
-    public nodeHandlerPvd: NodeHandlerProvider,
-    public nodeDataPvd: NodeDataProvider) {
+    private navCtrl: NavController,
+    private navParams: NavParams,
+    private alertCtrl: AlertController,
+    private loadingCtrl: LoadingController,
+    private toastCtrl: ToastController,
+    private nodeHandlerPvd: NodeHandlerProvider,
+    private nodeDataPvd: NodeDataProvider) {
   }
 
   ////////////////////////////////////////////////////////////////
-  // Framework
+  // Life Cycle
   ////////////////////////////////////////////////////////////////
 
-  ngOnInit() {
+  public ngOnInit(): void {
 
-    /*this.nodeDataPvd.generateFakeNodes().subscribe(nodeDefinitions => {
-      this.nodeDefinitions = nodeDefinitions;
-    });*/
     this.nodeDataPvd.loadNodeDefinitions();
     this.nodeDataPvd.nodeDefinitions$.subscribe(nodeDefinitions => {
       this.nodeDefinitions = nodeDefinitions;
     });
+
   }
 
   ////////////////////////////////////////////////////////////////
@@ -64,7 +69,7 @@ export class OntologyCreatorPage {
   /**
    * Update the topNodeDefTreeIndex based on the user selection of the top nodeNodeDefinition
    */
-  topNodeDefChange(selection: string) {
+  protected topNodeDefChange(selection: string): void {
     this.topNodeDefTreeIndex = ListUtil.getTopNodeDefTreeIndex(selection);
   }
 
@@ -72,7 +77,7 @@ export class OntologyCreatorPage {
    * Reduce the list of displayed nodes depending on the given input
    * @param input 
    */
-  filterNodes(ev: any, list: NodeDefinitionList) {
+  protected filterNodes(ev: any, list: NodeDefinitionList): void {
     let val = ev.target.value;
     // if the value is an empty string don't filter the items
     if (val && val.trim() !== '') {
@@ -91,7 +96,7 @@ export class OntologyCreatorPage {
    * @param node 
    * @param treeIndex 
    */
-  selectNode(node: Node, treeIndex: number) {
+  protected selectNode(node: Node, treeIndex: number): void {
 
     this.nodeHandlerPvd.setNodeDefinitions(this.nodeDefinitions);
 
@@ -106,6 +111,8 @@ export class OntologyCreatorPage {
       this.nodeHandlerPvd.selectNode(node, treeIndex);
     }
 
+    this.selectedNode = node;
+
   }
 
   /**
@@ -113,7 +120,7 @@ export class OntologyCreatorPage {
    * @param nodeDefinitionIndex 
    * @param listIndex 
    */
-  addNode(nodeDefIndex: number, listIndex: number) {
+  protected addNode(nodeDefIndex: number, listIndex: number): void {
     // Present an alert to the user to get the name of the node to create
     let alert = this.alertCtrl.create({
       title: 'Add node',
@@ -148,7 +155,36 @@ export class OntologyCreatorPage {
 
   }
 
-  addList(nodeDefinition: NodeDefinition) {
+  /**
+   * Update node data
+   * @param node 
+   */
+  protected updateNode(node): void {
+    this.nodeDataPvd.updateNode(node);
+  }
+
+  /**
+   * Delete node from the database
+   * At this point, we already got the confirmation from the user
+   * @param node 
+   */
+  protected deleteNode(node): void {
+    this.nodeDataPvd.deleteNode(node);
+  }
+
+  /**
+   * Cancel the edition of the node
+   * @param node
+   */
+  protected cancelEditNode(node): void {
+    // TODO: What do we do ?
+  }
+
+  /**
+   * Add a new list
+   * @param nodeDefinition
+   */
+  protected addList(nodeDefinition: NodeDefinition) {
     nodeDefinition.lists.push(new NodeDefinitionList());
   }
 
@@ -158,9 +194,10 @@ export class OntologyCreatorPage {
 
   /**
    * Return a Loading Ctrl
-   * @param message 
+   * @param message
+   * @return the created loading controller
    */
-  createLoadingCtrl(message: string) {
+  private createLoadingCtrl(message: string): any {
     return this.loadingCtrl.create({
       content: message
     });
@@ -172,7 +209,7 @@ export class OntologyCreatorPage {
    * @param timeout 
    * @param error 
    */
-  handleTimeout(timeout: number, error?: string) {
+  private handleTimeout(timeout: number, error?: string): void {
     setTimeout(() => {
       if (this.loading) {
         this.loading.dismiss()

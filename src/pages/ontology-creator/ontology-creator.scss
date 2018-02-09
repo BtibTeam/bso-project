@@ -5,6 +5,7 @@ page-ontology-creator {
   .scroll-content {
     overflow: auto;
     margin-top: 42px;
+    background-color: #eceff1;
   }
   .fixed-content {
     margin-top: 42px;
@@ -13,21 +14,30 @@ page-ontology-creator {
     font-size: 1.1em;
     font-weight: 400;
   }
-  .list-container {
-    /**
+  /**
     * Override select button which otherwise takes 100% of the screen
     */
-    ion-select button {
-      width: auto!important;
-      height: auto!important;
-    }
-    .topNodeDef-select {
-      padding: 8px 8px 8px 8px;
-    }
+  ion-select button {
+    width: auto!important;
+    height: auto!important;
+  }
+  .topNodeDef-select {
+    padding: 8px 8px 8px 8px;
+    max-width: 100px;
+  }
+  .update-text {
+    float: right;
+    font-size: 0.9em;
+  }
+  .nodeDef-container {
+    flex-grow: 1;
     .col {
       padding: 0;
+      .test-span {
+        flex-grow: 1;
+      }
       .nodeDef-header {
-        background-color: #81D4FA;
+        background-color: map-get($colors, headerBG);
         border-right: 1px solid white;
         .nodeDef-header-container {
           display: flex;
@@ -37,7 +47,7 @@ page-ontology-creator {
           .nodeDef-title {
             padding-left: 8px;
             font-size: 1em;
-            color: #212121;
+            text-transform: uppercase;
             font-weight: 400;
           }
           .add-list-button {
@@ -46,12 +56,17 @@ page-ontology-creator {
             font-size: 0.7em;
             border-radius: 50%;
             margin-right: 16px;
+            background-color: transparent;
+            box-shadow: none;
+            -webkit-box-shadow: none;
+            ion-icon {
+              font-size: 2.2em;
+            }
           }
         }
       }
       .nodeList-container {
-        margin-right: 2px;
-        max-width: 160px;
+        margin-right: 2px; //max-width: 160px;
         .add-node-button {
           border-radius: 50%;
           width: 25px;
@@ -60,7 +75,7 @@ page-ontology-creator {
         }
         .node-searchbar {
           padding: 0;
-          border-bottom: 1px solid #e9e9e9;
+          border-bottom: 3px solid #e9e9e9;
           input {
             font-size: 0.9em;
             box-shadow: none;
@@ -72,9 +87,17 @@ page-ontology-creator {
           font-size: 0.8em;
         }
         .node-item-selected {
-          background-color: #EEEEEE;
+          background-color: #c5c5c5;
         }
       }
+    }
+  }
+  .node-editor-container {
+    margin-top: 32px;
+    .node-editor {
+      width: 90%;
+      margin-left: auto;
+      margin-right: auto;
     }
   }
 }

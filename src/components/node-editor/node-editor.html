@@ -1,0 +1,54 @@
+<ion-card *ngIf="node" class="editor-card">
+  <form [formGroup]="editForm" novalidate>
+    <ion-grid class="node-grid">
+      <div class="header-row">
+        <button ion-button clear class="delete-button" color="light" (click)="deleteNode()">
+          <ion-icon name="trash" color="light"></ion-icon>
+        </button>
+        <ion-item color="headerBG">
+          <ion-label floating color="light" class="header-label">Node name</ion-label>
+          <ion-input formControlName="name" color="light"></ion-input>
+        </ion-item>
+        <ion-item color="headerBG">
+          <ion-label floating color="light" class="header-label">Node description</ion-label>
+          <ion-textarea textarea-autogrow formControlName="description" color="light"></ion-textarea>
+        </ion-item>
+        <ion-segment [(ngModel)]="segment" [ngModelOptions]="{standalone:true}" color="light" class="header-segment">
+          <ion-segment-button value="tags">
+            Tags
+          </ion-segment-button>
+          <ion-segment-button value="relations">
+            Relations
+          </ion-segment-button>
+          <ion-segment-button value="groups">
+            Groups
+          </ion-segment-button>
+          <ion-segment-button value="functions">
+            Functions
+          </ion-segment-button>
+          <ion-segment-button value="translations">
+            Translations
+          </ion-segment-button>
+        </ion-segment>
+      </div>
+      <div [ngSwitch]="segment" class="content-segment">
+        <div *ngSwitchCase="'tags'">
+          <addons-manager [addons]="node.tags" type="tags" (onChange)="updateTags($event)">
+          </addons-manager>
+        </div>
+        <div *ngSwitchCase="'relations'">
+          <addons-manager [addons]="node.relations" type="relations" (onChange)="updateRelations($event)">
+          </addons-manager>
+        </div>
+      </div>
+      <ion-row justify-content-end class="saving-row">
+        <button ion-button clear>
+          Cancel
+        </button>
+        <button ion-button [disabled]="!editForm.valid" (click)="saveNode()">
+          Save
+        </button>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-card>

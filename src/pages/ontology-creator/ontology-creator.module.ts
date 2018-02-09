@@ -2,7 +2,10 @@
 import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
 
-// Page
+// Components
+import { ComponentsModule } from '../../components/components.module';
+
+// Pages
 import { OntologyCreatorPage } from './ontology-creator';
 
 // Pipes
@@ -14,6 +17,7 @@ import { PipesModule } from '../../pipes/pipes.module';
   ],
   imports: [
     IonicPageModule.forChild(OntologyCreatorPage),
+    ComponentsModule,
     PipesModule
   ],
 })
