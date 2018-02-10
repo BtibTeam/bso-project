@@ -1,6 +1,8 @@
 // Framework
 import { Component, Output, EventEmitter, Input, OnChanges } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+
+// Ionic
 import { AlertController } from 'ionic-angular';
 
 // Models
@@ -15,12 +17,14 @@ import { Relation } from '../../model/relation-model';
 export class NodeEditor implements OnChanges {
 
   // Output events
-  @Output() onDelete: EventEmitter<Node> = new EventEmitter<Node>();
-  @Output() onSave: EventEmitter<Node> = new EventEmitter<Node>();
-  @Output() onCancel: EventEmitter<Node> = new EventEmitter<Node>();
+  @Output() private onDelete: EventEmitter<Node> = new EventEmitter<Node>();
+  @Output() private onSave: EventEmitter<Map<string, Node>> = new EventEmitter<Map<string, Node>>();
+  @Output() private onCancel: EventEmitter<Node> = new EventEmitter<Node>();
 
   // Input values
-  @Input('node') node: Node;
+  @Input('node') private originalNode: Node;
+
+  private node: Node = new Node(); // The copy of the node to work on
 
   private editForm: any;
   private segment: string = 'tags';
@@ -41,12 +45,12 @@ export class NodeEditor implements OnChanges {
   // Life Cycles
   ////////////////////////////////////////////////////////////////
 
-  ngOnChanges(changes): void {
-    if (changes.node) {
-      if (changes.node.currentValue) {
+  public ngOnChanges(changes): void {
+    if (changes.originalNode) {
+      if (changes.originalNode.currentValue) {
 
         // Create a deep copy of the node
-        this.node = Node.deepCopy(changes.node.currentValue);
+        this.node = Node.deepCopy(changes.originalNode.currentValue);
 
         // Patch form values
         this.editForm.patchValue({
@@ -97,7 +101,10 @@ export class NodeEditor implements OnChanges {
     } else {
       this.node.name = this.editForm.value.name;
       this.node.description = this.editForm.value.description;
-      this.onSave.emit(this.node);
+      let map: Map<string, Node> = new Map();
+      map.set('original', this.originalNode);
+      map.set('modified', this.node);
+      this.onSave.emit(map);
     }
   }
 

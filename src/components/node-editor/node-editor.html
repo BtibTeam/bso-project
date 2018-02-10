@@ -13,6 +13,7 @@
           <ion-label floating color="light" class="header-label">Node description</ion-label>
           <ion-textarea textarea-autogrow formControlName="description" color="light"></ion-textarea>
         </ion-item>
+        <relation-manager [isIn]="node.isIn" [nodeDefIndex]="node.nodeDefIndex" [listIndex]="node.listIndex"></relation-manager>
         <ion-segment [(ngModel)]="segment" [ngModelOptions]="{standalone:true}" color="light" class="header-segment">
           <ion-segment-button value="tags">
             Tags
