@@ -27,8 +27,8 @@ import { DataUtil } from '../../utils/data-util';
 export class NodeDataProvider {
 
   constructor(
-    public firestorePvd: FirestoreProvider,
-    public nodeHandlerPvd: NodeHandlerProvider) {
+    private firestorePvd: FirestoreProvider,
+    private nodeHandlerPvd: NodeHandlerProvider) {
   }
 
   public nodeDefinitions$: Observable<NodeDefinition[]> = Rx.Observable.empty();
@@ -140,13 +140,58 @@ export class NodeDataProvider {
   }
 
   /**
-   * Update a node
-   * @param node 
-   * @return a void promise
+   * Synchronize the modified node with others nodes that would be impacted
+   * @param map containing the original node and the modified node
    */
-  public updateNode(node: Node): Promise<void> {
-    const nodeDefinitionId = this.nodeHandlerPvd.getNodeDefinitionId(node.nodeDefIndex);
-    return this.firestorePvd.set(DataUtil.cleanUndefinedValues(Node.encode(node)), 'nodeDefinition/' + nodeDefinitionId + '/nodes/' + node.id);
+  public synchronizeNode(map: Map<string, Node>): void {
+
+    const originalNode = map.get('original');
+    const modifiedNode = map.get('modified');
+
+    /// Synchronize the node for the isIn relations
+    // Added relations
+    modifiedNode.isIn.forEach(modifiedNodeSnap => {
+
+      if (!originalNode.isIn.find(originalNodeSnap => originalNodeSnap.id === modifiedNodeSnap.id)) {
+
+        // Retrieve the original node
+        this.retrieveNodeFromSnapshot(modifiedNodeSnap).take(1).subscribe(_node => {
+
+          // Transform to a node
+          let node: Node = plainToClass(Node, _node as Object);
+          node.contains.push(NodeSnapshot.generateSnapshot(modifiedNode));
+          this.updateNode(node);
+        });
+
+      }
+
+    });
+
+    // Removed relations
+    originalNode.isIn.forEach(originalNodeSnap => {
+      if (!modifiedNode.isIn.find(modifiedNodeSnap => modifiedNodeSnap.id === originalNodeSnap.id)) {
+
+        // Retrieve the original node
+        this.retrieveNodeFromSnapshot(originalNodeSnap).take(1).subscribe(_node => {
+
+          // Transform to a node
+          let node: Node = plainToClass(Node, _node as Object);
+
+          // Find the index of the snapshot to delete
+          const index = node.contains.findIndex(_nodeSnap => modifiedNode.id === _nodeSnap.id);
+
+          if (index > -1) {
+            // Remove the snapshot then update the node
+            node.contains.splice(index, 1);
+            this.updateNode(node);
+          }
+        });
+
+      }
+    });
+
+    // Update the modified node
+    this.updateNode(modifiedNode);
   }
 
   /**
@@ -156,6 +201,33 @@ export class NodeDataProvider {
   public deleteNode(node: Node): void {
     const nodeDefinitionId = this.nodeHandlerPvd.getNodeDefinitionId(node.nodeDefIndex);
     this.firestorePvd.delete('nodeDefinition/' + nodeDefinitionId + '/nodes/' + node.id);
+  }
+
+  ////////////////////////////////////////////////////////////////
+  // Private Methods
+  ////////////////////////////////////////////////////////////////
+
+  /**
+   * Update a node to the database
+   * @param node 
+   * @return a void promise
+   */
+  private updateNode(node: Node): Promise<void> {
+
+    const nodeDefinitionId = this.nodeHandlerPvd.getNodeDefinitionId(node.nodeDefIndex);
+
+    // Compare 
+    return this.firestorePvd.set(DataUtil.cleanUndefinedValues(Node.encode(node)), 'nodeDefinition/' + nodeDefinitionId + '/nodes/' + node.id);
+  }
+
+  /**
+   * Retrieve a complete node from a given Snapshot
+   * @param nodeSnap
+   * @return an Observable with the node
+   */
+  private retrieveNodeFromSnapshot(nodeSnap: NodeSnapshot): Observable<any> {
+    const nodeDefinitionId = this.nodeHandlerPvd.getNodeDefinitionId(nodeSnap.nodeDefIndex);
+    return this.firestorePvd.readDocument('nodeDefinition/' + nodeDefinitionId + '/nodes/' + nodeSnap.id);
   }
 
   ////////////////////////////////////////////////////////////////
