@@ -1,0 +1,14 @@
+<mat-form-field class="demo-chip-list">
+  <mat-chip-list class="relation-mat-chip-list">
+    <mat-chip *ngFor="let nodeSnapshot of isIn" [removable]="removable" (remove)="removeRelation(nodeSnapshot)">
+      {{nodeSnapshot.name}}
+      <ion-icon matChipRemove name="close" color="softDark"></ion-icon>
+    </mat-chip>
+    <mat-chip (click)="addRelation()">
+      <ion-icon name="add" color="softDark"></ion-icon>
+    </mat-chip>
+    <input placeholder="isIn With" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
+      (matChipInputTokenEnd)="add($event)" />
+  </mat-chip-list>
+
+</mat-form-field>
