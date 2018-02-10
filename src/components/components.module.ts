@@ -25,6 +25,7 @@ import { NodeSelectorList } from './node-selector-list/node-selector-list';
 	declarations: [
 		NodeEditor,
 		AddonsManager,
+		AddonsEditor,
 		RelationManager,
 		NodeSelectorList
 	],
@@ -48,6 +49,7 @@ import { NodeSelectorList } from './node-selector-list/node-selector-list';
 		AddonsManager,
 		AddonsEditor,
 		RelationManager,
+		NodeSelectorList
 	]
 })
 export class ComponentsModule { }
