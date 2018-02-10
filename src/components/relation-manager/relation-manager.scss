@@ -1,0 +1,15 @@
+relation-manager {
+    .demo-chip-list {
+        width: 100%;
+        padding: 16px;
+      }
+
+      .relation-mat-chip-list {
+        span label {
+            color: white;
+        }
+        mat-chip {
+            background-color: white;
+        }
+    }
+}
