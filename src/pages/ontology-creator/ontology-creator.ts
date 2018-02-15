@@ -159,8 +159,8 @@ export class OntologyCreatorPage implements OnInit {
    * Update node data
    * @param node 
    */
-  protected updateNode(node): void {
-    this.nodeDataPvd.updateNode(node);
+  protected updateNode(map: Map<string, Node>): void {
+    this.nodeDataPvd.synchronizeNode(map);
   }
 
   /**

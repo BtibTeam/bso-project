@@ -29,7 +29,7 @@ export class AddonsManager implements OnChanges {
   public dataSource = new MatTableDataSource();
 
   constructor(
-    public dialog: MatDialog
+    private dialog: MatDialog
   ) { }
 
 
@@ -37,7 +37,7 @@ export class AddonsManager implements OnChanges {
   // Life Cycles
   ////////////////////////////////////////////////////////////////
 
-  ngOnChanges(changes) {
+  public ngOnChanges(changes): void {
     if (changes.addons) {
       if (changes.addons.currentValue) {
         this.addons = changes.addons.currentValue;

@@ -8,6 +8,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatIconModule } from '@angular/material/icon';
 
 // Components
 import { NodeEditor } from './node-editor/node-editor';
@@ -16,12 +18,16 @@ import { AddonsEditor } from './addons-editor/addons-editor';
 
 // Directives
 import { DirectivesModule } from '../directives/directives.module';
+import { RelationManager } from './relation-manager/relation-manager';
+import { NodeSelectorList } from './node-selector-list/node-selector-list';
 
 @NgModule({
 	declarations: [
 		NodeEditor,
 		AddonsManager,
-		AddonsEditor
+		AddonsEditor,
+		RelationManager,
+		NodeSelectorList
 	],
 	imports: [
 		IonicModule,
@@ -30,15 +36,20 @@ import { DirectivesModule } from '../directives/directives.module';
 		MatTableModule,
 		MatInputModule,
 		MatDialogModule,
-		MatCheckboxModule
+		MatCheckboxModule,
+		MatChipsModule,
+		MatIconModule
 	],
 	entryComponents: [
 		AddonsEditor,
+		NodeSelectorList
 	],
 	exports: [
 		NodeEditor,
 		AddonsManager,
-		AddonsEditor
+		AddonsEditor,
+		RelationManager,
+		NodeSelectorList
 	]
 })
 export class ComponentsModule { }

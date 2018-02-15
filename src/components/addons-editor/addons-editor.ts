@@ -60,13 +60,12 @@ export class AddonsEditor implements OnInit {
     this.dialogRef.close();
   }
 
-
   ////////////////////////////////////////////////////////////////
   // Public methods
   ////////////////////////////////////////////////////////////////
 
   /**
-   * The user selected a addon
+   * The user selected an addon
    * Close the the popup
    * @param addon 
    */
