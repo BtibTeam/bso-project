@@ -11,7 +11,7 @@ import { Relation } from "./relation-model";
 export class Node {
 
     // General
-    public name: string;
+    public name: string;    
     public id: string;
     public description: string;
     public nodeDefIndex: number;
@@ -57,26 +57,15 @@ export class Node {
 }
 
 /**
- * Support class for representing a NodeGroup
- */
-export class NodeGroup extends Node {
-
-    // Node relations
-    has: NodeSnapshot[];
-    belongsTo: NodeSnapshot[];
-
-}
-
-/**
  * Support class for representing a pointer to a node
  */
 export class NodeSnapshot {
 
     // General
-    name: string;
-    id: string;
-    nodeDefIndex: number;
-    listIndex: number;
+    public name: string;
+    public id: string;
+    public nodeDefIndex: number;
+    public listIndex: number;
 
 
     ////////////////////////////////////////////////////////////////
