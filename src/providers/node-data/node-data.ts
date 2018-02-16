@@ -10,6 +10,8 @@ import { plainToClass } from "class-transformer";
 // Models
 import { NodeDefinition, NodeDefinitionList, TopNodeDefinitionEnum } from '../../model/node-definition-model';
 import { Node, NodeSnapshot } from '../../model/node-model';
+import { NodeGroupDefinition } from '../../model/node-group-definition-model';
+import { NodeGroup } from '../../model/node-group-model';
 
 // Providers
 import { FirestoreProvider } from '../firestore/firestore';
@@ -50,17 +52,22 @@ export class NodeDataProvider {
         // For each nodeDefinition
         let ndfObsArray$: Observable<NodeDefinition>[] = nodeDefinitions.map(nodeDef => { // nodeDef: NodeDefinition
 
-          // Transform the plain object into a NodeDefinition type
-          let ndf: NodeDefinition = plainToClass(NodeDefinition, nodeDef as Object);
+          // Transform the plain object into a NodeDefinition type or a NodeGroupDefinition type
+          let ndf: NodeDefinition;
+          if (nodeDef.isNodeGroupDefinition) {
+            ndf = plainToClass(NodeGroupDefinition, nodeDef as Object);
+          } else {
+            ndf = plainToClass(NodeDefinition, nodeDef as Object);
+          }
 
           if (ndf.lists.length == 0) {
             let list = new NodeDefinitionList();
-            for (let id in TopNodeDefinitionEnum) {
+            /*for (let id in TopNodeDefinitionEnum) {
               if (ndf.id === id) {
                 list.showAddNode = true;
                 break;
               }
-            }
+            }*/
             ndf.lists.push(list);
           }
 
@@ -73,8 +80,13 @@ export class NodeDataProvider {
 
               nodes.map(_node => { // _node : Node
 
-                // Transform the plain object into a NodeType
-                let node: Node = plainToClass(Node, _node as Object);
+                // Transform the plain object into a Node type or a NodeGroup type
+                let node: Node;
+                if (_node.isNodeGroup) {
+                  node = plainToClass(NodeGroup, _node as Object);
+                } else {
+                  node = plainToClass(Node, _node as Object);
+                }
 
                 // Check if the list is already created in the Node Definition. Create it if not
                 if (node.listIndex >= ndf.lists.length) {
@@ -108,12 +120,16 @@ export class NodeDataProvider {
    * @param listIndex
    * @return a void promise
    */
-  public createNode(name: string, nodeDefIndex: number, listIndex: number): Promise<void> {
+  public createNode(name: string, nodeDefIndex: number, listIndex: number, isNodeGroupDefinition: boolean): Promise<void> {
 
     // Create a new node
-    let node = new Node();
+    let node: Node;
+    if (isNodeGroupDefinition) {
+      node = new NodeGroup();
+    } else {
+      node = new Node();
+    }
     node.id = this.firestorePvd.generateId(); // Generate a new id for this node
-
 
     // Update the node
     node.name = name;
@@ -121,7 +137,7 @@ export class NodeDataProvider {
     node.listIndex = listIndex;
 
     // Generate the isIn relation based on the current selection if the node is not at the uppest level
-    if (!(nodeDefIndex == 0 && listIndex == 0)) {
+    /*if (!(nodeDefIndex == 0 && listIndex == 0)) {
       let parentIsInNode = this.nodeHandlerPvd.getSelectedParentNode(node);
       if (parentIsInNode) {
         node.isIn.push(NodeSnapshot.generateSnapshot(parentIsInNode));
@@ -130,7 +146,7 @@ export class NodeDataProvider {
         parentIsInNode.contains.push(NodeSnapshot.generateSnapshot(node));
         this.updateNode(parentIsInNode);
       }
-    }
+    }*/
 
     const nodeDefinitionId = this.nodeHandlerPvd.getNodeDefinitionId(nodeDefIndex);
 
