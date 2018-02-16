@@ -21,7 +21,7 @@ export class NodeHandlerProvider {
    * Update the internal array of nodeDefinitions (and nodes) for the algorithms to work on
    * @param _nodeDefinitions 
    */
-  setNodeDefinitions(_nodeDefinitions: NodeDefinition[]) {
+  public setNodeDefinitions(_nodeDefinitions: NodeDefinition[]): void {
     this.nodeDefinitions = _nodeDefinitions;
   }
 
@@ -29,7 +29,7 @@ export class NodeHandlerProvider {
    * Update every node when one is selected 
    * @param treeIndex the index of the tree to work one to speed up the algorithm
    */
-  unselectNode(node: Node, treeIndex: number) {
+  public unselectNode(node: Node, treeIndex: number): void {
 
     let discoveredNodes: Node[] = [];
 
@@ -52,11 +52,26 @@ export class NodeHandlerProvider {
     });
 
     if (node.listIndex != 0) {
-      this.handleNodeAddButtons(node, false);
+      //this.handleNodeAddButtons(node, false);
     }
     // Display the button at the top anyway
-    this.nodeDefinitions[0].lists[0].showAddNode = true;
+    //this.nodeDefinitions[0].lists[0].showAddNode = true;
 
+  }
+
+  /**
+   * Unselect every node 
+  */
+  public unselectAllNodes(): void {
+    for (const nodeDef of this.nodeDefinitions) {
+      for (const list of nodeDef.lists) {
+        for (let node of list.nodes) {
+          node.isFilteredOut = false;
+          node.isHidden = false;
+          node.isSelected = false;
+        }
+      }
+    }
   }
 
   /**
@@ -64,7 +79,7 @@ export class NodeHandlerProvider {
    * @param node the unselected node
    * @param treeIndex the index of the tree to work one to speed up the algorithm
    */
-  selectNode(node: Node, treeIndex: number) {
+  public selectNode(node: Node, treeIndex: number): void {
 
     let discoveredNodes: Node[] = [];
     discoveredNodes.push(node);
@@ -78,27 +93,35 @@ export class NodeHandlerProvider {
     // Auto-select every single displayed node
     this.updateNodesState(discoveredNodes, treeIndex, this.autoSelectNodes);
 
-    this.handleNodeAddButtons(node, true);
+    //this.handleNodeAddButtons(node, true);
   }
   /**
    * Return the selected node among either the first parent list
    * or if it is the first list among the last list of the parent NodeDefinition
    * Return null otherwise
    * @param node
+   * @return the selected parent node
    */
-  getSelectedParentNode(node: Node) {
+  public getSelectedParentNode(node: Node): Node {
 
     // Search among the direct parent inside its own NodeDefinition
-    if (node.listIndex > 0) {
-      for (const _node of this.nodeDefinitions[node.nodeDefIndex].lists[node.listIndex - 1].nodes) {
+    for (let i = node.listIndex - 1; i >= 0; i--) {
+      const list = this.nodeDefinitions[node.nodeDefIndex].lists[i];
+      for (const _node of list.nodes) {
         if (_node.isSelected)
           return _node;
       }
-    } else if (node.nodeDefIndex > 0) { // We didn't find it in the same NodeDefinition. We try in the parent NodeDefinition
-      let lastListIndex = this.nodeDefinitions[node.nodeDefIndex - 1].lists.length - 1;
-      for (const _node of this.nodeDefinitions[node.nodeDefIndex - 1].lists[lastListIndex].nodes) {
-        if (_node.isSelected)
-          return _node;
+    }
+
+    // We didn't find it in the same NodeDefinition. We try in the parent NodeDefinition
+    for (let i = node.nodeDefIndex - 1; i >= 0; i--) {
+      const nodeDef = this.nodeDefinitions[i];
+      for (let j = nodeDef.lists.length - 1; j >= 0; j--) {
+        const list = this.nodeDefinitions[i].lists[j];
+        for (const _node of list.nodes) {
+          if (_node.isSelected)
+            return _node;
+        }
       }
     }
 
@@ -110,7 +133,7 @@ export class NodeHandlerProvider {
    * Return the NodeDefinition id based on the given index
    * @param index 
    */
-  getNodeDefinitionId(index: number): string {
+  public getNodeDefinitionId(index: number): string {
     return this.nodeDefinitions[index].id;
   }
 
@@ -147,7 +170,7 @@ export class NodeHandlerProvider {
     }
   }
 
-  handleNodeAddButtons(node: Node, selected: boolean) {
+  /*handleNodeAddButtons(node: Node, selected: boolean) {
     // Handle the add node button appearance on next lists
     if (this.nodeDefinitions[node.nodeDefIndex].lists[node.listIndex + 1]) {
       this.nodeDefinitions[node.nodeDefIndex].lists[node.listIndex].showAddNode = selected;
@@ -155,7 +178,7 @@ export class NodeHandlerProvider {
     if (this.nodeDefinitions[node.nodeDefIndex + 1]) {
       this.nodeDefinitions[node.nodeDefIndex + 1].lists[0].showAddNode = selected;
     }
-  }
+  }*/
 
   ////////////////////////////////////////////////////////////////
   // State functions
@@ -182,7 +205,7 @@ export class NodeHandlerProvider {
    */
   private resetHiddenState = (discoveredNodes: Node[], node: Node) => {
     node.isHidden = false;
-    this.handleNodeAddButtons(node, false);
+    //this.handleNodeAddButtons(node, false);
   }
 
   /**
@@ -194,7 +217,7 @@ export class NodeHandlerProvider {
     if (!node.isHidden) {
       if (this.isSingleSiblingsDisplayed(node)) {
         node.isSelected = true;
-        this.handleNodeAddButtons(node, true);
+        //this.handleNodeAddButtons(node, true);
       }
     }
   }
