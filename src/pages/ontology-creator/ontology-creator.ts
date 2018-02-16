@@ -58,6 +58,9 @@ export class OntologyCreatorPage implements OnInit {
     this.nodeDataPvd.loadNodeDefinitions();
     this.nodeDataPvd.nodeDefinitions$.subscribe(nodeDefinitions => {
       this.nodeDefinitions = nodeDefinitions;
+
+      this.nodeHandlerPvd.setNodeDefinitions(this.nodeDefinitions);
+
     });
 
   }
@@ -98,20 +101,24 @@ export class OntologyCreatorPage implements OnInit {
    */
   protected selectNode(node: Node, treeIndex: number): void {
 
-    this.nodeHandlerPvd.setNodeDefinitions(this.nodeDefinitions);
-
     if (node.isSelected) {
 
       node.isSelected = false;
       this.nodeHandlerPvd.unselectNode(node, treeIndex);
+      let targetedNode = this.nodeHandlerPvd.getSelectedParentNode(node);
+      if (targetedNode != null) {
+        this.selectedNode = targetedNode;
+      } else {
+        this.selectedNode = undefined;
+      }
 
     } else {
 
       node.isSelected = true;
       this.nodeHandlerPvd.selectNode(node, treeIndex);
-    }
+      this.selectedNode = node;
 
-    this.selectedNode = node;
+    }
 
   }
 
@@ -120,7 +127,7 @@ export class OntologyCreatorPage implements OnInit {
    * @param nodeDefinitionIndex 
    * @param listIndex 
    */
-  protected addNode(nodeDefIndex: number, listIndex: number): void {
+  protected addNode(nodeDefIndex: number, listIndex: number, isNodeGroupDefinition: boolean): void {
     // Present an alert to the user to get the name of the node to create
     let alert = this.alertCtrl.create({
       title: 'Add node',
@@ -143,9 +150,10 @@ export class OntologyCreatorPage implements OnInit {
             this.loading.present();
 
             // Create the node in the database and update related node
-            this.nodeDataPvd.createNode(data.name, nodeDefIndex, listIndex).then(() => {
+            this.nodeDataPvd.createNode(data.name, nodeDefIndex, listIndex, isNodeGroupDefinition).then(() => {
               this.loading.dismiss();
               this.loading = null;
+              this.nodeHandlerPvd.unselectAllNodes();
             });
           }
         }
