@@ -15,6 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { NodeEditor } from './node-editor/node-editor';
 import { AddonsManager } from './addons-manager/addons-manager';
 import { AddonsEditor } from './addons-editor/addons-editor';
+import { NodeGroupEditor } from './node-group-editor/node-group-editor';
 
 // Directives
 import { DirectivesModule } from '../directives/directives.module';
@@ -27,7 +28,8 @@ import { NodeSelectorList } from './node-selector-list/node-selector-list';
 		AddonsManager,
 		AddonsEditor,
 		RelationManager,
-		NodeSelectorList
+		NodeSelectorList,
+		NodeGroupEditor
 	],
 	imports: [
 		IonicModule,
@@ -49,7 +51,8 @@ import { NodeSelectorList } from './node-selector-list/node-selector-list';
 		AddonsManager,
 		AddonsEditor,
 		RelationManager,
-		NodeSelectorList
+		NodeSelectorList,
+		NodeGroupEditor
 	]
 })
 export class ComponentsModule { }

@@ -1,0 +1,36 @@
+<ion-grid>
+  <ion-row>
+    <ion-col>
+      <ion-list>
+        <ion-item-divider class="list-divider-title">Position</ion-item-divider>
+        <ion-item *ngFor="let node of positionNodes" (click)="selectNode(node, 'position')" [ngClass]="{'node-item': true, 'node-item-selected': node.id === selectedPosition?.id }">
+          <p>{{node.name}}</p>
+        </ion-item>
+      </ion-list>
+    </ion-col>
+    <ion-col>
+      <ion-list>
+        <ion-item-divider class="list-divider-title">Resource</ion-item-divider>
+        <ion-item *ngFor="let node of resourceNodes" (click)="selectNode(node, 'resource')" [ngClass]="{'node-item': true, 'node-item-selected': node.id === selectedResource?.id }">
+          <p>{{node.name}}</p>
+        </ion-item>
+      </ion-list>
+    </ion-col>
+    <ion-col>
+      <ion-list>
+        <ion-item-divider class="list-divider-title">Type</ion-item-divider>
+        <ion-item *ngFor="let node of typeNodes" (click)="selectNode(node, 'type')" [ngClass]="{'node-item': true, 'node-item-selected': node.id === selectedType?.id }">
+          <p>{{node.name}}</p>
+        </ion-item>
+      </ion-list>
+    </ion-col>
+    <ion-col>
+      <ion-list>
+        <ion-item-divider class="list-divider-title">Dimension</ion-item-divider>
+        <ion-item *ngFor="let node of dimensionNodes" (click)="selectNode(node, 'dimension')" [ngClass]="{'node-item': true, 'node-item-selected': node.id === selectedDimension?.id }">
+          <p>{{node.name}}</p>
+        </ion-item>
+      </ion-list>
+    </ion-col>
+  </ion-row>
+</ion-grid>
