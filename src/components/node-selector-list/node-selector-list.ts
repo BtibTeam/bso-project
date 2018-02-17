@@ -20,6 +20,7 @@ export class NodeSelectorList implements OnInit {
 
   // Input values
   private isIn: NodeSnapshot[] = [];
+  private treeIndex: number = -1;
   private nodeDefIndex: number = -1;
   private listIndex: number = -1;
 
@@ -35,6 +36,7 @@ export class NodeSelectorList implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.isIn = data.isIn;
+    this.treeIndex = data.treeIndex;
     this.nodeDefIndex = data.nodeDefIndex;
     this.listIndex = data.listIndex;
   }
@@ -53,13 +55,17 @@ export class NodeSelectorList implements OnInit {
 
       for (let nodeDef of nodeDefinitions) {
 
+        if (nodeDef.treeIndex != this.treeIndex) {
+          continue;
+        }
+
         nodeDef.lists.forEach(list => {
 
           nodes = nodes.concat(list.nodes);
 
           // Remove nodes that would be a list at the same level or below
           nodes = nodes.filter(node => {
-            return node.nodeDefIndex < this.nodeDefIndex || node.nodeDefIndex == this.nodeDefIndex && node.listIndex < this.listIndex
+            return node.nodeDefIndex < this.nodeDefIndex || node.nodeDefIndex == this.nodeDefIndex && node.listIndex < this.listIndex;
           });
 
           // Remove nodes already related to the current node

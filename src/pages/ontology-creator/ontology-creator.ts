@@ -150,7 +150,7 @@ export class OntologyCreatorPage implements OnInit {
             this.loading.present();
 
             // Create the node in the database and update related node
-            this.nodeDataPvd.createNode(data.name, nodeDefIndex, listIndex, isNodeGroupDefinition).then(() => {
+            this.nodeDataPvd.createNode(data.name, this.topNodeDefTreeIndex, nodeDefIndex, listIndex, isNodeGroupDefinition).then(() => {
               this.loading.dismiss();
               this.loading = null;
               this.nodeHandlerPvd.unselectAllNodes();

@@ -18,8 +18,9 @@ export class RelationManager {
 
   // Input values
   @Input('isIn') private isIn: NodeSnapshot[] = [];
-  @Input('nodeDefIndex') private nodeDefIndex: number = 0;
-  @Input('listIndex') private listIndex: number = 0;
+  @Input('treeIndex') private treeIndex: number = -1;
+  @Input('nodeDefIndex') private nodeDefIndex: number = -1;
+  @Input('listIndex') private listIndex: number = -1;
 
   private removable: boolean = true; // Whether chips can be removed
 
@@ -39,12 +40,16 @@ export class RelationManager {
         this.isIn = changes.isIn.currentValue;
       }
     } else if (changes.nodeDefIndex) {
-      if (changes.isIn.nodeDefIndex) {
+      if (changes.nodeDefIndex.currentValue) {
         this.nodeDefIndex = changes.nodeDefIndex.currentValue;
       }
     } else if (changes.listIndex) {
-      if (changes.isIn.listIndex) {
+      if (changes.listIndex.currentValue) {
         this.listIndex = changes.listIndex.currentValue;
+      }
+    } else if (changes.treeIndex) {
+      if (changes.treeIndex.currentValue) {
+        this.treeIndex = changes.treeIndex.currentValue;
       }
     }
   }
@@ -75,6 +80,7 @@ export class RelationManager {
       width: '800px',
       data: {
         isIn: this.isIn,
+        treeIndex: this.treeIndex,
         nodeDefIndex: this.nodeDefIndex,
         listIndex: this.listIndex
       }
