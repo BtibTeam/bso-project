@@ -153,6 +153,7 @@ export class OntologyCreatorPage implements OnInit {
             this.nodeDataPvd.createNode(data.name, this.topNodeDefTreeIndex, nodeDefIndex, listIndex, isNodeGroupDefinition).then(() => {
               this.loading.dismiss();
               this.loading = null;
+              this.selectedNode = undefined;
               this.nodeHandlerPvd.unselectAllNodes();
             });
           }
@@ -169,6 +170,8 @@ export class OntologyCreatorPage implements OnInit {
    */
   protected updateNode(map: Map<string, Node>): void {
     this.nodeDataPvd.synchronizeNode(map);
+    this.selectedNode = undefined;
+    this.nodeHandlerPvd.unselectAllNodes();
   }
 
   /**
@@ -178,6 +181,8 @@ export class OntologyCreatorPage implements OnInit {
    */
   protected deleteNode(node): void {
     this.nodeDataPvd.deleteNode(node);
+    this.selectedNode = undefined;
+    this.nodeHandlerPvd.unselectAllNodes();
   }
 
   /**
