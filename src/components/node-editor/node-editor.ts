@@ -6,9 +6,10 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { AlertController } from 'ionic-angular';
 
 // Models
-import { Node } from '../../model/node-model';
+import { Node, NodeSnapshot } from '../../model/node-model';
 import { Tag } from '../../model/tag-model';
 import { Relation } from '../../model/relation-model';
+import { NodeGroup } from '../../model/node-group-model';
 
 @Component({
   selector: 'node-editor',
@@ -69,7 +70,7 @@ export class NodeEditor implements OnChanges {
   /**
    * Delete the node from the database
    */
-  public deleteNode(): void {
+  protected deleteNode(): void {
     const confirm = this.alertCtrl.create({
       title: 'Are you sure to delete the node?',
       message: 'The node will be definitely deleted and all its properties',
@@ -95,7 +96,7 @@ export class NodeEditor implements OnChanges {
   /**
    * Save the node in the database
    */
-  public saveNode(): void {
+  protected saveNode(): void {
     if (!this.editForm.valid) {
       console.error(this.editForm.value);
     } else {
@@ -112,7 +113,7 @@ export class NodeEditor implements OnChanges {
    * Update tags when they have changed
    * @param tags 
    */
-  public updateTags(tags: Tag[]): void {
+  protected updateTags(tags: Tag[]): void {
     this.node.tags = tags;
   }
 
@@ -120,8 +121,16 @@ export class NodeEditor implements OnChanges {
  * Update relations when they have changed
  * @param tags 
  */
-  public updateRelations(relations: Relation[]): void {
+  protected updateRelations(relations: Relation[]): void {
     this.node.relations = relations;
+  }
+
+  /**
+   * Update has relations when the node is NodeGroup
+   * @param has
+   */
+  protected updateGroups(has: NodeSnapshot[]): void {
+    (this.node as NodeGroup).has = has;
   }
 
 }

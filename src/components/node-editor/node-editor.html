@@ -41,6 +41,10 @@
           <addons-manager [addons]="node.relations" type="relations" (onChange)="updateRelations($event)">
           </addons-manager>
         </div>
+        <div *ngSwitchCase="'groups'">
+          <node-group-editor [has]="node.has" (onChange)="updateGroups($event)">
+          </node-group-editor>
+        </div>
       </div>
       <ion-row justify-content-end class="saving-row">
         <button ion-button clear>
