@@ -11,11 +11,12 @@ import { Relation } from "./relation-model";
 export class Node {
 
     // General
-    public name: string;    
+    public name: string;
     public id: string;
     public description: string;
-    public nodeDefIndex: number;
-    public listIndex: number;
+    public treeIndex: number; // Indicates in which tree the node belongs to
+    public nodeDefIndex: number; // Indicates in which NodeDefinition is the node inside a tree
+    public listIndex: number; // Indicates in which sublist is the node inside a NodeDefinition
 
     // Node relations
     public isIn: NodeSnapshot[] = [];
@@ -64,6 +65,7 @@ export class NodeSnapshot {
     // General
     public name: string;
     public id: string;
+    public treeIndex: number;
     public nodeDefIndex: number;
     public listIndex: number;
 
@@ -79,6 +81,7 @@ export class NodeSnapshot {
     public static generateSnapshot(node: Node): NodeSnapshot {
         let snapshot = new NodeSnapshot();
         snapshot.id = node.id;
+        snapshot.treeIndex = node.treeIndex;
         snapshot.listIndex = node.listIndex;
         snapshot.name = node.name;
         snapshot.nodeDefIndex = node.nodeDefIndex;

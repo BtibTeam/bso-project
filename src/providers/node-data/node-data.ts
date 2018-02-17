@@ -133,6 +133,7 @@ export class NodeDataProvider {
 
     // Update the node
     node.name = name;
+    node.treeIndex = treeIndex;
     node.nodeDefIndex = nodeDefIndex;
     node.listIndex = listIndex;
 
