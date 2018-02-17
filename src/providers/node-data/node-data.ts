@@ -120,12 +120,13 @@ export class NodeDataProvider {
    * @param listIndex
    * @return a void promise
    */
-  public createNode(name: string, nodeDefIndex: number, listIndex: number, isNodeGroupDefinition: boolean): Promise<void> {
+  public createNode(name: string, treeIndex: number, nodeDefIndex: number, listIndex: number, isNodeGroupDefinition: boolean): Promise<void> {
 
     // Create a new node
     let node: Node;
     if (isNodeGroupDefinition) {
       node = new NodeGroup();
+      (node as NodeGroup).isNodeGroup = true;
     } else {
       node = new Node();
     }
