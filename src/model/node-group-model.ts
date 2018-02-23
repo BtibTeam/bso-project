@@ -12,6 +12,5 @@ export class NodeGroup extends Node {
 
     // NodeGroup relations
     public has: NodeSnapshot[] = [];
-    public belongsTo: NodeSnapshot[];
 
 }
