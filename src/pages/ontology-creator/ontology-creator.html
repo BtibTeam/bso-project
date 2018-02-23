@@ -9,7 +9,7 @@
 
 <ion-content padding>
 
-  <ion-grid>
+  <ion-grid fixed>
     <ion-row>
       <ion-col>
         <ion-select [(ngModel)]="topNodeDef" (ionChange)="topNodeDefChange($event)" interface="popover" class="topNodeDef-select">
@@ -40,7 +40,7 @@
                 <span *ngFor="let node of list.nodes">
                   <ion-item *ngIf="!(node.isFilteredOut || node.isHidden)" (click)="selectNode(node, nodeDef.treeIndex)" [ngClass]="{'node-item': true, 'node-item-selected': node.isSelected}">{{node.name}}</ion-item>
                 </span>
-                <button *ngIf="list.showAddNode" ion-button color="light" class="add-node-button" (click)="addNode(nodeDefIndex, listIndex)">
+                <button ion-button color="light" class="add-node-button" (click)="addNode(nodeDefIndex, listIndex, nodeDef.isNodeGroupDefinition)">
                   <ion-icon name="add"></ion-icon>
                 </button>
               </ion-list>
@@ -49,7 +49,7 @@
         </ion-col>
       </span>
     </ion-row>
-    <ion-row class="node-editor-container">
+    <ion-row *ngIf="selectedNode" class="node-editor-container">
       <node-editor class="node-editor" [node]="selectedNode" (onDelete)="deleteNode($event)" (onSave)="updateNode($event)" (onCancel)="cancelEditNode($event)"></node-editor>
     </ion-row>
   </ion-grid>

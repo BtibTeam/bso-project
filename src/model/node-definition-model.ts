@@ -20,7 +20,7 @@ export class NodeDefinitionList {
     public nodes: Node[] = [];
 
     // UI Specific
-    public showAddNode: boolean = false; // Define the visibility of a AddNode button
+    //public showAddNode: boolean = false; // Define the visibility of a AddNode button
 }
 
 /**

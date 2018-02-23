@@ -13,7 +13,7 @@
           <ion-label floating color="light" class="header-label">Node description</ion-label>
           <ion-textarea textarea-autogrow formControlName="description" color="light"></ion-textarea>
         </ion-item>
-        <relation-manager [isIn]="node.isIn" [nodeDefIndex]="node.nodeDefIndex" [listIndex]="node.listIndex"></relation-manager>
+        <relation-manager [isIn]="node.isIn" [treeIndex]="node.treeIndex" [nodeDefIndex]="node.nodeDefIndex" [listIndex]="node.listIndex"></relation-manager>
         <ion-segment [(ngModel)]="segment" [ngModelOptions]="{standalone:true}" color="light" class="header-segment">
           <ion-segment-button value="tags">
             Tags
@@ -21,7 +21,7 @@
           <ion-segment-button value="relations">
             Relations
           </ion-segment-button>
-          <ion-segment-button value="groups">
+          <ion-segment-button value="groups" *ngIf="node.isNodeGroup">
             Groups
           </ion-segment-button>
           <ion-segment-button value="functions">
@@ -40,6 +40,10 @@
         <div *ngSwitchCase="'relations'">
           <addons-manager [addons]="node.relations" type="relations" (onChange)="updateRelations($event)">
           </addons-manager>
+        </div>
+        <div *ngSwitchCase="'groups'">
+          <node-group-editor [has]="node.has" (onChange)="updateGroups($event)">
+          </node-group-editor>
         </div>
       </div>
       <ion-row justify-content-end class="saving-row">
