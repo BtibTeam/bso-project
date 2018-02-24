@@ -2,6 +2,9 @@
 
   <ion-navbar color="headerBG" class="ontology-navbar">
     <ion-title class="title">Haystack Semantic Ontology Project</ion-title>
+    <ion-buttons end>
+      <ion-label color="light" class="update-text">Last update 01/01/2019</ion-label>
+    </ion-buttons>
   </ion-navbar>
 
 </ion-header>
@@ -15,9 +18,6 @@
         <ion-select [(ngModel)]="topNodeDef" (ionChange)="topNodeDefChange($event)" interface="popover" class="topNodeDef-select">
           <ion-option *ngFor="let topNodeDefElt of topNodeDefList" [value]="topNodeDefElt">{{topNodeDefElt | friendlyCase}}</ion-option>
         </ion-select>
-      </ion-col>
-      <ion-col>
-        <p class="update-text">Last update 01/01/2019</p>
       </ion-col>
     </ion-row>
     <ion-row>
@@ -53,5 +53,11 @@
       <node-editor class="node-editor" [node]="selectedNode" (onDelete)="deleteNode($event)" (onSave)="updateNode($event)" (onCancel)="cancelEditNode($event)"></node-editor>
     </ion-row>
   </ion-grid>
+
+  <div class="footer-container">
+    <p ion-text color="softDark">
+      Copyright 2018 B.TIB - MIT License
+    </p>
+  </div>
 
 </ion-content>
