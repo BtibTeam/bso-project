@@ -78,6 +78,10 @@
           <node-group-editor [has]="node.has" (onChange)="updateGroups($event)">
           </node-group-editor>
         </div>
+        <div *ngSwitchCase="'translations'">
+          <translation-manager [translations]="node.translations" [originalName]="node.name" (onChange)="updateTranslations($event)">
+          </translation-manager>
+        </div>
       </div>
 
       <!-- Savings -->

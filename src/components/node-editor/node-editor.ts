@@ -6,7 +6,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { AlertController } from 'ionic-angular';
 
 // Models
-import { Node, NodeSnapshot } from '../../model/node-model';
+import { Node, NodeSnapshot, NodeTranslation } from '../../model/node-model';
 import { Tag } from '../../model/tag-model';
 import { Relation } from '../../model/relation-model';
 import { NodeGroup } from '../../model/node-group-model';
@@ -131,6 +131,14 @@ export class NodeEditor implements OnChanges {
    */
   protected updateGroups(has: NodeSnapshot[]): void {
     (this.node as NodeGroup).has = has;
+  }
+
+  /**
+   * Update translations when they have changed
+   * @param translations
+   */
+  protected updateTranslations(translations: NodeTranslation[]): void {
+    this.node.translations = translations;
   }
 
 }
