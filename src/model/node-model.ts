@@ -26,6 +26,9 @@ export class Node {
     public mayBe: NodeSnapshot[] = [];
     public contains: NodeSnapshot[] = [];
 
+    // Translations
+    public translations: NodeTranslation[] = [];
+
     // UI specific
     public isHidden: boolean = false;
     public isFilteredOut: boolean = false;
@@ -91,4 +94,16 @@ export class NodeSnapshot {
         snapshot.nodeDefIndex = node.nodeDefIndex;
         return snapshot;
     }
+}
+
+/**
+ * Support class for representing a pointer to a node
+ */
+export class NodeTranslation {
+
+    // General
+    public language: string;
+    public name: string;
+    public description: string;
+
 }
