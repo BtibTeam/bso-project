@@ -7,12 +7,39 @@ import { NodeSnapshot, Node } from "./node-model";
 export class NodeDefinition {
 
     // General
-    public id: string = '';
     public name: string = '';
+    public id: string = '';
     public treeIndex: number = -1; // Common id to a single tree
 
     public lists: NodeDefinitionList[] = [];
 
+}
+
+/**
+ * Support class for representing a pointer to a node
+ */
+export class NodeDefinitionSnapshot {
+
+    // General
+    public name: string;
+    public id: string;
+    public treeIndex: number;
+
+    ////////////////////////////////////////////////////////////////
+    // Static methods
+    ////////////////////////////////////////////////////////////////
+
+    /**
+     * Generate a nodeSnapshot based on the given nodeDefinition
+     * @param nodeDefinition
+     */
+    public static generateSnapshot(node: NodeDefinition): NodeDefinitionSnapshot {
+        let snapshot = new NodeDefinitionSnapshot();
+        snapshot.name = node.name;
+        snapshot.id = node.id;
+        snapshot.treeIndex = node.treeIndex;
+        return snapshot;
+    }
 }
 
 export class NodeDefinitionList {
