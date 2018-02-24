@@ -13,9 +13,6 @@ node-editor {
           right: 0px;
           font-size: 1.6em;
         }
-        .header-label {
-          color: white;
-        }
         .header-segment {
           margin: 16px 0px 0px 16px;
           padding-right: 16px;
@@ -26,6 +23,15 @@ node-editor {
       }
       .content-segment {
         margin: 16px;
+        .relation-label {
+          padding-left: 16px;
+        }
+        relation-manager .demo-chip-list {
+          padding: 0px 16px 0px 16px;
+          .mat-form-field-infix {
+            border-top: 0px;
+          }
+        }
       }
       .saving-row {
         margin: 16px;

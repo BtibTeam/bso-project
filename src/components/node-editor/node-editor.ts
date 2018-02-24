@@ -28,7 +28,7 @@ export class NodeEditor implements OnChanges {
   private node: Node = new Node(); // The copy of the node to work on
 
   private editForm: any;
-  private segment: string = 'tags';
+  private segment: string = 'nodeRelations';
 
   constructor(
     public formBuilder: FormBuilder,
