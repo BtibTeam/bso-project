@@ -1,0 +1,26 @@
+<div>
+  <h3 ion-text color="softDark" class="title">
+    Edit translation of {{originalName}}
+  </h3>
+
+  <form [formGroup]="editForm">
+    <ion-list>
+      <ion-item>
+        <ion-label floating color="softDark" class="header-label">Language</ion-label>
+        <ion-input formControlName="language" color="softDark"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label floating color="softDark" class="header-label">Name</ion-label>
+        <ion-input formControlName="name" color="softDark"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label floating color="softDark" class="header-label">Description</ion-label>
+        <ion-input formControlName="description" color="softDark"></ion-input>
+      </ion-item>
+    </ion-list>
+    <button ion-button [disabled]="!editForm.valid" class="save-button" (click)="saveTranslation()">
+      Save
+    </button>
+  </form>
+
+</div>
