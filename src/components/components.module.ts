@@ -16,11 +16,13 @@ import { NodeEditor } from './node-editor/node-editor';
 import { AddonsManager } from './addons-manager/addons-manager';
 import { AddonsEditor } from './addons-editor/addons-editor';
 import { NodeGroupEditor } from './node-group-editor/node-group-editor';
+import { RelationManager } from './relation-manager/relation-manager';
+import { NodeSelectorList } from './node-selector-list/node-selector-list';
+import { TranslationManager } from './translation-manager/translation-manager';
+import { TranslationEditor } from './translation-editor/translation-editor';
 
 // Directives
 import { DirectivesModule } from '../directives/directives.module';
-import { RelationManager } from './relation-manager/relation-manager';
-import { NodeSelectorList } from './node-selector-list/node-selector-list';
 
 @NgModule({
 	declarations: [
@@ -29,7 +31,9 @@ import { NodeSelectorList } from './node-selector-list/node-selector-list';
 		AddonsEditor,
 		RelationManager,
 		NodeSelectorList,
-		NodeGroupEditor
+		NodeGroupEditor,
+		TranslationManager,
+		TranslationEditor
 	],
 	imports: [
 		IonicModule,
@@ -44,7 +48,8 @@ import { NodeSelectorList } from './node-selector-list/node-selector-list';
 	],
 	entryComponents: [
 		AddonsEditor,
-		NodeSelectorList
+		NodeSelectorList,
+		TranslationEditor
 	],
 	exports: [
 		NodeEditor,
@@ -52,7 +57,9 @@ import { NodeSelectorList } from './node-selector-list/node-selector-list';
 		AddonsEditor,
 		RelationManager,
 		NodeSelectorList,
-		NodeGroupEditor
+		NodeGroupEditor,
+		TranslationManager,
+		TranslationEditor
 	]
 })
 export class ComponentsModule { }
