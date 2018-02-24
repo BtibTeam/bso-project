@@ -26,3 +26,14 @@
   overflow-y: auto!important;
 }
 
+.cdk-overlay-pane {
+  height: 82%;
+  .mat-dialog-container {
+    padding: 0px;
+  }
+}
+
+.mat-chip {
+  cursor: pointer!important;
+}
+
