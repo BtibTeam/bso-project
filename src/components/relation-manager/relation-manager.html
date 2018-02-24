@@ -1,6 +1,10 @@
 <mat-form-field class="demo-chip-list">
   <mat-chip-list class="relation-mat-chip-list">
-    <mat-chip *ngFor="let nodeSnapshot of isIn" [removable]="removable" (remove)="removeRelation(nodeSnapshot)">
+    <mat-chip *ngFor="let nodeDefSnapshot of nodeDefs" [removable]="removable" class="nodeDef-chip" (remove)="removeNodeDefRelation(nodeDefSnapshot)">
+      {{nodeDefSnapshot.name}}
+      <ion-icon matChipRemove name="close" color="softDark"></ion-icon>
+    </mat-chip>
+    <mat-chip *ngFor="let nodeSnapshot of nodes" [removable]="removable" (remove)="removeNodeRelation(nodeSnapshot)">
       {{nodeSnapshot.name}}
       <ion-icon matChipRemove name="close" color="softDark"></ion-icon>
     </mat-chip>
