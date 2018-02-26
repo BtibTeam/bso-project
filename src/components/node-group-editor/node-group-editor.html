@@ -32,5 +32,13 @@
         </ion-item>
       </ion-list>
     </ion-col>
+    <ion-col>
+      <ion-list>
+        <ion-item-divider class="list-divider-title">Caracteristic</ion-item-divider>
+        <ion-item *ngFor="let node of caracteristicNodes" (click)="selectNode(node, 'caracteristic')" [ngClass]="{'node-item': true, 'node-item-selected': node.id === selectedCaracteristic?.id }">
+          <p>{{node.name}}</p>
+        </ion-item>
+      </ion-list>
+    </ion-col>
   </ion-row>
 </ion-grid>
