@@ -192,7 +192,7 @@ export class NodeHandlerProvider {
   private applyHiddenStateToDiscoveredNodes = (discoveredNodes: any, node: any) => {
     if (discoveredNodes.length > 0) {
       // Check if it is not one of the discovered nodes
-      if (discoveredNodes.indexOf(node) == -1) {
+      if (discoveredNodes.indexOf(node) === -1) {
         node.isHidden = true;
       }
     }
