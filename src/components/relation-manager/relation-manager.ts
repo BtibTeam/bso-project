@@ -73,7 +73,7 @@ export class RelationManager {
       width: '800px',
       data: {
         nodes: this.nodes,
-        sameTreeIndex: this.showOnlySameTree,
+        showOnlySameTree: this.showOnlySameTree,
         showNodeDef: this.showNodeDef,
         onlyAscendantNodes: this.onlyAscendantNodes,
         treeIndex: this.treeIndex,
