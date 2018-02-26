@@ -60,7 +60,7 @@ export class NodeDataProvider {
             ndf = plainToClass(NodeDefinition, nodeDef as Object);
           }
 
-          if (ndf.lists.length == 0) {
+          if (ndf.lists.length === 0) {
             let list = new NodeDefinitionList();
             /*for (let id in TopNodeDefinitionEnum) {
               if (ndf.id === id) {

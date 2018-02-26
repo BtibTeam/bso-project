@@ -19,15 +19,22 @@ import { NodeDataProvider } from '../../providers/node-data/node-data';
 export class NodeSelectorList implements OnInit {
 
   // Input values
-  private isIn: NodeSnapshot[] = [];
+  private showOnlySameTree: boolean = false;
+  private showNodeDef: boolean = false;
+  private onlyAscendantNodes: boolean = false;
+  private nodes: NodeSnapshot[] = [];
   private treeIndex: number = -1;
   private nodeDefIndex: number = -1;
   private listIndex: number = -1;
 
+  private segment: string = 'nodes';
+
   // Angular Table
   private text: string;
-  public displayedColumns = ['name', 'description', 'actions'];
-  public dataSource = new MatTableDataSource();
+  public nodeDisplayedColumns = ['name', 'description', 'actions'];
+  public nodeDefinitionDisplayedColumns = ['name', 'actions'];
+  public nodeDataSource = new MatTableDataSource();
+  public nodeDefinitionDataSource = new MatTableDataSource();
 
   constructor(
     private nodePvd: NodeHandlerProvider,
@@ -35,7 +42,10 @@ export class NodeSelectorList implements OnInit {
     public dialogRef: MatDialogRef<NodeSelectorList>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    this.isIn = data.isIn;
+    this.showOnlySameTree = data.showOnlySameTree;
+    this.showNodeDef = data.showNodeDef;
+    this.onlyAscendantNodes = data.onlyAscendantNodes;
+    this.nodes = data.nodes;
     this.treeIndex = data.treeIndex;
     this.nodeDefIndex = data.nodeDefIndex;
     this.listIndex = data.listIndex;
@@ -52,36 +62,40 @@ export class NodeSelectorList implements OnInit {
     this.nodeDataPvd.nodeDefinitions$.subscribe(nodeDefinitions => {
 
       let nodes: Node[] = [];
+      let nodeDefs: NodeDefinition[] = [];
 
       for (let nodeDef of nodeDefinitions) {
 
         if (nodeDef.treeIndex != this.treeIndex) {
-          continue;
+          if (this.showOnlySameTree === false) {
+            continue;
+          }
         }
+
+        nodeDefs.push(nodeDef);
 
         nodeDef.lists.forEach(list => {
 
           nodes = nodes.concat(list.nodes);
 
-          // Remove nodes that would be a list at the same level or below
-          nodes = nodes.filter(node => {
-            return node.nodeDefIndex < this.nodeDefIndex || node.nodeDefIndex == this.nodeDefIndex && node.listIndex < this.listIndex;
-          });
+          // Remove unwanted nodes only if we want to display the ones of the tree index
+          if (this.onlyAscendantNodes === true) {
 
-          // Remove nodes already related to the current node
-          nodes = nodes.filter(node => {
-            if (this.isIn.findIndex(nodeSnap => {
-              return node.id === nodeSnap.id
-            }) == -1) {
-              return true;
-            } else {
-              return false;
-            }
-          })
+            // Remove nodes that would be a list at the same level or below
+            nodes = nodes.filter(node => {
+              return node.nodeDefIndex < this.nodeDefIndex || node.nodeDefIndex === this.nodeDefIndex && node.listIndex < this.listIndex;
+            });
 
-          this.dataSource = new MatTableDataSource(nodes);
+            // Remove nodes already related to the current node
+            nodes = nodes.filter(node => {
+              return !!this.nodes.findIndex(nodeSnap => (node.id === nodeSnap.id))
+            });
+          }
 
         });
+
+        this.nodeDataSource = new MatTableDataSource(nodes);
+        this.nodeDefinitionDataSource = new MatTableDataSource(nodeDefs);
       }
 
     });
@@ -98,13 +112,26 @@ export class NodeSelectorList implements OnInit {
 
   /**
    * The user selected a node
-   * Close the the popup
+   * Close the popup
    * @param node 
    */
   public selectNode(node: Node): void {
 
     this.dialogRef.close({
       node: node
+    });
+
+  }
+
+  /**
+   * The user selected a nodeDefinition
+   * Close the popup
+   * @param nodeDef
+   */
+  public selectNodeDef(nodeDef: Node): void {
+
+    this.dialogRef.close({
+      nodeDef: nodeDef
     });
 
   }
@@ -120,7 +147,7 @@ export class NodeSelectorList implements OnInit {
   public applyFilter(filterValue: string): void {
     filterValue = filterValue.trim(); // Remove whitespace
     filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
-    this.dataSource.filter = filterValue;
+    this.nodeDataSource.filter = filterValue;
   }
 
 }

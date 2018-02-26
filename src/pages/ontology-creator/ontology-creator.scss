@@ -1,10 +1,17 @@
 page-ontology-creator {
+  min-height: 100%;
   .ontology-navbar {
     min-height: 42px;
+    .update-text {
+      position: relative;
+      float: right;
+      font-size: 0.9em;
+      margin: 8px 8px 8px 0px;
+    }
   }
   .scroll-content {
     overflow: auto;
-    margin-top: 42px;
+    margin-top: 32px!important;
     background-color: #eceff1;
   }
   .fixed-content {
@@ -24,72 +31,72 @@ page-ontology-creator {
   .topNodeDef-select {
     padding: 8px 8px 8px 8px;
     max-width: 100px;
+    cursor: pointer;
   }
-  .update-text {
-    float: right;
-    font-size: 0.9em;
-  }
-  .nodeDef-container {
-    flex-grow: 0;
-    .col {
-      padding: 0;
-      .test-span {
-        flex-grow: 1;
-      }
-      .nodeDef-header {
-        background-color: map-get($colors, headerBG);
-        border-right: 1px solid white;
-        .nodeDef-header-container {
-          display: flex;
-          flex-direction: row;
-          justify-content: space-between;
-          align-items: center;
-          .nodeDef-title {
-            padding-left: 8px;
-            font-size: 1em;
-            text-transform: uppercase;
-            font-weight: 400;
-          }
-          .add-list-button {
-            width: 10px;
-            height: 22px;
-            font-size: 0.7em;
-            border-radius: 50%;
-            margin-right: 16px;
-            background-color: transparent;
-            box-shadow: none;
-            -webkit-box-shadow: none;
-            ion-icon {
-              font-size: 2.2em;
+  .grid {
+    padding: 0;
+    .nodeDef-container {
+      flex-grow: 0;
+      .col {
+        padding: 0;
+        .test-span {
+          flex-grow: 1;
+        }
+        .nodeDef-header {
+          background-color: map-get($colors, headerBG);
+          border-right: 1px solid white;
+          .nodeDef-header-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            .nodeDef-title {
+              padding-left: 8px;
+              font-size: 1em;
+              text-transform: uppercase;
+              font-weight: 400;
+            }
+            .add-list-button {
+              width: 10px;
+              height: 22px;
+              font-size: 0.7em;
+              border-radius: 50%;
+              margin-right: 16px;
+              background-color: transparent;
+              box-shadow: none;
+              -webkit-box-shadow: none;
+              ion-icon {
+                font-size: 2.2em;
+              }
             }
           }
         }
-      }
-      .nodeList-container {
-        margin-right: 2px; //max-width: 160px;
-        .add-node-button {
-          border-radius: 50%;
-          width: 25px;
-          height: 30px;
-          margin-top: 8px;
-        }
-        .node-searchbar {
-          width: 180px;
-          padding: 0;
-          border-bottom: 3px solid #e9e9e9;
-          input {
-            font-size: 0.9em;
-            box-shadow: none;
-            -webkit-box-shadow: none;
+        .nodeList-container {
+          margin-right: 2px; //max-width: 160px;
+          .add-node-button {
+            border-radius: 50%;
+            width: 25px;
+            height: 30px;
+            margin-top: 8px;
           }
-        }
-        .node-item {
-          width: 180px;
-          padding-left: 8px;
-          font-size: 0.8em;
-        }
-        .node-item-selected {
-          background-color: #c5c5c5;
+          .node-searchbar {
+            width: 160px;
+            padding: 0;
+            border-bottom: 3px solid #e9e9e9;
+            input {
+              font-size: 0.9em;
+              box-shadow: none;
+              -webkit-box-shadow: none;
+            }
+          }
+          .node-item {
+            width: 160px;
+            padding-left: 8px;
+            font-size: 0.8em;
+          }
+          .node-item-selected {
+            background-color: #c5c5c5;
+          }
         }
       }
     }
@@ -101,5 +108,13 @@ page-ontology-creator {
       margin-left: auto;
       margin-right: auto;
     }
+  }
+  .footer-container {
+    margin-top: 200px;
+    border-top: 1px solid lightgray;
+    height: 50px;
+    text-align: center;
+    display: flex;
+    align-items: flex-end;
   }
 }

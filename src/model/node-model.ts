@@ -4,6 +4,7 @@ import { plainToClass } from "class-transformer";
 // Models
 import { Tag } from "./tag-model";
 import { Relation } from "./relation-model";
+import { NodeDefinitionSnapshot } from "./node-definition-model";
 
 /**
  * Support class for representing a node
@@ -20,6 +21,9 @@ export class Node {
 
     // Node relations
     public isIn: NodeSnapshot[] = [];
+    public isNot: NodeSnapshot[] = [];
+    public isNotDef: NodeDefinitionSnapshot[] = [];
+    public mayBe: NodeSnapshot[] = [];
     public contains: NodeSnapshot[] = [];
 
     // UI specific

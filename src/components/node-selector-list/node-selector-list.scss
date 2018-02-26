@@ -1,21 +1,28 @@
 node-selector-list {
+    font-family: "Roboto", "Helvetica Neue", sans-serif;
     .nodes-selector-container {
         display: flex;
         flex-direction: column;
-      }
-      .nodes-selector-header {
-        min-height: 64px;
-        padding: 8px 24px 0;
-      }
-      .mat-form-field {
-        font-size: 14px;
-        width: 100%;
-      }
-      .mat-table {
-        overflow: auto;
-        max-height: 500px;
-      }
-      .select-button {
-        padding: 0.8em;
-      }
+        .header {
+          padding: 24px;
+          background-color: map-get($colors, headerBG);
+        }
+        .content-segment {
+          .search-container {
+            min-height: 64px;
+            padding: 16px 24px 0px 24px;
+          }
+          .mat-form-field {
+            font-size: 14px;
+            width: 100%;
+          }
+          .mat-table {
+            overflow: auto;
+            //max-height: 70%;
+          }
+          .select-button {
+            padding: 0.8em;
+          }
+        }
+    }
 }

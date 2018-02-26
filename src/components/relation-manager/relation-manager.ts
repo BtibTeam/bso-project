@@ -9,6 +9,7 @@ import { NodeSelectorList } from '../node-selector-list/node-selector-list';
 
 // Models
 import { Node, NodeSnapshot } from '../../model/node-model';
+import { NodeDefinitionSnapshot } from '../../model/node-definition-model';
 
 @Component({
   selector: 'relation-manager',
@@ -17,7 +18,11 @@ import { Node, NodeSnapshot } from '../../model/node-model';
 export class RelationManager {
 
   // Input values
-  @Input('isIn') private isIn: NodeSnapshot[] = [];
+  @Input('nodes') private nodes: NodeSnapshot[] = [];
+  @Input('nodeDefs') private nodeDefs: NodeDefinitionSnapshot[] = [];
+  @Input('showOnlySameTree') private showOnlySameTree: boolean = false;
+  @Input('showNodeDef') private showNodeDef: boolean = false;
+  @Input('onlyAscendantNodes') private onlyAscendantNodes: boolean = false;
   @Input('treeIndex') private treeIndex: number = -1;
   @Input('nodeDefIndex') private nodeDefIndex: number = -1;
   @Input('listIndex') private listIndex: number = -1;
@@ -31,30 +36,6 @@ export class RelationManager {
   }
 
   ////////////////////////////////////////////////////////////////
-  // Life Cycles
-  ////////////////////////////////////////////////////////////////
-
-  public ngOnChanges(changes): void {
-    if (changes.isin) {
-      if (changes.isIn.currentValue) {
-        this.isIn = changes.isIn.currentValue;
-      }
-    } else if (changes.nodeDefIndex) {
-      if (changes.nodeDefIndex.currentValue) {
-        this.nodeDefIndex = changes.nodeDefIndex.currentValue;
-      }
-    } else if (changes.listIndex) {
-      if (changes.listIndex.currentValue) {
-        this.listIndex = changes.listIndex.currentValue;
-      }
-    } else if (changes.treeIndex) {
-      if (changes.treeIndex.currentValue) {
-        this.treeIndex = changes.treeIndex.currentValue;
-      }
-    }
-  }
-
-  ////////////////////////////////////////////////////////////////
   // User Interactions
   ////////////////////////////////////////////////////////////////
 
@@ -63,10 +44,22 @@ export class RelationManager {
    * Remove the isIn relation with the targeted node
    * @param nodeSnap
    */
-  protected removeRelation(nodeSnap: NodeSnapshot): void {
-    const index = this.isIn.indexOf(nodeSnap);
+  protected removeNodeRelation(nodeSnap: NodeSnapshot): void {
+    const index = this.nodes.indexOf(nodeSnap);
     if (index > -1) {
-      this.isIn.splice(index, 1);
+      this.nodes.splice(index, 1);
+    }
+  }
+
+  /**
+   * Called a chip is removed
+   * Remove the isIn relation with the targeted nodeDefinition
+   * @param nodeDefSnap
+   */
+  protected removeNodeDefRelation(nodeDefSnap: NodeDefinitionSnapshot): void {
+    const index = this.nodeDefs.indexOf(nodeDefSnap);
+    if (index > -1) {
+      this.nodeDefs.splice(index, 1);
     }
   }
 
@@ -79,7 +72,10 @@ export class RelationManager {
     let dialogRef = this.dialog.open(NodeSelectorList, {
       width: '800px',
       data: {
-        isIn: this.isIn,
+        nodes: this.nodes,
+        sameTreeIndex: this.showOnlySameTree,
+        showNodeDef: this.showNodeDef,
+        onlyAscendantNodes: this.onlyAscendantNodes,
         treeIndex: this.treeIndex,
         nodeDefIndex: this.nodeDefIndex,
         listIndex: this.listIndex
@@ -89,7 +85,11 @@ export class RelationManager {
     // Retrieve the selected addon if there is one
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.isIn.push(NodeSnapshot.generateSnapshot(result.node));
+        if (result.node) {
+          this.nodes.push(NodeSnapshot.generateSnapshot(result.node));
+        } else if (result.nodeDef) {
+          this.nodeDefs.push(NodeDefinitionSnapshot.generateSnapshot(result.nodeDef));
+        }
       }
     });
   }
