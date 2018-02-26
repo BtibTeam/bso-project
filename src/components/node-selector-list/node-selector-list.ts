@@ -83,18 +83,12 @@ export class NodeSelectorList implements OnInit {
 
             // Remove nodes that would be a list at the same level or below
             nodes = nodes.filter(node => {
-              return node.nodeDefIndex < this.nodeDefIndex || node.nodeDefIndex == this.nodeDefIndex && node.listIndex < this.listIndex;
+              return node.nodeDefIndex < this.nodeDefIndex || node.nodeDefIndex === this.nodeDefIndex && node.listIndex < this.listIndex;
             });
 
             // Remove nodes already related to the current node
             nodes = nodes.filter(node => {
-              if (this.nodes.findIndex(nodeSnap => {
-                return node.id === nodeSnap.id
-              }) == -1) {
-                return true;
-              } else {
-                return false;
-              }
+              return !!this.nodes.findIndex(nodeSnap => (node.id === nodeSnap.id))
             });
           }
 

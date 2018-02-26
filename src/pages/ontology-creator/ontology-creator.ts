@@ -85,7 +85,7 @@ export class OntologyCreatorPage implements OnInit {
     // if the value is an empty string don't filter the items
     if (val && val.trim() !== '') {
       for (let node of list.nodes) {
-        node.isFilteredOut = node.name.toLowerCase().indexOf(val.toLowerCase()) == -1;
+        node.isFilteredOut = node.name.toLowerCase().indexOf(val.toLowerCase()) === -1;
       }
     } else {
       for (let node of list.nodes) {
