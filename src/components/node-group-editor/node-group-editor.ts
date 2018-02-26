@@ -25,12 +25,14 @@ export class NodeGroupEditor implements OnInit, OnChanges {
   private resourceNodes: Node[] = [];
   private typeNodes: Node[] = [];
   private dimensionNodes: Node[] = [];
+  private caracteristicNodes: Node[] = [];
 
   // Selected nodes
   private selectedPosition: NodeSnapshot = null;
   private selectedResource: NodeSnapshot = null;
   private selectedType: NodeSnapshot = null;
   private selectedDimension: NodeSnapshot = null;
+  private selectedCaracteristic: NodeSnapshot = null;
 
   constructor(
     private nodeDataPvd: NodeDataProvider) {
@@ -63,6 +65,9 @@ export class NodeGroupEditor implements OnInit, OnChanges {
           case 'dimension':
             this.dimensionNodes = this.fillNodeArray(this.dimensionNodes, nodeDef);
             break;
+          case 'caracteristic':
+            this.caracteristicNodes = this.fillNodeArray(this.caracteristicNodes, nodeDef);
+            break;
         }
       }
     });
@@ -86,6 +91,9 @@ export class NodeGroupEditor implements OnInit, OnChanges {
               break;
             case 4: // Dimension
               this.selectedDimension = nodeSnap;
+              break;
+            case 5: // Caracteristic
+              this.selectedCaracteristic = nodeSnap;
               break;
           }
         }
@@ -131,6 +139,13 @@ export class NodeGroupEditor implements OnInit, OnChanges {
           this.selectedDimension = NodeSnapshot.generateSnapshot(node);
         }
         break;
+      case 'caracteristic':
+        if (this.selectedCaracteristic && this.selectedCaracteristic.id === node.id) {
+          this.selectedCaracteristic = null;
+        } else {
+          this.selectedCaracteristic = NodeSnapshot.generateSnapshot(node);
+        }
+        break;
     }
     this.emitNewchanges();
   }
@@ -168,6 +183,9 @@ export class NodeGroupEditor implements OnInit, OnChanges {
     }
     if (this.selectedDimension != null) {
       hasRelations.push(this.selectedDimension);
+    }
+    if (this.selectedCaracteristic != null) {
+      hasRelations.push(this.selectedCaracteristic);
     }
     this.onChange.emit(hasRelations);
   }

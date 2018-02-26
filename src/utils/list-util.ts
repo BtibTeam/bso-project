@@ -24,7 +24,7 @@ export class ListUtil {
         let index = 0;
         for (let item in TopNodeDefinitionEnum) {
             if (item === nodeDefinition) {
-                return index - 5; // The first 4 indexes are numbers and not strings
+                return index - 6; // The first 5 indexes are numbers and not strings
             }
             ++index;
         }
