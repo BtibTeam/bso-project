@@ -49,8 +49,8 @@
         <div *ngSwitchCase="'nodeRelations'">
           <!-- isIn Relations -->
           <ion-label color="softDark" class="relation-label">isIn relations</ion-label>
-          <relation-manager [nodes]="node.isIn" [showOnlySameTree]="true" [onlyAscendantNodes]="true" [treeIndex]="node.treeIndex" [nodeDefIndex]="node.nodeDefIndex"
-            [listIndex]="node.listIndex"></relation-manager>
+          <relation-manager [nodes]="node.isIn" [showOnlySameTree]="true" [onlyAscendantNodes]="true" [treeIndex]="node.treeIndex"
+            [nodeDefIndex]="node.nodeDefIndex" [listIndex]="node.listIndex"></relation-manager>
           <!-- isNot Relations -->
           <ion-label color="softDark" class="relation-label">isNot relations</ion-label>
           <relation-manager [nodes]="node.isNot" [nodeDefs]="node.isNotDef" [showNodeDef]="true" [treeIndex]="node.treeIndex" [nodeDefIndex]="node.nodeDefIndex"
@@ -77,6 +77,12 @@
         <div *ngSwitchCase="'groups'">
           <node-group-editor [has]="node.has" (onChange)="updateGroups($event)">
           </node-group-editor>
+        </div>
+
+        <!-- Translations -->
+        <div *ngSwitchCase="'translations'">
+          <translation-manager [translations]="node.translations" [originalName]="node.name" (onChange)="updateTranslations($event)">
+          </translation-manager>
         </div>
       </div>
 
