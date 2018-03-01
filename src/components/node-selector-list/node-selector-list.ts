@@ -67,7 +67,7 @@ export class NodeSelectorList implements OnInit {
       for (let nodeDef of nodeDefinitions) {
 
         if (nodeDef.treeIndex != this.treeIndex) {
-          if (this.showOnlySameTree === false) {
+          if (this.showOnlySameTree === true) {
             continue;
           }
         }

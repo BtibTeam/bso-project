@@ -58,5 +58,6 @@ export enum TopNodeDefinitionEnum {
     'position',
     'resource',
     'type',
-    'dimension'
+    'dimension',
+    'caracteristic'
 }
