@@ -2,6 +2,9 @@
 import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
 
+// Angular Material
+import { MatTooltipModule } from '@angular/material/tooltip';
+
 // Components
 import { ComponentsModule } from '../../components/components.module';
 
@@ -18,7 +21,8 @@ import { PipesModule } from '../../pipes/pipes.module';
   imports: [
     IonicPageModule.forChild(OntologyCreatorPage),
     ComponentsModule,
-    PipesModule
+    PipesModule,
+    MatTooltipModule
   ],
 })
 export class OntologyCreatorPageModule { }
