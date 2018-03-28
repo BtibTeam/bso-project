@@ -21,7 +21,7 @@
       </ion-col>
     </ion-row>
     <ion-row>
-      <span *ngFor="let nodeDef of nodeDefinitions;let nodeDefIndex=index" class="nodeDef-container">
+      <span *ngFor="let nodeDef of nodeDefinitions" class="nodeDef-container">
         <ion-col *ngIf="nodeDef.treeIndex === topNodeDefTreeIndex">
           <ion-row>
             <ion-col class="nodeDef-header">
@@ -40,7 +40,7 @@
                 <span *ngFor="let node of list.nodes">
                   <ion-item *ngIf="!(node.isFilteredOut || node.isHidden)" (click)="selectNode(node, nodeDef.treeIndex)" [ngClass]="{'node-item': true, 'node-item-selected': node.isSelected}" [matTooltip]="node.name" matTooltipPosition="below">{{node.name}}</ion-item>
                 </span>
-                <button ion-button color="light" class="add-node-button" (click)="addNode(nodeDefIndex, listIndex, nodeDef.isNodeGroupDefinition)">
+                <button ion-button color="light" class="add-node-button" (click)="addNode(nodeDef.index, listIndex, nodeDef.isNodeGroupDefinition)">
                   <ion-icon name="add"></ion-icon>
                 </button>
               </ion-list>

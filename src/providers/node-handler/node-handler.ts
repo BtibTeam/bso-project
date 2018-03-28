@@ -129,14 +129,6 @@ export class NodeHandlerProvider {
     return null;
   }
 
-  /**
-   * Return the NodeDefinition id based on the given index
-   * @param index 
-   */
-  public getNodeDefinitionId(index: number): string {
-    return this.nodeDefinitions[index].id;
-  }
-
   ////////////////////////////////////////////////////////////////
   // Internal methods
   ////////////////////////////////////////////////////////////////
@@ -309,7 +301,7 @@ export class NodeHandlerProvider {
     if (node.isSelected) {
       return true;
     }
-    for (let _node of this.nodeDefinitions[node.nodeDefIndex].lists[node.listIndex].nodes) {
+    for (let _node of this.getNodeDefinition(node.treeIndex, node.nodeDefIndex).lists[node.listIndex].nodes) {
       if (_node.isSelected) {
         return true;
       }
@@ -322,7 +314,7 @@ export class NodeHandlerProvider {
    * @param node 
    */
   private isSingleSiblingsDisplayed(node: Node): boolean {
-    for (let _node of this.nodeDefinitions[node.nodeDefIndex].lists[node.listIndex].nodes) {
+    for (let _node of this.getNodeDefinition(node.treeIndex, node.nodeDefIndex).lists[node.listIndex].nodes) {
       if (!_node.isHidden && node !== _node) {
         return false;
       }
@@ -330,6 +322,24 @@ export class NodeHandlerProvider {
     return true;
   }
 
+  /**
+   * Return the NodeDefinition id based on the given index
+   * @param index 
+   */
+  public getNodeDefinitionId(treeIndex: number, nodeDefIndex: number): string {
+    return this.getNodeDefinition(treeIndex, nodeDefIndex).id;
+  }
+
+  /**
+   * Return a NodeDefinition among the list based on its indexes
+   * @param treeIndex 
+   * @param nodeDefIndex 
+   */
+  private getNodeDefinition(treeIndex: number, nodeDefIndex: number): NodeDefinition {
+    return this.nodeDefinitions.find((nodeDef: NodeDefinition, index: number) => {
+      return nodeDef.treeIndex === treeIndex && nodeDef.index === nodeDefIndex;
+    });
+  }
 
   /**
    * Return a node based on a nodeSnapshot

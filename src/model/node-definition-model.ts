@@ -9,6 +9,7 @@ export class NodeDefinition {
     // General
     public name: string = '';
     public id: string = '';
+    public index: number; // Index of the NodeDefinition inside a tree
     public treeIndex: number = -1; // Common id to a single tree
 
     public lists: NodeDefinitionList[] = [];
