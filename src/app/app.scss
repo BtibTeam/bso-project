@@ -1,6 +1,4 @@
 // http://ionicframework.com/docs/theming/
-
-
 // App Global Sass
 // --------------------------------------------------
 // Put style rules here that you want to apply globally. These
@@ -14,16 +12,14 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
-
 // Angular Material theme
 @import "indigo-pink";
-
-.popover-content { 
-    overflow: hidden;
+.popover-content {
+  overflow: hidden;
 }
 
 .alert-message {
-  overflow-y: auto!important;
+  overflow-y: auto !important;
 }
 
 .cdk-overlay-pane {
@@ -33,7 +29,12 @@
   }
 }
 
-.mat-chip {
-  cursor: pointer!important;
+.modal-wrapper {
+  width: 1000px;
+  left: calc(50% - 500px);
+  right: calc(50% - 500px);
 }
 
+.mat-chip {
+  cursor: pointer !important;
+}

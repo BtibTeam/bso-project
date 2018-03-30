@@ -1,0 +1,99 @@
+<ion-content>
+  <ion-card *ngIf="node" class="editor-card">
+    <form [formGroup]="editForm" novalidate>
+      <ion-grid class="node-grid">
+        <div class="header-row">
+
+          <!-- Delete -->
+          <button ion-button clear class="delete-button" color="light" (click)="deleteNode()">
+            <ion-icon name="trash" color="light"></ion-icon>
+          </button>
+
+          <!-- Name -->
+          <ion-item color="headerBG">
+            <ion-label floating color="light">Node name</ion-label>
+            <ion-input formControlName="name" color="light"></ion-input>
+          </ion-item>
+
+          <!-- Description -->
+          <ion-item color="headerBG">
+            <ion-label floating color="light">Node description</ion-label>
+            <ion-textarea textarea-autogrow formControlName="description" color="light"></ion-textarea>
+          </ion-item>
+
+          <!-- Segment -->
+          <ion-segment [(ngModel)]="segment" [ngModelOptions]="{standalone:true}" color="light" class="header-segment">
+            <ion-segment-button value="nodeRelations">
+              Node Relations
+            </ion-segment-button>
+            <ion-segment-button value="sourceTags">
+              Source tags
+            </ion-segment-button>
+            <ion-segment-button value="sourceRelations">
+              Source relations
+            </ion-segment-button>
+            <ion-segment-button value="groups" *ngIf="node.isNodeGroup">
+              Groups
+            </ion-segment-button>
+            <ion-segment-button value="translations">
+              Translations
+            </ion-segment-button>
+          </ion-segment>
+        </div>
+
+        <div [ngSwitch]="segment" class="content-segment">
+
+          <!-- Node Relations -->
+          <div *ngSwitchCase="'nodeRelations'">
+            <!-- isIn Relations -->
+            <ion-label color="softDark" class="relation-label">isIn relations</ion-label>
+            <relation-manager [nodes]="node.isIn" [showOnlySameTree]="true" [onlyAscendantNodes]="true" [treeIndex]="node.treeIndex"
+              [nodeDefIndex]="node.nodeDefIndex" [listIndex]="node.listIndex"></relation-manager>
+            <!-- isNot Relations -->
+            <ion-label color="softDark" class="relation-label">isNot relations</ion-label>
+            <relation-manager [nodes]="node.isNot" [nodeDefs]="node.isNotDef" [showNodeDef]="true" [treeIndex]="node.treeIndex" [nodeDefIndex]="node.nodeDefIndex"
+              [listIndex]="node.listIndex"></relation-manager>
+            <!-- mayBe Relations -->
+            <ion-label color="softDark" class="relation-label">mayBe relations</ion-label>
+            <relation-manager [nodes]="node.mayBe" [showOnlySameTree]="false" [treeIndex]="node.treeIndex" [nodeDefIndex]="node.nodeDefIndex"
+              [listIndex]="node.listIndex"></relation-manager>
+          </div>
+
+          <!-- Source Tags -->
+          <div *ngSwitchCase="'sourceTags'">
+            <addons-manager [addons]="node.tags" type="tags" (onChange)="updateTags($event)">
+            </addons-manager>
+          </div>
+
+          <!-- Source Relations -->
+          <div *ngSwitchCase="'sourceRelations'">
+            <addons-manager [addons]="node.relations" type="relations" (onChange)="updateRelations($event)">
+            </addons-manager>
+          </div>
+
+          <!-- Node Groups -->
+          <div *ngSwitchCase="'groups'">
+            <node-group-editor [has]="node.has" (onChange)="updateGroups($event)">
+            </node-group-editor>
+          </div>
+
+          <!-- Translations -->
+          <div *ngSwitchCase="'translations'">
+            <translation-manager [translations]="node.translations" [originalName]="node.name" (onChange)="updateTranslations($event)">
+            </translation-manager>
+          </div>
+        </div>
+
+        <!-- Savings -->
+        <ion-row justify-content-end class="saving-row">
+          <button ion-button clear (click)="cancel()">
+            Cancel
+          </button>
+          <button ion-button type="button" [disabled]="!editForm.valid" (click)="saveNode()">
+            Save
+          </button>
+        </ion-row>
+      </ion-grid>
+    </form>
+  </ion-card>
+</ion-content>
