@@ -35,8 +35,13 @@ page-ontology-creator {
   }
   .grid {
     padding: 0;
+    width: 100% !important;
     .nodeDef-container {
       flex-grow: 0;
+      .nodeDef-header {
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
+      }
       .col {
         padding: 0;
         .test-span {
@@ -72,17 +77,9 @@ page-ontology-creator {
           }
         }
         .nodeDef-row {
-          max-height: 300px;
-          overflow-y: auto;
           margin-bottom: 32px;
           .nodeList-container {
             margin-right: 2px; //max-width: 160px;
-            .add-node-button {
-              border-radius: 50%;
-              width: 25px;
-              height: 30px;
-              margin-top: 8px;
-            }
             .node-searchbar {
               width: 160px;
               padding: 0;
@@ -93,13 +90,36 @@ page-ontology-creator {
                 -webkit-box-shadow: none;
               }
             }
+            .node-list {
+              overflow-y: auto;
+              max-height: 300px;
             .node-item {
               width: 160px;
               padding-left: 8px;
               font-size: 0.8em;
+                color: map-get($colors, softDark);
+              }
+              .edit-icon {
+                margin: 0px;
+                padding: 0px;
+                font-size: 2em;
+                cursor: pointer;
+                display: none;
+              }
+              .node-item:hover {
+                .edit-icon {
+                  display: inherit;
+                }
+              }
+            }
+            .add-node-button {
+              border-radius: 50%;
+              width: 25px;
+              height: 30px;
             }
             .node-item-selected {
               background-color: #c5c5c5;
+              color: map-get($colors, light);
             }
           }
         }
