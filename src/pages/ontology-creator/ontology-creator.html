@@ -36,22 +36,21 @@
           <ion-row class="nodeDef-row">
             <ion-col *ngFor="let list of nodeDef.lists;let listIndex=index" class="nodeList-container">
               <ion-searchbar (ionInput)="filterNodes($event, list)" class="node-searchbar"></ion-searchbar>
-              <ion-list>
+              <ion-list class="node-list">
                 <span *ngFor="let node of list.nodes">
-                  <ion-item *ngIf="!(node.isFilteredOut || node.isHidden)" (click)="selectNode(node, nodeDef.treeIndex)" [ngClass]="{'node-item': true, 'node-item-selected': node.isSelected}"
-                    [matTooltip]="node.name" matTooltipPosition="below">{{node.name}}</ion-item>
+                  <ion-item *ngIf="!(node.isFilteredOut || node.isHidden)" [ngClass]="{'node-item': true, 'node-item-selected': node.isSelected}"
+                    [matTooltip]="node.name" matTooltipPosition="below" (click)="selectNode(node, nodeDef.treeIndex)">{{node.name}}
+                    <ion-icon item-right color="softDark" name="create" class="edit-icon" (click)="editNode(node, nodeDef.treeIndex)"></ion-icon>
+                  </ion-item>
                 </span>
-                <button ion-button color="light" class="add-node-button" (click)="addNode(nodeDef.index, listIndex, nodeDef.isNodeGroupDefinition)">
-                  <ion-icon name="add"></ion-icon>
-                </button>
               </ion-list>
+              <button ion-button color="light" class="add-node-button" (click)="addNode(nodeDef.index, listIndex, nodeDef.isNodeGroupDefinition)">
+                <ion-icon name="add"></ion-icon>
+              </button>
             </ion-col>
           </ion-row>
         </ion-col>
       </span>
-    </ion-row>
-    <ion-row *ngIf="selectedNode" class="node-editor-container">
-      <node-editor class="node-editor" [node]="selectedNode" (onDelete)="deleteNode($event)" (onSave)="updateNode($event)" (onCancel)="cancelEditNode($event)"></node-editor>
     </ion-row>
   </ion-grid>
 

@@ -1,6 +1,7 @@
-node-editor {
+page-node-editor {
   .editor-card {
-    animation: fade 1s;
+    margin: 0;
+    width: 100%;
     .node-grid {
       padding: 0px;
       .header-row {
@@ -19,6 +20,10 @@ node-editor {
           ion-segment-button {
             font-weight: 400;
           }
+        }
+        .item-input-has-focus .label-md[floating],
+        .input-has-focus .label-md[floating] {
+          color: map-get($colors, light);
         }
       }
       .content-segment {
@@ -39,14 +44,6 @@ node-editor {
           font-size: 0.8em;
         }
       }
-    }
-  }
-  @keyframes fade {
-    0% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
     }
   }
 }

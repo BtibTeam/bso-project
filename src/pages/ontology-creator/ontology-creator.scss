@@ -93,10 +93,10 @@ page-ontology-creator {
             .node-list {
               overflow-y: auto;
               max-height: 300px;
-            .node-item {
-              width: 160px;
-              padding-left: 8px;
-              font-size: 0.8em;
+              .node-item {
+                width: 160px;
+                padding-left: 8px;
+                font-size: 0.8em;
                 color: map-get($colors, softDark);
               }
               .edit-icon {
@@ -124,14 +124,6 @@ page-ontology-creator {
           }
         }
       }
-    }
-  }
-  .node-editor-container {
-    margin-top: 32px;
-    .node-editor {
-      width: 90%;
-      margin-left: auto;
-      margin-right: auto;
     }
   }
   .footer-container {
