@@ -19,7 +19,7 @@ import { NodeGroup } from '../../model/node-group-model';
 export class NodeEditorPage {
 
   // Input values
-  private originalNode: Node = new Node(); // The original node
+  private originalNode: Node; // The original node
   private node: Node = new Node(); // The copy of the node to work on
 
   private editForm: any;
@@ -50,7 +50,7 @@ export class NodeEditorPage {
   /**
    * Cancel the Node edition 
    */
-  protected cancel() {
+  protected cancel(): void {
     this.viewCtrl.dismiss();
   }
 
