@@ -19,6 +19,7 @@ import { NodeHandlerProvider } from '../providers/node-handler/node-handler';
 import { NodeDataProvider } from '../providers/node-data/node-data';
 import { FirestoreProvider } from '../providers/firestore/firestore';
 import { AddonsDataProvider } from '../providers/addons-data/addons-data';
+import { ConfigProvider } from '../providers/config/config';
 
 // Firestore config
 const config = {
@@ -55,6 +56,7 @@ const config = {
     NodeDataProvider,
     FirestoreProvider,
     AddonsDataProvider,
+    ConfigProvider,
   ]
 })
 export class AppModule { }
