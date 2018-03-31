@@ -34,7 +34,7 @@ export class NodeHandlerProvider {
     let discoveredNodes: Node[] = [];
 
     // Reset every node hidden state in order to all of them being displayed
-    this.updateNodesState([], treeIndex, this.resetHiddenState);
+    this.updateNodesState(node, [], treeIndex, this.resetHiddenState);
 
     // Get every selected node
     let selectedNodes = this.getSelectedNodes(treeIndex);
@@ -48,7 +48,7 @@ export class NodeHandlerProvider {
       discoveredNodes = this.findRelatedNodes(treeIndex, selectedNode, discoveredNodes, true, true);
 
       // Apply the hidden state to every node which is not contained in the discoveredNodes array
-      this.updateNodesState(discoveredNodes, treeIndex, this.applyHiddenStateToDiscoveredNodes);
+      this.updateNodesState(node, discoveredNodes, treeIndex, this.applyHiddenStateToDiscoveredNodes);
     });
 
     if (node.listIndex != 0) {
@@ -88,10 +88,10 @@ export class NodeHandlerProvider {
     discoveredNodes = this.findRelatedNodes(treeIndex, node, discoveredNodes, true, true);
 
     // Apply the hidden state to every node which is not contained in the discoveredNodes array
-    this.updateNodesState(discoveredNodes, treeIndex, this.applyHiddenStateToDiscoveredNodes);
+    this.updateNodesState(node, discoveredNodes, treeIndex, this.applyHiddenStateToDiscoveredNodes);
 
-    // Auto-select every single displayed node
-    this.updateNodesState(discoveredNodes, treeIndex, this.autoSelectNodes);
+    // Auto-select every single displayed node only if they are from a higher level than the selected Node
+    this.updateNodesState(node, discoveredNodes, treeIndex, this.autoSelectNodes, this.isLowerLevelNodes);
 
     //this.handleNodeAddButtons(node, true);
   }
@@ -135,11 +135,12 @@ export class NodeHandlerProvider {
 
   /**
    * Browse every node of the given tree index and perform the given function on each of them
+   * @param referenceNode
    * @param discoveredNodes 
    * @param treeIndex 
    * @param stateFunction 
    */
-  private updateNodesState(discoveredNodes: Node[], treeIndex: number, stateFunction: Function) {
+  private updateNodesState(referenceNode: Node, discoveredNodes: Node[], treeIndex: number, stateFunction: Function, filterFunction?: Function) {
 
     // Browse all nodeDefinition
     for (let nodeDef of this.nodeDefinitions) {
@@ -155,7 +156,7 @@ export class NodeHandlerProvider {
 
         // Browse all nodes
         for (let node of list.nodes) {
-          stateFunction(discoveredNodes, node);
+          stateFunction(referenceNode, discoveredNodes, node, filterFunction);
         }
       }
 
@@ -178,10 +179,11 @@ export class NodeHandlerProvider {
 
   /**
    * Apply the hidden state if the given node is contained in the given discoveredNodes array
+   * @param referenceNode
    * @param discoveredNodes 
    * @param node 
    */
-  private applyHiddenStateToDiscoveredNodes = (discoveredNodes: any, node: any) => {
+  private applyHiddenStateToDiscoveredNodes = (referenceNode: Node, discoveredNodes: any, node: any) => {
     if (discoveredNodes.length > 0) {
       // Check if it is not one of the discovered nodes
       if (discoveredNodes.indexOf(node) === -1) {
@@ -192,26 +194,53 @@ export class NodeHandlerProvider {
 
   /**
    * Reset the hidden states of the given node
+   * @param referenceNode
    * @param discoveredNodes 
    * @param node 
    */
-  private resetHiddenState = (discoveredNodes: Node[], node: Node) => {
+  private resetHiddenState = (referenceNode: Node, discoveredNodes: Node[], node: Node) => {
     node.isHidden = false;
     //this.handleNodeAddButtons(node, false);
   }
 
   /**
    * Auto-select the given node if it's the only one displayed among its siblings
+   * @param referenceNode
    * @param discoveredNodes 
-   * @param node 
+   * @param node
+   * @param filterFunction
    */
-  private autoSelectNodes = (discoveredNodes: Node[], node: Node) => {
+  private autoSelectNodes = (referenceNode: Node, discoveredNodes: Node[], node: Node, filterFunction?: Function) => {
+    if (filterFunction) {
+      if (filterFunction(referenceNode, node) === true)
+        return;
+    }
     if (!node.isHidden) {
       if (this.isSingleSiblingsDisplayed(node)) {
         node.isSelected = true;
         //this.handleNodeAddButtons(node, true);
       }
     }
+  }
+
+  ////////////////////////////////////////////////////////////////
+  // Filter functions
+  ////////////////////////////////////////////////////////////////
+
+  /**
+   * Check whether the Node is from a lower or upper Level than the reference one
+   * @param referenceNode 
+   * @param node
+   * @return true if the Node is from a lower level in the isIn hierarchy
+   */
+  private isLowerLevelNodes = (referenceNode: Node, node: Node): boolean => {
+    if (node.nodeDefIndex == referenceNode.nodeDefIndex) {
+      if (node.listIndex > referenceNode.listIndex) {
+        return true;
+      }
+    } else if (node.nodeDefIndex > referenceNode.nodeDefIndex)
+      return true;
+    return false;
   }
 
   ////////////////////////////////////////////////////////////////
