@@ -45,7 +45,7 @@ export class NodeHandlerProvider {
       discoveredNodes.push(selectedNode);
 
       // Explore isIn and contains relationships to discovered every connected nodes to the selected one
-      discoveredNodes = this.findRelatedNodes(selectedNode, discoveredNodes, true, true);
+      discoveredNodes = this.findRelatedNodes(treeIndex, selectedNode, discoveredNodes, true, true);
 
       // Apply the hidden state to every node which is not contained in the discoveredNodes array
       this.updateNodesState(discoveredNodes, treeIndex, this.applyHiddenStateToDiscoveredNodes);
@@ -85,7 +85,7 @@ export class NodeHandlerProvider {
     discoveredNodes.push(node);
 
     // Explore isIn and contains relationships to discovered every connected nodes to the selected one
-    discoveredNodes = this.findRelatedNodes(node, discoveredNodes, true, true);
+    discoveredNodes = this.findRelatedNodes(treeIndex, node, discoveredNodes, true, true);
 
     // Apply the hidden state to every node which is not contained in the discoveredNodes array
     this.updateNodesState(discoveredNodes, treeIndex, this.applyHiddenStateToDiscoveredNodes);
@@ -245,18 +245,19 @@ export class NodeHandlerProvider {
 
   /**
    * Exploration algorithm for discovering every node which is not already hidden by following isIn and contains relationships
+   * @param treeIndex The graph index
    * @param referenceNode The node from which the exploration is based
    * @param discoveredNodes An array of nodes to be discovered. Return the same array.
    * @param isIn whether to activate the exploration through isIn relationships 
    * @param contains whether to activate the exploration through contains relationships
    */
-  private findRelatedNodes(referenceNode: Node, discoveredNodes: Node[], isIn: boolean, contains: boolean): Node[] {
+  private findRelatedNodes(treeIndex: number, referenceNode: Node, discoveredNodes: Node[], isIn: boolean, contains: boolean): Node[] {
     if (isIn) {
       // Browse every isIn relationships between nodes
       referenceNode.isIn.forEach(nodeSnap => {
 
         // Get the relative node
-        let node: Node = this.getNode(nodeSnap);
+        let node: Node = this.getNode(treeIndex, nodeSnap);
         if (node != null) {
 
           // Add the node
@@ -266,7 +267,7 @@ export class NodeHandlerProvider {
           if (!node.isHidden) {
 
             // Call itself to discover more nodes
-            discoveredNodes.concat(this.findRelatedNodes(node, discoveredNodes, true, false));
+            discoveredNodes.concat(this.findRelatedNodes(treeIndex, node, discoveredNodes, true, false));
 
           }
         }
@@ -276,14 +277,14 @@ export class NodeHandlerProvider {
       // Same algorithm for contains relationships
       referenceNode.contains.forEach(nodeSnap => {
 
-        let node: Node = this.getNode(nodeSnap);
+        let node: Node = this.getNode(treeIndex, nodeSnap);
         if (node != null) {
           discoveredNodes.push(node);
 
           if (!node.isHidden) {
 
             // Call itself to discover more nodes
-            discoveredNodes.concat(this.findRelatedNodes(node, discoveredNodes, false, true));
+            discoveredNodes.concat(this.findRelatedNodes(treeIndex, node, discoveredNodes, false, true));
 
           }
         }
@@ -327,7 +328,11 @@ export class NodeHandlerProvider {
    * @param index 
    */
   public getNodeDefinitionId(treeIndex: number, nodeDefIndex: number): string {
-    return this.getNodeDefinition(treeIndex, nodeDefIndex).id;
+    const nodeDefinition = this.getNodeDefinition(treeIndex, nodeDefIndex);
+    if (nodeDefinition) {
+      return nodeDefinition.id;
+    }
+    return null;
   }
 
   /**
@@ -344,20 +349,23 @@ export class NodeHandlerProvider {
   /**
    * Return a node based on a nodeSnapshot
    * Return null if it didn't find the node
-   * @param nodeDefIndex
+   * @param treeIndex
    * @param nodeSnap 
    */
-  private getNode(nodeSnap: NodeSnapshot): Node {
+  private getNode(treeIndex: number, nodeSnap: NodeSnapshot): Node {
 
     // Browse all lists
-    for (let list of this.nodeDefinitions[nodeSnap.nodeDefIndex].lists) {
+    const nodeDefinition = this.getNodeDefinition(treeIndex, nodeSnap.nodeDefIndex);
+    if (nodeDefinition) {
+      for (let list of nodeDefinition.lists) {
 
-      // Browse all nodes
-      for (let node of list.nodes) {
+        // Browse all nodes
+        for (let node of list.nodes) {
 
-        // Check if ids match
-        if (node.id === nodeSnap.id) {
-          return node;
+          // Check if ids match
+          if (node.id === nodeSnap.id) {
+            return node;
+          }
         }
       }
     }
