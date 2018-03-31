@@ -12,7 +12,6 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 
 // Components
-import { NodeEditor } from './node-editor/node-editor';
 import { AddonsManager } from './addons-manager/addons-manager';
 import { AddonsEditor } from './addons-editor/addons-editor';
 import { NodeGroupEditor } from './node-group-editor/node-group-editor';
@@ -26,7 +25,6 @@ import { DirectivesModule } from '../directives/directives.module';
 
 @NgModule({
 	declarations: [
-		NodeEditor,
 		AddonsManager,
 		AddonsEditor,
 		RelationManager,
@@ -52,7 +50,6 @@ import { DirectivesModule } from '../directives/directives.module';
 		TranslationEditor
 	],
 	exports: [
-		NodeEditor,
 		AddonsManager,
 		AddonsEditor,
 		RelationManager,

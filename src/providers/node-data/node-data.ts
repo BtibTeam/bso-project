@@ -134,23 +134,12 @@ export class NodeDataProvider {
 
     // Update the node
     node.name = name;
+    node.description = name;
     node.treeIndex = treeIndex;
     node.nodeDefIndex = nodeDefIndex;
     node.listIndex = listIndex;
 
-    // Generate the isIn relation based on the current selection if the node is not at the uppest level
-    /*if (!(nodeDefIndex == 0 && listIndex == 0)) {
-      let parentIsInNode = this.nodeHandlerPvd.getSelectedParentNode(node);
-      if (parentIsInNode) {
-        node.isIn.push(NodeSnapshot.generateSnapshot(parentIsInNode));
-
-        // Update the contains relation
-        parentIsInNode.contains.push(NodeSnapshot.generateSnapshot(node));
-        this.updateNode(parentIsInNode);
-      }
-    }*/
-
-    const nodeDefinitionId = this.nodeHandlerPvd.getNodeDefinitionId(nodeDefIndex);
+    const nodeDefinitionId = this.nodeHandlerPvd.getNodeDefinitionId(treeIndex, nodeDefIndex);
 
     // Push the node to the cloud
     return this.firestorePvd.set(DataUtil.cleanUndefinedValues(Node.encode(node)), 'nodeDefinition/' + nodeDefinitionId + '/nodes/' + node.id);
@@ -217,7 +206,7 @@ export class NodeDataProvider {
    * @param node 
    */
   public deleteNode(node: Node): void {
-    const nodeDefinitionId = this.nodeHandlerPvd.getNodeDefinitionId(node.nodeDefIndex);
+    const nodeDefinitionId = this.nodeHandlerPvd.getNodeDefinitionId(node.treeIndex, node.nodeDefIndex);
     this.firestorePvd.delete('nodeDefinition/' + nodeDefinitionId + '/nodes/' + node.id);
   }
 
@@ -232,7 +221,7 @@ export class NodeDataProvider {
    */
   private updateNode(node: Node): Promise<void> {
 
-    const nodeDefinitionId = this.nodeHandlerPvd.getNodeDefinitionId(node.nodeDefIndex);
+    const nodeDefinitionId = this.nodeHandlerPvd.getNodeDefinitionId(node.treeIndex, node.nodeDefIndex);
 
     // Compare 
     return this.firestorePvd.set(DataUtil.cleanUndefinedValues(Node.encode(node)), 'nodeDefinition/' + nodeDefinitionId + '/nodes/' + node.id);
@@ -244,7 +233,7 @@ export class NodeDataProvider {
    * @return an Observable with the node
    */
   private retrieveNodeFromSnapshot(nodeSnap: NodeSnapshot): Observable<any> {
-    const nodeDefinitionId = this.nodeHandlerPvd.getNodeDefinitionId(nodeSnap.nodeDefIndex);
+    const nodeDefinitionId = this.nodeHandlerPvd.getNodeDefinitionId(nodeSnap.treeIndex, nodeSnap.nodeDefIndex);
     return this.firestorePvd.readDocument('nodeDefinition/' + nodeDefinitionId + '/nodes/' + nodeSnap.id);
   }
 

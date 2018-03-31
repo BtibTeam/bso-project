@@ -3,7 +3,7 @@ import { Component, Output, EventEmitter, Input, OnChanges } from '@angular/core
 import { FormBuilder, Validators } from '@angular/forms';
 
 // Ionic
-import { AlertController } from 'ionic-angular';
+import { AlertController, IonicPage, ViewController, NavParams } from 'ionic-angular';
 
 // Models
 import { Node, NodeSnapshot, NodeTranslation } from '../../model/node-model';
@@ -11,61 +11,48 @@ import { Tag } from '../../model/tag-model';
 import { Relation } from '../../model/relation-model';
 import { NodeGroup } from '../../model/node-group-model';
 
+@IonicPage()
 @Component({
-  selector: 'node-editor',
+  selector: 'page-node-editor',
   templateUrl: 'node-editor.html'
 })
-export class NodeEditor implements OnChanges {
-
-  // Output events
-  @Output() private onDelete: EventEmitter<Node> = new EventEmitter<Node>();
-  @Output() private onSave: EventEmitter<Map<string, Node>> = new EventEmitter<Map<string, Node>>();
-  @Output() private onCancel: EventEmitter<Node> = new EventEmitter<Node>();
+export class NodeEditorPage {
 
   // Input values
-  @Input('node') private originalNode: Node;
-
+  private originalNode: Node; // The original node
   private node: Node = new Node(); // The copy of the node to work on
 
   private editForm: any;
   private segment: string = 'nodeRelations';
 
   constructor(
-    public formBuilder: FormBuilder,
-    public alertCtrl: AlertController,
+    private formBuilder: FormBuilder,
+    private alertCtrl: AlertController,
+    private viewCtrl: ViewController,
+    private params: NavParams,
   ) {
+
+    this.originalNode = this.params.get('node');
 
     this.editForm = formBuilder.group({
       name: ['', Validators.compose([Validators.minLength(2), Validators.required])],
       description: ['', Validators.compose([Validators.minLength(2), Validators.required])],
     });
 
-  }
+    this.init(this.originalNode);
 
-  ////////////////////////////////////////////////////////////////
-  // Life Cycles
-  ////////////////////////////////////////////////////////////////
-
-  public ngOnChanges(changes): void {
-    if (changes.originalNode) {
-      if (changes.originalNode.currentValue) {
-
-        // Create a deep copy of the node
-        this.node = Node.deepCopy(changes.originalNode.currentValue);
-
-        // Patch form values
-        this.editForm.patchValue({
-          'name': this.node.name,
-          'description': this.node.description
-        });
-
-      }
-    }
   }
 
   ////////////////////////////////////////////////////////////////
   // User interactions
   ////////////////////////////////////////////////////////////////
+
+  /**
+   * Cancel the Node edition 
+   */
+  protected cancel(): void {
+    this.viewCtrl.dismiss();
+  }
 
   /**
    * Delete the node from the database
@@ -78,14 +65,14 @@ export class NodeEditor implements OnChanges {
         {
           text: 'Cancel',
           handler: () => {
-            //do nothing
+            this.viewCtrl.dismiss();
           }
         },
         {
           text: 'Yes',
           handler: () => {
             let data = { delete: true };
-            this.onDelete.emit(this.node);
+            this.viewCtrl.dismiss({ 'delete': this.node });
           }
         }
       ]
@@ -105,7 +92,7 @@ export class NodeEditor implements OnChanges {
       let map: Map<string, Node> = new Map();
       map.set('original', this.originalNode);
       map.set('modified', this.node);
-      this.onSave.emit(map);
+      this.viewCtrl.dismiss({ 'save': map });
     }
   }
 
@@ -139,6 +126,27 @@ export class NodeEditor implements OnChanges {
    */
   protected updateTranslations(translations: NodeTranslation[]): void {
     this.node.translations = translations;
+  }
+
+  ////////////////////////////////////////////////////////////////
+  // Utils
+  ////////////////////////////////////////////////////////////////
+
+  /**
+   * Initialize the provided Node
+   * @param changes
+   */
+  private init(_node: any): void {
+
+    // Create a deep copy of the node
+    this.node = Node.deepCopy(_node);
+
+    // Patch form values
+    this.editForm.patchValue({
+      'name': this.node.name,
+      'description': this.node.description
+    });
+
   }
 
 }

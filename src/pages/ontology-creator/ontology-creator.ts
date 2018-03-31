@@ -1,11 +1,8 @@
 // Angular
 import { Component, ViewChild, OnInit } from '@angular/core';
 
-// Components
-import { NodeEditor } from '../../components/node-editor/node-editor';
-
 // Ionic
-import { IonicPage, NavController, NavParams, AlertController, LoadingController, Loading, ToastController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, LoadingController, Loading, ToastController, ModalController } from 'ionic-angular';
 
 // Models
 import { Node, NodeSnapshot } from '../../model/node-model';
@@ -43,6 +40,7 @@ export class OntologyCreatorPage implements OnInit {
     private navCtrl: NavController,
     private navParams: NavParams,
     private alertCtrl: AlertController,
+    private modalCtrl: ModalController,
     private loadingCtrl: LoadingController,
     private toastCtrl: ToastController,
     private nodeHandlerPvd: NodeHandlerProvider,
@@ -117,8 +115,28 @@ export class OntologyCreatorPage implements OnInit {
       node.isSelected = true;
       this.nodeHandlerPvd.selectNode(node, treeIndex);
       this.selectedNode = node;
-
     }
+
+  }
+
+  /**
+   * Open a modal with the Node Editor
+   * @param node 
+   * @param treeIndex 
+   */
+  protected editNode(node: Node, treeIndex: number) {
+
+    let nodeEditorModal = this.modalCtrl.create('NodeEditorPage', { node });
+    nodeEditorModal.present();
+    nodeEditorModal.onDidDismiss(data => {
+      if (data) {
+        if (data.delete) {
+          this.deleteNode(data.delete);
+        } else if (data.save) {
+          this.updateNode(data.save);
+        }
+      }
+    });
 
   }
 
