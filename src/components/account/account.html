@@ -1,0 +1,34 @@
+<div *ngIf="!user">
+
+  <h3 ion-text color="softDark">Sign in</h3>
+
+  <form [formGroup]="loginForm" novalidate>
+
+    <ion-item>
+      <ion-label floating>Email</ion-label>
+      <ion-input formControlName="email" type="email" [class.invalid]="!loginForm.controls.email.valid && loginForm.controls.email.dirty"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label floating>Password</ion-label>
+      <ion-input formControlName="password" type="password" [class.invalid]="!loginForm.controls.password.valid && loginForm.controls.password.dirty"></ion-input>
+    </ion-item>
+
+    <button ion-button round color='accentuation' (click)="signIn()" [disabled]="!loginForm.valid" class="validation-button">
+      Login
+    </button>
+
+  </form>
+
+</div>
+
+<div *ngIf="user">
+
+  <h3 ion-text color="softDark">Happy to see you</h3>
+  <p color="softDark">{{user.email}}</p>
+
+  <button ion-button round color='accentuation' (click)="signOut()" class="signout-button">
+    Sign out
+  </button>
+
+</div>
