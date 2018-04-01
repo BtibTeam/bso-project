@@ -1,1 +1,39 @@
-<ion-nav [root]="rootPage"></ion-nav>
+<mat-sidenav-container class="app-container">
+
+  <mat-sidenav #sidenav mode="side" [(opened)]="opened">
+    <account [user]="user" (loggedIn)="switchAccountSideBar()"></account>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+
+    <ion-header>
+
+      <ion-navbar color="headerBG" class="ontology-navbar">
+
+        <ion-buttons left>
+          <div class="login-button-container">
+            <button ion-button (click)=switchAccountSideBar()>
+              <ion-icon name="person"></ion-icon>
+              <p *ngIf="user">{{user.email}}</p>
+              <p *ngIf="!user">Login</p>
+            </button>
+          </div>
+        </ion-buttons>
+
+        <ion-title class="title">Haystack Semantic Ontology Project</ion-title>
+
+        <ion-buttons end>
+          <ion-label color="light" class="update-text">Last update 01/01/2019</ion-label>
+        </ion-buttons>
+
+      </ion-navbar>
+
+    </ion-header>
+
+    <ion-content padding>
+      <ion-nav [root]="rootPage"></ion-nav>
+    </ion-content>
+
+  </mat-sidenav-content>
+
+</mat-sidenav-container>
