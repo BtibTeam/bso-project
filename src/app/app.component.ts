@@ -1,5 +1,11 @@
-// Framework
+// Angular
 import { Component } from '@angular/core';
+
+// AngularFire
+import { AngularFireAuth } from 'angularfire2/auth';
+
+// Firestore
+import User from 'firebase/auth';
 
 // Pages
 import { HomePage } from '../pages/home/home';
@@ -8,9 +14,30 @@ import { HomePage } from '../pages/home/home';
   templateUrl: 'app.html'
 })
 export class MyApp {
-  rootPage: any = HomePage;
 
-  constructor() {
+  rootPage: any = HomePage;
+  opened: boolean = false;
+  user: User = null;
+
+  constructor(
+    afAuth: AngularFireAuth) {
+
+    afAuth.authState.subscribe(_user => {
+      this.user = _user;
+    });
+
   }
+
+  ////////////////////////////////////////////////////////////////
+  // User Interactions
+  ////////////////////////////////////////////////////////////////
+
+  /**
+   * Switch the side bar nav
+  */
+  switchAccountSideBar() {
+    this.opened = !this.opened;
+  }
+
 }
 
