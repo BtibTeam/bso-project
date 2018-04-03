@@ -8,7 +8,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSidenavModule } from '@angular/material';
 
 // Components
-import { accountComponent } from '../components/account/account';
+import { AccountComponent } from '../components/account/account';
 
 // Firestore
 import { AngularFireModule } from 'angularfire2';
@@ -41,7 +41,7 @@ const config = {
   declarations: [
     MyApp,
     HomePage,
-    accountComponent
+    AccountComponent
   ],
   imports: [
     MatSidenavModule,
@@ -56,7 +56,7 @@ const config = {
   entryComponents: [
     MyApp,
     HomePage,
-    accountComponent
+    AccountComponent
   ],
   providers: [
     { provide: ErrorHandler, useClass: IonicErrorHandler },

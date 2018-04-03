@@ -11,7 +11,7 @@ import * as firebase from 'firebase/app';
 export class FireAuthProvider {
 
   constructor(
-    private afAuth: AngularFireAuth,
+    private afAuth: AngularFireAuth
   ) { }
 
   ////////////////////////////////////////////////////////////////
@@ -23,14 +23,14 @@ export class FireAuthProvider {
    * @param email 
    * @param password 
    */
-  signInWithEmailAndPassword(email: string, password: string): Promise<any> {
+  public signInWithEmailAndPassword(email: string, password: string): Promise<any> {
     return this.afAuth.auth.signInWithEmailAndPassword(email, password);
   }
 
   /**
    * Sign out the user
    */
-  signOut(): Promise<void> {
+  public signOut(): Promise<void> {
     return this.afAuth.auth.signOut();
   }
 

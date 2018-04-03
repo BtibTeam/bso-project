@@ -20,7 +20,8 @@ export class MyApp {
   user: User = null;
 
   constructor(
-    afAuth: AngularFireAuth) {
+    afAuth: AngularFireAuth
+  ) {
 
     afAuth.authState.subscribe(_user => {
       this.user = _user;
@@ -35,7 +36,7 @@ export class MyApp {
   /**
    * Switch the side bar nav
   */
-  switchAccountSideBar() {
+  protected switchAccountSideBar(): void {
     this.opened = !this.opened;
   }
 
