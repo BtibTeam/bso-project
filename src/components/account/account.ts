@@ -12,7 +12,7 @@ import { FireAuthProvider } from '../../providers/fire-auth/fire-auth';
   selector: 'account',
   templateUrl: 'account.html'
 })
-export class accountComponent {
+export class AccountComponent {
 
   // Inputs
   @Input('user') user: User = null;
