@@ -21,7 +21,8 @@ export class NodeEditorPage {
   // Input values
   private originalNode: Node; // The original node
   private node: Node = new Node(); // The copy of the node to work on
-
+  private readonly: boolean = false;
+  
   private editForm: any;
   private segment: string = 'nodeRelations';
 
@@ -33,6 +34,7 @@ export class NodeEditorPage {
   ) {
 
     this.originalNode = this.params.get('node');
+    this.readonly = this.params.get('readonly');
 
     this.editForm = formBuilder.group({
       name: ['', Validators.compose([Validators.minLength(2), Validators.required])],

@@ -19,6 +19,7 @@ export class NodeGroupEditor implements OnInit, OnChanges {
 
   // Input values
   @Input('has') private hasRelations: NodeSnapshot[] = [];
+  @Input('readonly') private readonly: boolean = true;
 
   // Available nodes
   private positionNodes: Node[] = [];
@@ -110,6 +111,9 @@ export class NodeGroupEditor implements OnInit, OnChanges {
    * @param node
    */
   protected selectNode(node: Node, nodeDefinitionId: string): void {
+    if (this.readonly)
+      return;
+
     switch (nodeDefinitionId) {
       case 'position':
         if (this.selectedPosition && this.selectedPosition.id === node.id) {
