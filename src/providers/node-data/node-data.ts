@@ -180,14 +180,16 @@ export class NodeDataProvider {
 
           // Transform to a node
           let node: Node = plainToClass(Node, _node as Object);
-          const index = node.isIn.findIndex(nodeSnap => {
+          const index: number = node.isIn.findIndex(nodeSnap => {
             return nodeSnap.id === modifiedNode.id;
           });
           
           // Delete the NodeSnapshot and push the new one
+          if(index >= 0){
           node.isIn.splice(index, 1);
           node.isIn.push(NodeSnapshot.generateSnapshot(modifiedNode));
           this.updateNode(node);
+          }
         });
 
       });

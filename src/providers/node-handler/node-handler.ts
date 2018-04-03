@@ -233,8 +233,8 @@ export class NodeHandlerProvider {
    * @param node
    * @return true if the Node is from a lower level in the isIn hierarchy
    */
-  private isLowerLevelNodes = (referenceNode: Node, node: Node): boolean => {
-    if (node.nodeDefIndex == referenceNode.nodeDefIndex) {
+  private isLowerLevelNodes: Function = (referenceNode: Node, node: Node): boolean => {
+    if (node.nodeDefIndex === referenceNode.nodeDefIndex) {
       if (node.listIndex > referenceNode.listIndex) {
         return true;
       }
@@ -357,7 +357,7 @@ export class NodeHandlerProvider {
    * @param index 
    */
   public getNodeDefinitionId(treeIndex: number, nodeDefIndex: number): string {
-    const nodeDefinition = this.getNodeDefinition(treeIndex, nodeDefIndex);
+    const nodeDefinition: NodeDefinition = this.getNodeDefinition(treeIndex, nodeDefIndex);
     if (nodeDefinition) {
       return nodeDefinition.id;
     }
@@ -384,7 +384,7 @@ export class NodeHandlerProvider {
   private getNode(treeIndex: number, nodeSnap: NodeSnapshot): Node {
 
     // Browse all lists
-    const nodeDefinition = this.getNodeDefinition(treeIndex, nodeSnap.nodeDefIndex);
+    const nodeDefinition: NodeDefinition = this.getNodeDefinition(treeIndex, nodeSnap.nodeDefIndex);
     if (nodeDefinition) {
       for (let list of nodeDefinition.lists) {
 
