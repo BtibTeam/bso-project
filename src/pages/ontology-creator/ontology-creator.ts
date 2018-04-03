@@ -64,6 +64,9 @@ export class OntologyCreatorPage implements OnInit {
   // Life Cycle
   ////////////////////////////////////////////////////////////////
 
+  /**
+   * @Override
+   */
   public ngOnInit(): void {
 
     this.nodeDataPvd.loadNodeDefinitions();
