@@ -14,6 +14,61 @@
 // automatically applied to the <body> element in the app.
 // Angular Material theme
 @import "indigo-pink";
+.app-container {
+  position: absolute !important;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  .login-layer {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 10;
+  }
+}
+
+mat-sidenav {
+  width: 300px;
+}
+
+.ontology-navbar {
+  min-height: 42px;
+  padding: 0;
+  .login-button-container {
+    background-color: map-get($colors, accentuation);
+    height: 42px;
+    button {
+      height: 100%;
+      margin-right: 8px;
+      ion-icon {
+        margin: 0px 8px;
+      }
+    }
+  }
+  .update-text {
+    position: relative;
+    float: right;
+    font-size: 0.9em;
+    margin: 8px 8px 8px 0px;
+  }
+}
+
+.scroll-content {
+  overflow: auto;
+  background-color: #eceff1;
+}
+
+.fixed-content {
+  margin-top: 42px;
+}
+
+.title div {
+  font-size: 1.1em;
+  font-weight: 400;
+}
+
 .popover-content {
   overflow: hidden;
 }

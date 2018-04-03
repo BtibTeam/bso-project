@@ -22,7 +22,8 @@ export class TranslationManager implements OnChanges {
   // Input values
   @Input('originalName') private originalName: string = '';
   @Input('translations') private translations: NodeTranslation[];
-
+  @Input('readonly') private readonly: boolean = true;
+  
   public displayedColumns = ['language', 'name', 'description', 'actions'];
   public dataSource = new MatTableDataSource();
 

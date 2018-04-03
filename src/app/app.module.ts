@@ -3,7 +3,12 @@ import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule } from '@angular/common/http'
+
+// Angular Material
+import { MatSidenavModule } from '@angular/material';
+
+// Components
+import { AccountComponent } from '../components/account/account';
 
 // Firestore
 import { AngularFireModule } from 'angularfire2';
@@ -20,6 +25,7 @@ import { NodeDataProvider } from '../providers/node-data/node-data';
 import { FirestoreProvider } from '../providers/firestore/firestore';
 import { AddonsDataProvider } from '../providers/addons-data/addons-data';
 import { ConfigProvider } from '../providers/config/config';
+import { FireAuthProvider } from '../providers/fire-auth/fire-auth';
 
 // Firestore config
 const config = {
@@ -34,10 +40,11 @@ const config = {
 @NgModule({
   declarations: [
     MyApp,
-    HomePage
+    HomePage,
+    AccountComponent
   ],
   imports: [
-    HttpClientModule,
+    MatSidenavModule,
     BrowserModule,
     BrowserAnimationsModule,
     IonicModule.forRoot(MyApp),
@@ -48,7 +55,8 @@ const config = {
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    HomePage
+    HomePage,
+    AccountComponent
   ],
   providers: [
     { provide: ErrorHandler, useClass: IonicErrorHandler },
@@ -57,6 +65,7 @@ const config = {
     FirestoreProvider,
     AddonsDataProvider,
     ConfigProvider,
+    FireAuthProvider,
   ]
 })
 export class AppModule { }
