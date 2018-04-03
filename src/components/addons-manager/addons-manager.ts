@@ -23,7 +23,8 @@ export class AddonsManager implements OnChanges {
   // Input values
   @Input('addons') private addons: Addon[];
   @Input('type') private type: string;
-
+  @Input('readonly') private readonly: boolean = true;
+  
   private text: string;
   public displayedColumns = ['tag', 'kind', 'description', 'actions'];
   public dataSource = new MatTableDataSource();

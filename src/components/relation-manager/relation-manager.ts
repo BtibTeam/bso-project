@@ -26,6 +26,7 @@ export class RelationManager {
   @Input('treeIndex') private treeIndex: number = -1;
   @Input('nodeDefIndex') private nodeDefIndex: number = -1;
   @Input('listIndex') private listIndex: number = -1;
+  @Input('readonly') private readonly: boolean = true;
 
   private removable: boolean = true; // Whether chips can be removed
 

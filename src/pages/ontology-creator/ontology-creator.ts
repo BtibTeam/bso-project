@@ -1,6 +1,9 @@
 // Angular
 import { Component, ViewChild, OnInit } from '@angular/core';
 
+// Firestore
+import User from 'firebase/auth';
+
 // Ionic
 import { IonicPage, NavController, NavParams, AlertController, LoadingController, Loading, ToastController, ModalController } from 'ionic-angular';
 
@@ -20,6 +23,7 @@ import { Observable } from 'rxjs/Observable';
 // Utils
 import { ListUtil } from '../../utils/list-util';
 import { ViewUtil } from '../../utils/view-util';
+import { AngularFireAuth } from 'angularfire2/auth';
 
 @IonicPage()
 @Component({
@@ -32,9 +36,9 @@ export class OntologyCreatorPage implements OnInit {
   private topNodeDef: string = 'category';
   private topNodeDefTreeIndex: number = 0;
 
+  private user: User = undefined;
   private nodeDefinitions: NodeDefinition[] = []; // UI list that can be manipulated
   private config: Config = new Config(); // Config object
-  private lastPublicationText: string = '';
 
   private loading: Loading;
 
@@ -46,8 +50,14 @@ export class OntologyCreatorPage implements OnInit {
     private loadingCtrl: LoadingController,
     private toastCtrl: ToastController,
     private nodeHandlerPvd: NodeHandlerProvider,
+    private afAuth: AngularFireAuth,
     private configPvd: ConfigProvider,
     private nodeDataPvd: NodeDataProvider) {
+
+    afAuth.authState.subscribe(_user => {
+      this.user = _user;
+    });
+
   }
 
   ////////////////////////////////////////////////////////////////
@@ -121,9 +131,12 @@ export class OntologyCreatorPage implements OnInit {
    * @param node 
    * @param treeIndex 
    */
-  protected editNode(node: Node, treeIndex: number) {
+  protected editNode(node: Node, treeIndex: number, readonly: boolean) {
 
-    let nodeEditorModal = this.modalCtrl.create('NodeEditorPage', { node });
+    let nodeEditorModal = this.modalCtrl.create('NodeEditorPage', {
+      'node': node,
+      'readonly': readonly
+    });
     nodeEditorModal.present();
     nodeEditorModal.onDidDismiss(data => {
       if (data) {

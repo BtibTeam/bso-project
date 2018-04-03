@@ -48,48 +48,51 @@
             <!-- isIn Relations -->
             <ion-label color="softDark" class="relation-label">isIn relations</ion-label>
             <relation-manager [nodes]="node.isIn" [showOnlySameTree]="true" [onlyAscendantNodes]="true" [treeIndex]="node.treeIndex"
-              [nodeDefIndex]="node.nodeDefIndex" [listIndex]="node.listIndex"></relation-manager>
+              [nodeDefIndex]="node.nodeDefIndex" [listIndex]="node.listIndex" [readonly]="readonly"></relation-manager>
             <!-- isNot Relations -->
             <ion-label color="softDark" class="relation-label">isNot relations</ion-label>
             <relation-manager [nodes]="node.isNot" [nodeDefs]="node.isNotDef" [showNodeDef]="true" [treeIndex]="node.treeIndex" [nodeDefIndex]="node.nodeDefIndex"
-              [listIndex]="node.listIndex"></relation-manager>
+              [listIndex]="node.listIndex" [readonly]="readonly"></relation-manager>
             <!-- mayBe Relations -->
             <ion-label color="softDark" class="relation-label">mayBe relations</ion-label>
             <relation-manager [nodes]="node.mayBe" [showOnlySameTree]="false" [treeIndex]="node.treeIndex" [nodeDefIndex]="node.nodeDefIndex"
-              [listIndex]="node.listIndex"></relation-manager>
+              [listIndex]="node.listIndex" [readonly]="readonly"></relation-manager>
           </div>
 
           <!-- Source Tags -->
           <div *ngSwitchCase="'sourceTags'">
-            <addons-manager [addons]="node.tags" type="tags" (onChange)="updateTags($event)">
+            <addons-manager [addons]="node.tags" type="tags" [readonly]="readonly" (onChange)="updateTags($event)">
             </addons-manager>
           </div>
 
           <!-- Source Relations -->
           <div *ngSwitchCase="'sourceRelations'">
-            <addons-manager [addons]="node.relations" type="relations" (onChange)="updateRelations($event)">
+            <addons-manager [addons]="node.relations" type="relations" [readonly]="readonly" (onChange)="updateRelations($event)">
             </addons-manager>
           </div>
 
           <!-- Node Groups -->
           <div *ngSwitchCase="'groups'">
-            <node-group-editor [has]="node.has" (onChange)="updateGroups($event)">
+            <node-group-editor [has]="node.has" [readonly]="readonly" (onChange)="updateGroups($event)">
             </node-group-editor>
           </div>
 
           <!-- Translations -->
           <div *ngSwitchCase="'translations'">
-            <translation-manager [translations]="node.translations" [originalName]="node.name" (onChange)="updateTranslations($event)">
+            <translation-manager [translations]="node.translations" [originalName]="node.name" [readonly]="readonly" (onChange)="updateTranslations($event)">
             </translation-manager>
           </div>
         </div>
 
         <!-- Savings -->
         <ion-row justify-content-end class="saving-row">
-          <button ion-button clear (click)="cancel()">
+          <button *ngIf="readonly" ion-button clear (click)="cancel()">
+            Close
+          </button>
+          <button *ngIf="!readonly" ion-button clear (click)="cancel()">
             Cancel
           </button>
-          <button ion-button type="button" [disabled]="!editForm.valid" (click)="saveNode()">
+          <button *ngIf="!readonly" ion-button type="button" [disabled]="!editForm.valid" (click)="saveNode()">
             Save
           </button>
         </ion-row>
