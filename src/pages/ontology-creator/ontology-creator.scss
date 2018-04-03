@@ -1,13 +1,12 @@
 page-ontology-creator {
-  min-height: 100%;
-  .ontology-navbar {
-    min-height: 48px;
-    .title div {
-      font-size: 1.3em;
-      font-weight: 300;
+  min-height: 100vh;
+  .page-title {
+    font-size: 1.4em;
+    padding: 16px 0px;
+    text-align: center;
     }
-    .publication-button {
-      padding: 16px;
+  .toolbar {
+    padding: 0px;
     }
   }
   .scroll-content {
@@ -15,15 +14,11 @@ page-ontology-creator {
     margin-top: 32px !important;
     background-color: #eceff1;
   }
-  .fixed-content {
-    margin-top: 42px;
-  }
-  /**
-    * Override select button which otherwise takes 100% of the screen
-    */
-  ion-select button {
-    width: auto !important;
-    height: auto !important;
+  .publication-button {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    color: map-get($colors, primary);
   }
   .topNodeDef-select {
     padding: 8px 8px 8px 8px;

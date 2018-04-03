@@ -64,13 +64,6 @@ export class OntologyCreatorPage implements OnInit {
 
     });
 
-    this.configPvd.loadConfig();
-    this.configPvd.config$.subscribe(config => {
-
-      this.config = config;
-      this.lastPublicationText = 'Last publication on ' + new Date(config.lastPublication).toLocaleDateString();
-    });
-
   }
 
   ////////////////////////////////////////////////////////////////
