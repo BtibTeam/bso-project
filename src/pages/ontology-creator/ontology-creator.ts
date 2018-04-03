@@ -73,8 +73,8 @@ export class OntologyCreatorPage implements OnInit {
   /**
    * Update the topNodeDefTreeIndex based on the user selection of the top nodeNodeDefinition
    */
-  protected topNodeDefChange(selection: string): void {
-    this.topNodeDefTreeIndex = ListUtil.getTopNodeDefTreeIndex(selection);
+  protected topNodeDefChange(segment: any): void {
+    this.topNodeDefTreeIndex = ListUtil.getTopNodeDefTreeIndex(segment.value);
   }
 
   /**
