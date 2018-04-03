@@ -6,6 +6,8 @@
 
   <mat-sidenav-content>
 
+    <div *ngIf="opened" class="login-layer"></div>
+
     <ion-header>
 
       <ion-navbar color="headerBG" class="ontology-navbar">
@@ -14,7 +16,6 @@
           <div class="login-button-container">
             <button ion-button (click)=switchAccountSideBar()>
               <ion-icon name="person"></ion-icon>
-              <p *ngIf="user">{{user.email}}</p>
               <p *ngIf="!user">Login</p>
             </button>
           </div>
@@ -23,7 +24,7 @@
         <ion-title class="title">Haystack Semantic Ontology Project</ion-title>
 
         <ion-buttons end>
-          <ion-label color="light" class="update-text">Last update 01/01/2019</ion-label>
+          <ion-label color="light" class="update-text">v{{config.version}}</ion-label>
         </ion-buttons>
 
       </ion-navbar>
