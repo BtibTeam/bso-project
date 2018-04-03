@@ -34,7 +34,7 @@ export class NodeHandlerProvider {
     let discoveredNodes: Node[] = [];
 
     // Reset every node hidden state in order to all of them being displayed
-    this.updateNodesState([], treeIndex, this.resetHiddenState);
+    this.updateNodesState(node, [], treeIndex, this.resetHiddenState);
 
     // Get every selected node
     let selectedNodes = this.getSelectedNodes(treeIndex);
@@ -45,10 +45,10 @@ export class NodeHandlerProvider {
       discoveredNodes.push(selectedNode);
 
       // Explore isIn and contains relationships to discovered every connected nodes to the selected one
-      discoveredNodes = this.findRelatedNodes(selectedNode, discoveredNodes, true, true);
+      discoveredNodes = this.findRelatedNodes(treeIndex, selectedNode, discoveredNodes, true, true);
 
       // Apply the hidden state to every node which is not contained in the discoveredNodes array
-      this.updateNodesState(discoveredNodes, treeIndex, this.applyHiddenStateToDiscoveredNodes);
+      this.updateNodesState(node, discoveredNodes, treeIndex, this.applyHiddenStateToDiscoveredNodes);
     });
 
     if (node.listIndex != 0) {
@@ -85,13 +85,13 @@ export class NodeHandlerProvider {
     discoveredNodes.push(node);
 
     // Explore isIn and contains relationships to discovered every connected nodes to the selected one
-    discoveredNodes = this.findRelatedNodes(node, discoveredNodes, true, true);
+    discoveredNodes = this.findRelatedNodes(treeIndex, node, discoveredNodes, true, true);
 
     // Apply the hidden state to every node which is not contained in the discoveredNodes array
-    this.updateNodesState(discoveredNodes, treeIndex, this.applyHiddenStateToDiscoveredNodes);
+    this.updateNodesState(node, discoveredNodes, treeIndex, this.applyHiddenStateToDiscoveredNodes);
 
-    // Auto-select every single displayed node
-    this.updateNodesState(discoveredNodes, treeIndex, this.autoSelectNodes);
+    // Auto-select every single displayed node only if they are from a higher level than the selected Node
+    this.updateNodesState(node, discoveredNodes, treeIndex, this.autoSelectNodes, this.isLowerLevelNodes);
 
     //this.handleNodeAddButtons(node, true);
   }
@@ -135,11 +135,12 @@ export class NodeHandlerProvider {
 
   /**
    * Browse every node of the given tree index and perform the given function on each of them
+   * @param referenceNode
    * @param discoveredNodes 
    * @param treeIndex 
    * @param stateFunction 
    */
-  private updateNodesState(discoveredNodes: Node[], treeIndex: number, stateFunction: Function) {
+  private updateNodesState(referenceNode: Node, discoveredNodes: Node[], treeIndex: number, stateFunction: Function, filterFunction?: Function) {
 
     // Browse all nodeDefinition
     for (let nodeDef of this.nodeDefinitions) {
@@ -155,7 +156,7 @@ export class NodeHandlerProvider {
 
         // Browse all nodes
         for (let node of list.nodes) {
-          stateFunction(discoveredNodes, node);
+          stateFunction(referenceNode, discoveredNodes, node, filterFunction);
         }
       }
 
@@ -178,10 +179,11 @@ export class NodeHandlerProvider {
 
   /**
    * Apply the hidden state if the given node is contained in the given discoveredNodes array
+   * @param referenceNode
    * @param discoveredNodes 
    * @param node 
    */
-  private applyHiddenStateToDiscoveredNodes = (discoveredNodes: any, node: any) => {
+  private applyHiddenStateToDiscoveredNodes = (referenceNode: Node, discoveredNodes: any, node: any) => {
     if (discoveredNodes.length > 0) {
       // Check if it is not one of the discovered nodes
       if (discoveredNodes.indexOf(node) === -1) {
@@ -192,26 +194,53 @@ export class NodeHandlerProvider {
 
   /**
    * Reset the hidden states of the given node
+   * @param referenceNode
    * @param discoveredNodes 
    * @param node 
    */
-  private resetHiddenState = (discoveredNodes: Node[], node: Node) => {
+  private resetHiddenState = (referenceNode: Node, discoveredNodes: Node[], node: Node) => {
     node.isHidden = false;
     //this.handleNodeAddButtons(node, false);
   }
 
   /**
    * Auto-select the given node if it's the only one displayed among its siblings
+   * @param referenceNode
    * @param discoveredNodes 
-   * @param node 
+   * @param node
+   * @param filterFunction
    */
-  private autoSelectNodes = (discoveredNodes: Node[], node: Node) => {
+  private autoSelectNodes = (referenceNode: Node, discoveredNodes: Node[], node: Node, filterFunction?: Function) => {
+    if (filterFunction) {
+      if (filterFunction(referenceNode, node) === true)
+        return;
+    }
     if (!node.isHidden) {
       if (this.isSingleSiblingsDisplayed(node)) {
         node.isSelected = true;
         //this.handleNodeAddButtons(node, true);
       }
     }
+  }
+
+  ////////////////////////////////////////////////////////////////
+  // Filter functions
+  ////////////////////////////////////////////////////////////////
+
+  /**
+   * Check whether the Node is from a lower or upper Level than the reference one
+   * @param referenceNode 
+   * @param node
+   * @return true if the Node is from a lower level in the isIn hierarchy
+   */
+  private isLowerLevelNodes: Function = (referenceNode: Node, node: Node): boolean => {
+    if (node.nodeDefIndex === referenceNode.nodeDefIndex) {
+      if (node.listIndex > referenceNode.listIndex) {
+        return true;
+      }
+    } else if (node.nodeDefIndex > referenceNode.nodeDefIndex)
+      return true;
+    return false;
   }
 
   ////////////////////////////////////////////////////////////////
@@ -245,18 +274,19 @@ export class NodeHandlerProvider {
 
   /**
    * Exploration algorithm for discovering every node which is not already hidden by following isIn and contains relationships
+   * @param treeIndex The graph index
    * @param referenceNode The node from which the exploration is based
    * @param discoveredNodes An array of nodes to be discovered. Return the same array.
    * @param isIn whether to activate the exploration through isIn relationships 
    * @param contains whether to activate the exploration through contains relationships
    */
-  private findRelatedNodes(referenceNode: Node, discoveredNodes: Node[], isIn: boolean, contains: boolean): Node[] {
+  private findRelatedNodes(treeIndex: number, referenceNode: Node, discoveredNodes: Node[], isIn: boolean, contains: boolean): Node[] {
     if (isIn) {
       // Browse every isIn relationships between nodes
       referenceNode.isIn.forEach(nodeSnap => {
 
         // Get the relative node
-        let node: Node = this.getNode(nodeSnap);
+        let node: Node = this.getNode(treeIndex, nodeSnap);
         if (node != null) {
 
           // Add the node
@@ -266,7 +296,7 @@ export class NodeHandlerProvider {
           if (!node.isHidden) {
 
             // Call itself to discover more nodes
-            discoveredNodes.concat(this.findRelatedNodes(node, discoveredNodes, true, false));
+            discoveredNodes.concat(this.findRelatedNodes(treeIndex, node, discoveredNodes, true, false));
 
           }
         }
@@ -276,14 +306,14 @@ export class NodeHandlerProvider {
       // Same algorithm for contains relationships
       referenceNode.contains.forEach(nodeSnap => {
 
-        let node: Node = this.getNode(nodeSnap);
+        let node: Node = this.getNode(treeIndex, nodeSnap);
         if (node != null) {
           discoveredNodes.push(node);
 
           if (!node.isHidden) {
 
             // Call itself to discover more nodes
-            discoveredNodes.concat(this.findRelatedNodes(node, discoveredNodes, false, true));
+            discoveredNodes.concat(this.findRelatedNodes(treeIndex, node, discoveredNodes, false, true));
 
           }
         }
@@ -327,7 +357,11 @@ export class NodeHandlerProvider {
    * @param index 
    */
   public getNodeDefinitionId(treeIndex: number, nodeDefIndex: number): string {
-    return this.getNodeDefinition(treeIndex, nodeDefIndex).id;
+    const nodeDefinition: NodeDefinition = this.getNodeDefinition(treeIndex, nodeDefIndex);
+    if (nodeDefinition) {
+      return nodeDefinition.id;
+    }
+    return null;
   }
 
   /**
@@ -344,20 +378,23 @@ export class NodeHandlerProvider {
   /**
    * Return a node based on a nodeSnapshot
    * Return null if it didn't find the node
-   * @param nodeDefIndex
+   * @param treeIndex
    * @param nodeSnap 
    */
-  private getNode(nodeSnap: NodeSnapshot): Node {
+  private getNode(treeIndex: number, nodeSnap: NodeSnapshot): Node {
 
     // Browse all lists
-    for (let list of this.nodeDefinitions[nodeSnap.nodeDefIndex].lists) {
+    const nodeDefinition: NodeDefinition = this.getNodeDefinition(treeIndex, nodeSnap.nodeDefIndex);
+    if (nodeDefinition) {
+      for (let list of nodeDefinition.lists) {
 
-      // Browse all nodes
-      for (let node of list.nodes) {
+        // Browse all nodes
+        for (let node of list.nodes) {
 
-        // Check if ids match
-        if (node.id === nodeSnap.id) {
-          return node;
+          // Check if ids match
+          if (node.id === nodeSnap.id) {
+            return node;
+          }
         }
       }
     }

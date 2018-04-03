@@ -7,10 +7,12 @@ import { IonicPage, NavController, NavParams, AlertController, LoadingController
 // Models
 import { Node, NodeSnapshot } from '../../model/node-model';
 import { NodeDefinition, NodeDefinitionList } from '../../model/node-definition-model';
+import { Config } from '../../model/config-model';
 
 // Providers
 import { NodeHandlerProvider } from '../../providers/node-handler/node-handler';
 import { NodeDataProvider } from '../../providers/node-data/node-data';
+import { ConfigProvider } from '../../providers/config/config';
 
 // RxJs
 import { Observable } from 'rxjs/Observable';
@@ -31,8 +33,8 @@ export class OntologyCreatorPage implements OnInit {
   private topNodeDefTreeIndex: number = 0;
 
   private nodeDefinitions: NodeDefinition[] = []; // UI list that can be manipulated
-
-  private selectedNode: Node;
+  private config: Config = new Config(); // Config object
+  private lastPublicationText: string = '';
 
   private loading: Loading;
 
@@ -44,6 +46,7 @@ export class OntologyCreatorPage implements OnInit {
     private loadingCtrl: LoadingController,
     private toastCtrl: ToastController,
     private nodeHandlerPvd: NodeHandlerProvider,
+    private configPvd: ConfigProvider,
     private nodeDataPvd: NodeDataProvider) {
   }
 
@@ -59,6 +62,13 @@ export class OntologyCreatorPage implements OnInit {
 
       this.nodeHandlerPvd.setNodeDefinitions(this.nodeDefinitions);
 
+    });
+
+    this.configPvd.loadConfig();
+    this.configPvd.config$.subscribe(config => {
+
+      this.config = config;
+      this.lastPublicationText = 'Last publication on ' + new Date(config.lastPublication).toLocaleDateString();
     });
 
   }
@@ -104,17 +114,11 @@ export class OntologyCreatorPage implements OnInit {
       node.isSelected = false;
       this.nodeHandlerPvd.unselectNode(node, treeIndex);
       let targetedNode = this.nodeHandlerPvd.getSelectedParentNode(node);
-      if (targetedNode != null) {
-        this.selectedNode = targetedNode;
-      } else {
-        this.selectedNode = undefined;
-      }
 
     } else {
 
       node.isSelected = true;
       this.nodeHandlerPvd.selectNode(node, treeIndex);
-      this.selectedNode = node;
     }
 
   }
@@ -171,7 +175,6 @@ export class OntologyCreatorPage implements OnInit {
             this.nodeDataPvd.createNode(data.name, this.topNodeDefTreeIndex, nodeDefIndex, listIndex, isNodeGroupDefinition).then(() => {
               this.loading.dismiss();
               this.loading = null;
-              this.selectedNode = undefined;
               this.nodeHandlerPvd.unselectAllNodes();
             });
           }
@@ -188,7 +191,6 @@ export class OntologyCreatorPage implements OnInit {
    */
   protected updateNode(map: Map<string, Node>): void {
     this.nodeDataPvd.synchronizeNode(map);
-    this.selectedNode = undefined;
     this.nodeHandlerPvd.unselectAllNodes();
   }
 
@@ -199,7 +201,6 @@ export class OntologyCreatorPage implements OnInit {
    */
   protected deleteNode(node): void {
     this.nodeDataPvd.deleteNode(node);
-    this.selectedNode = undefined;
     this.nodeHandlerPvd.unselectAllNodes();
   }
 
@@ -217,6 +218,60 @@ export class OntologyCreatorPage implements OnInit {
    */
   protected addList(nodeDefinition: NodeDefinition) {
     nodeDefinition.lists.push(new NodeDefinitionList());
+  }
+
+  /**
+   * Publish a new version 
+   */
+  protected publishNewVersion() {
+
+    // Present an alert to the user to get the name of the node to create
+    let alert = this.alertCtrl.create({
+      title: 'Publish a new version',
+      subTitle: 'Current version: ' + this.config.version,
+      inputs: [
+        {
+          name: 'version',
+          placeholder: 'Increment the current version'
+        },
+        {
+          name: 'changelog',
+          placeholder: 'Specify a changelog'
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+        {
+          text: 'Publish',
+          handler: data => {
+
+            this.loading = this.createLoadingCtrl('Publishing the new version');
+            this.handleTimeout(10000, 'Publishing the new version');
+            this.loading.present();
+
+            this.config.version = data.version;
+            this.config.lastPublication = Date.now();
+            this.config.changelog.splice(0, 1, {
+              version: this.config.version,
+              date: this.config.lastPublication,
+              text: data.changelog
+            });
+
+            // Create the node in the database and update the related node
+            this.configPvd.updateVersion(this.config).then(() => {
+              this.loading.dismiss();
+              this.loading = null;
+              this.nodeHandlerPvd.unselectAllNodes();
+            });
+          }
+        }
+      ]
+    });
+    alert.present();
+
   }
 
   ////////////////////////////////////////////////////////////////

@@ -1,9 +1,6 @@
 // Angular
 import { Injectable } from '@angular/core';
 
-// Firestore
-import { AngularFirestore, AngularFirestoreDocument } from 'angularfire2/firestore';
-
 // Libraries
 import { plainToClass } from "class-transformer";
 
@@ -173,6 +170,30 @@ export class NodeDataProvider {
       }
 
     });
+
+    // Update contains relations if the name of the Node has changed
+    if (originalNode.name !== modifiedNode.name) {
+      modifiedNode.contains.forEach(modifiedNodeSnap => {
+
+        // Retrieve the original node
+        this.retrieveNodeFromSnapshot(modifiedNodeSnap).take(1).subscribe(_node => {
+
+          // Transform to a node
+          let node: Node = plainToClass(Node, _node as Object);
+          const index: number = node.isIn.findIndex(nodeSnap => {
+            return nodeSnap.id === modifiedNode.id;
+          });
+          
+          // Delete the NodeSnapshot and push the new one
+          if(index >= 0){
+          node.isIn.splice(index, 1);
+          node.isIn.push(NodeSnapshot.generateSnapshot(modifiedNode));
+          this.updateNode(node);
+          }
+        });
+
+      });
+    }
 
     // Removed relations
     originalNode.isIn.forEach(originalNodeSnap => {

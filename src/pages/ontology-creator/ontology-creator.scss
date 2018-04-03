@@ -1,12 +1,13 @@
 page-ontology-creator {
   min-height: 100%;
   .ontology-navbar {
-    min-height: 42px;
-    .update-text {
-      position: relative;
-      float: right;
-      font-size: 0.9em;
-      margin: 8px 8px 8px 0px;
+    min-height: 48px;
+    .title div {
+      font-size: 1.3em;
+      font-weight: 300;
+    }
+    .publication-button {
+      padding: 16px;
     }
   }
   .scroll-content {
@@ -16,10 +17,6 @@ page-ontology-creator {
   }
   .fixed-content {
     margin-top: 42px;
-  }
-  .title div {
-    font-size: 1.1em;
-    font-weight: 400;
   }
   /**
     * Override select button which otherwise takes 100% of the screen
