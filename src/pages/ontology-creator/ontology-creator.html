@@ -1,9 +1,12 @@
 <ion-header>
 
   <ion-navbar color="headerBG" class="ontology-navbar">
-    <ion-title class="title">Haystack Semantic Ontology Project</ion-title>
+    <ion-title class="title">Haystack Semantic Ontology Project v{{config.version}}</ion-title>
     <ion-buttons end>
-      <ion-label color="light" class="update-text">Last update 01/01/2019</ion-label>
+      <button ion-button solid color="secondary" [matTooltip]="lastPublicationText" matTooltipPosition="below" class="publication-button"
+        (click)="publishNewVersion()">
+        Publish
+      </button>
     </ion-buttons>
   </ion-navbar>
 

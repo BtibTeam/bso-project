@@ -1,9 +1,6 @@
 // Angular
 import { Injectable } from '@angular/core';
 
-// Firestore
-import { AngularFirestore, AngularFirestoreDocument } from 'angularfire2/firestore';
-
 // Libraries
 import { plainToClass } from "class-transformer";
 
