@@ -4,15 +4,16 @@ page-ontology-creator {
     font-size: 1.4em;
     padding: 16px 0px;
     text-align: center;
-    }
+  }
   .toolbar {
     padding: 0px;
-    }
   }
-  .scroll-content {
-    overflow: auto;
-    margin-top: 32px !important;
-    background-color: #eceff1;
+  .toolbar-segment {
+    justify-content: left;
+    max-width: 650px;
+    .segment-button {
+      border-bottom-width: 3px;
+    }
   }
   .publication-button {
     position: absolute;
@@ -20,14 +21,13 @@ page-ontology-creator {
     right: 12px;
     color: map-get($colors, primary);
   }
-  .topNodeDef-select {
-    padding: 8px 8px 8px 8px;
-    max-width: 100px;
-    cursor: pointer;
+  ion-content {
+    margin-top: 110px;
   }
   .grid {
     padding: 0;
     width: 100% !important;
+    min-height: calc(100% - 180px);
     .nodeDef-container {
       flex-grow: 0;
       .nodeDef-header {
@@ -119,11 +119,10 @@ page-ontology-creator {
     }
   }
   .footer-container {
-    margin-top: 200px;
     border-top: 1px solid lightgray;
     height: 50px;
-    text-align: center;
-    display: flex;
-    align-items: flex-end;
+    text-align: left;
+    position: relative;
+    bottom: 0px;
   }
 }

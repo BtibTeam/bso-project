@@ -1,17 +1,18 @@
-<ion-header>
-
-  <ion-navbar color="headerBG" class="ontology-navbar">
-    <ion-title class="title">Haystack Semantic Ontology Project v{{config.version}}</ion-title>
-    <ion-buttons end>
-      <button ion-button solid color="secondary" [matTooltip]="lastPublicationText" matTooltipPosition="below" class="publication-button"
+<ion-toolbar color="headerBG">
+  <ion-title class="page-title">
+    Ontology Editor
+  </ion-title>
+  <button *ngIf="user" ion-button solid small color="light" [matTooltip]="lastPublicationText" matTooltipPosition="below" class="publication-button"
         (click)="publishNewVersion()">
         Publish
       </button>
-    </ion-buttons>
-  </ion-navbar>
-
-</ion-header>
-
+  <ion-segment [(ngModel)]="topNodeDef" (ionChange)="topNodeDefChange($event)" color="light"
+    class="toolbar-segment">
+    <ion-segment-button *ngFor="let topNodeDefElt of topNodeDefList" [value]="topNodeDefElt">
+      {{topNodeDefElt | friendlyCase}}
+    </ion-segment-button>
+  </ion-segment>
+</ion-toolbar>
 
 <ion-content padding>
 
