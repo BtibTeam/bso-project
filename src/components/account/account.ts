@@ -15,7 +15,7 @@ import { FireAuthProvider } from '../../providers/fire-auth/fire-auth';
 export class AccountComponent {
 
   // Inputs
-  @Input('user') user: User = null;
+  @Input('user') private user: User = null;
 
   // Outputs
   @Output() private loggedIn: EventEmitter<void> = new EventEmitter<void>();
@@ -24,7 +24,8 @@ export class AccountComponent {
 
   constructor(
     private formBuilder: FormBuilder,
-    private authPvd: FireAuthProvider) {
+    private authPvd: FireAuthProvider
+  ) {
 
     this.loginForm = formBuilder.group({
       email: ['', Validators.compose([Validators.email, Validators.required])],

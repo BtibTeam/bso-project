@@ -23,14 +23,14 @@ export class MyApp {
 
   private rootPage: any = HomePage;
   private opened: boolean = false;
-  
+
   private user: User = null;
   private config: Config = new Config(); // Config object
   private lastPublicationText: string = '';
-  
+
   constructor(
     private afAuth: AngularFireAuth,
-    private configPvd: ConfigProvider,    
+    private configPvd: ConfigProvider,
   ) {
 
     afAuth.authState.subscribe(_user => {
@@ -43,6 +43,9 @@ export class MyApp {
   // Life Cycle
   ////////////////////////////////////////////////////////////////
 
+  /**
+   * @Override
+  */
   public ngOnInit(): void {
 
     this.configPvd.loadConfig();
