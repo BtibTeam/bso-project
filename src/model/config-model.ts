@@ -1,5 +1,3 @@
-import * as firebase from 'firebase';
-
 export class Config {
 
     public lastPublication: Date = new Date();

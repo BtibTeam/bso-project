@@ -39,7 +39,7 @@ export class OntologyCreatorPage implements OnInit {
   private user: User = undefined;
   private nodeDefinitions: NodeDefinition[] = []; // UI list that can be manipulated
   private config: Config = new Config(); // Config object
-
+  private lastPublicationText: string = '';
   private loading: Loading;
 
   constructor(
@@ -75,6 +75,12 @@ export class OntologyCreatorPage implements OnInit {
 
       this.nodeHandlerPvd.setNodeDefinitions(this.nodeDefinitions);
 
+    });
+
+    this.configPvd.config$.subscribe(config => {
+
+      this.config = config;
+      this.lastPublicationText = 'Last publication on ' + new Date(config.lastPublication).toLocaleDateString();
     });
 
   }
@@ -262,7 +268,7 @@ export class OntologyCreatorPage implements OnInit {
             this.loading.present();
 
             this.config.version = data.version;
-            this.config.lastPublication = Date.now();
+            this.config.lastPublication = new Date(Date.now());
             this.config.changelog.splice(0, 1, {
               version: this.config.version,
               date: this.config.lastPublication,
