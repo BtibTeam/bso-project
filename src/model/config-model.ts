@@ -1,7 +1,8 @@
+import * as firebase from 'firebase';
 
 export class Config {
 
-    public lastPublication: number = 0;
+    public lastPublication: Date = new Date();
     public version: string = '';
     public changelog: ChangelogItem[] = [];
     public languages: string[] = [];
@@ -10,6 +11,6 @@ export class Config {
 
 export interface ChangelogItem {
     version: string;
-    date: number;
+    date: Date;
     text: string;
 } 
