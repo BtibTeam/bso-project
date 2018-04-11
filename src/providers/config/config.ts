@@ -40,7 +40,7 @@ export class ConfigProvider {
    */
   public updateVersion(config: Config): Promise<void> {
 
-    return this.firestorePvd.set(config, 'config/parameters');
+    return this.firestorePvd.set(JSON.parse(JSON.stringify(config)), 'config/parameters');
 
   }
 
