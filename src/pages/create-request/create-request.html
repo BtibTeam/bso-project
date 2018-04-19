@@ -1,0 +1,199 @@
+<ion-header>
+
+  <ion-navbar color="headerBG">
+    <ion-title>Submit a modification request</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <ion-grid>
+
+    <ion-list>
+
+      <ion-item-group class="header-group">
+
+        <p ion-text color="softDark">Before submitting a modification, please check the open ones</p>
+        <p ion-text color="softDark">If none is already submitted, select the object below and fill in the fields as precised as possible</p>
+
+      </ion-item-group>
+
+      <ion-item-group>
+
+        <mat-form-field>
+          <mat-select [(ngModel)]="request.object" placeholder="Which part would you like to update ?">
+            <mat-option [value]="0">General</mat-option>
+            <mat-option [value]="1">Relations</mat-option>
+            <mat-option [value]="2">Translations</mat-option>
+            <mat-option [value]="3">Addons</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+      </ion-item-group>
+
+      <!-- General -->
+      <span *ngIf="request.object === 0">
+
+        <mat-form-field>
+          <mat-select [(ngModel)]="request.field" placeholder="Which field ?">
+            <mat-option value="name">Name</mat-option>
+            <mat-option value="description">Description</mat-option>
+            <mat-option value="other">Other</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <span *ngIf="request.field !== ''">
+
+          <!-- Name -->
+          <ion-item *ngIf="request.field === 'name'">
+            <ion-label>
+              {{node.name}} ->
+            </ion-label>
+            <ion-input [(ngModel)]="request.value1"></ion-input>
+          </ion-item>
+
+          <!-- Description -->
+          <ion-item *ngIf="request.field === 'description'">
+            <ion-label>
+              {{node.description}} ->
+            </ion-label>
+            <ion-textarea textarea-autogrow [(ngModel)]="request.value1"></ion-textarea>
+          </ion-item>
+
+          <!-- Other -->
+          <ion-item *ngIf="request.field === 'other'">
+            <ion-label>
+              Other
+            </ion-label>
+            <ion-textarea textarea-autogrow [(ngModel)]="request.value1"></ion-textarea>
+          </ion-item>
+
+        </span>
+
+      </span>
+
+
+      <!-- Relations -->
+      <span *ngIf="request.object === 1">
+
+        <mat-form-field>
+          <mat-select [(ngModel)]="request.field" placeholder="Which relation ?">
+            <mat-option value="isIn">isIn</mat-option>
+            <mat-option value="isNot">isNot</mat-option>
+            <mat-option value="mayBe">mayBe</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- isIn Relations -->
+        <relation-manager *ngIf="request.field === 'isIn' " [nodes]="node.isIn" [showOnlySameTree]="true" [onlyAscendantNodes]="true"
+          [treeIndex]="node.treeIndex" [nodeDefIndex]="node.nodeDefIndex" [listIndex]="node.listIndex" [readonly]="false"></relation-manager>
+        <!-- isNot Relations -->
+        <relation-manager *ngIf="request.field === 'isNot'" [nodes]="node.isNot" [nodeDefs]="node.isNotDef" [showNodeDef]="true"
+          [treeIndex]="node.treeIndex" [nodeDefIndex]="node.nodeDefIndex" [listIndex]="node.listIndex" [readonly]="false"></relation-manager>
+        <!-- mayBe Relations -->
+        <relation-manager *ngIf="request.field === 'mayBe'" [nodes]="node.mayBe" [showOnlySameTree]="false" [treeIndex]="node.treeIndex"
+          [nodeDefIndex]="node.nodeDefIndex" [listIndex]="node.listIndex" [readonly]="false"></relation-manager>
+
+      </span>
+
+
+      <!-- Translations -->
+      <span *ngIf="request.object === 2">
+
+        <div>
+          <mat-form-field>
+            <mat-select [(ngModel)]="request.language" placeholder="Which translation ?" (selectionChange)="defineNewTranslation($event)">
+              <mat-option *ngFor="let translation of node.translations" [value]="request.language">{{translation.language}}</mat-option>
+              <mat-option *ngIf="!request.newLanguage" value="new">New translation</mat-option>
+              <mat-option *ngIf="request.newLanguage" [value]="request.language">{{ request.language }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <button ion-button clear *ngIf="request.newLanguage" (click)="deleteNewTranslation()">
+            <ion-icon name="trash" color="danger"></ion-icon>
+          </button>
+        </div>
+
+        <div *ngIf="request.language !== '' && !request.newLanguage">
+
+          <mat-form-field>
+            <mat-select [(ngModel)]="request.field" placeholder="Which field ?">
+              <mat-option value="name">Name</mat-option>
+              <mat-option value="description">Description</mat-option>
+              <mat-option value="other">Other</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Name -->
+          <ion-item *ngIf="request.field === 'name' ">
+            <ion-label>
+              {{node.name}} ->
+            </ion-label>
+            <ion-input [(ngModel)]="request.value1"></ion-input>
+          </ion-item>
+
+          <!-- Description -->
+          <ion-item *ngIf="request.field === 'description' ">
+            <ion-label>
+              {{node.description}} ->
+            </ion-label>
+            <ion-textarea textarea-autogrow [(ngModel)]="request.value1"></ion-textarea>
+          </ion-item>
+
+          <!-- Other -->
+          <ion-item *ngIf="request.field === 'other' ">
+            <ion-label>
+              Other
+            </ion-label>
+            <ion-textarea textarea-autogrow [(ngModel)]="request.value1"></ion-textarea>
+          </ion-item>
+
+        </div>
+
+        <span *ngIf="request.newLanguage">
+
+          <!-- Name -->
+          <ion-item>
+            <ion-label>
+              {{node.name}} ->
+            </ion-label>
+            <ion-input [placeholder]="node.name " [(ngModel)]="request.value1 "></ion-input>
+          </ion-item>
+
+          <!-- Description -->
+          <ion-item>
+            <ion-label>
+              {{node.description}} ->
+            </ion-label>
+            <ion-textarea [placeholder]="node.name " textarea-autogrow [(ngModel)]="request.value2 "></ion-textarea>
+          </ion-item>
+
+        </span>
+
+      </span>
+
+      <!-- Source Tags -->
+      <span *ngIf="request.object === 3">
+
+        <!-- Source Tags -->
+        <div>
+          <addons-manager [addons]="node.tags" type="tags" [readonly]="false" (onChange)="updateTags($event)">
+          </addons-manager>
+        </div>
+
+      </span>
+
+    </ion-list>
+
+    <ion-row justify-content-end class="saving-row">
+      <button ion-button clear (click)="cancel()">
+        Cancel
+      </button>
+      <button ion-button type="button" [disabled]="request.value1 === '' " (click)="validateRequest()">
+        Validate
+      </button>
+    </ion-row>
+
+  </ion-grid>
+
+</ion-content>
