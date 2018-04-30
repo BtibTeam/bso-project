@@ -52,6 +52,11 @@ export class AddonsEditor implements OnInit {
       this.addonsDataPvd.tags$.subscribe(tags => {
         this.dataSource = new MatTableDataSource(tags);
       });
+    } else if (this.type === 'relations') {
+      this.addonsDataPvd.loadRelations();
+      this.addonsDataPvd.relations$.subscribe(relations => {
+        this.dataSource = new MatTableDataSource(relations);
+      });
     }
 
   }
