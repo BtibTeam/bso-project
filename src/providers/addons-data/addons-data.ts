@@ -17,6 +17,7 @@ import { FirestoreProvider } from '../firestore/firestore';
 import Rx from 'rxjs/Rx';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
+import { Relation } from '../../model/relation-model';
 
 @Injectable()
 export class AddonsDataProvider {
@@ -26,6 +27,7 @@ export class AddonsDataProvider {
   ) { }
 
   public tags$: Observable<Tag[]> = Rx.Observable.empty();
+  public relations$: Observable<Relation[]> = Rx.Observable.empty();
 
   ////////////////////////////////////////////////////////////////
   // Public methods
@@ -48,6 +50,29 @@ export class AddonsDataProvider {
           let tg: Tag = plainToClass(Tag, tag as Object);
 
           return tg;
+
+        });
+
+      });
+  }
+
+  /**
+ * Start a subscription to read the entire list of relations at the first call
+ * Update automatically the relations$ variable at every update
+ */
+  public loadRelations(): void {
+
+    // Read all relations
+    this.relations$ = this.firestorePvd.readCollection('relation')
+      .map(relations => { // relations: Relation[]
+
+        // For each relation
+        return relations.map(relation => { // relation: Relation
+
+          // Transform the plain object into a Relation type
+          let rel: Relation = plainToClass(Relation, relation as Object);
+
+          return rel;
 
         });
 
