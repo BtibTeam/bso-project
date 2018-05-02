@@ -47,9 +47,7 @@ export class AddonsDataProvider {
         return tags.map(tag => { // tag: Tag
 
           // Transform the plain object into a Tag type
-          let tg: Tag = plainToClass(Tag, tag as Object);
-
-          return tg;
+          return plainToClass(Tag, tag as Object);
 
         });
 
@@ -70,9 +68,7 @@ export class AddonsDataProvider {
         return relations.map(relation => { // relation: Relation
 
           // Transform the plain object into a Relation type
-          let rel: Relation = plainToClass(Relation, relation as Object);
-
-          return rel;
+          return plainToClass(Relation, relation as Object);
 
         });
 
