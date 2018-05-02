@@ -1,0 +1,82 @@
+<div class="nodes-selector-container">
+
+    <div class="header">
+
+        <ion-segment [(ngModel)]="segment" [ngModelOptions]="{standalone:true}" color="light" class="header-segment">
+            <ion-segment-button value="nodes">
+                Nodes Selection
+            </ion-segment-button>
+            <ion-segment-button *ngIf="showNodeDef" value="nodeDefinitions">
+                Node Definition Selection
+            </ion-segment-button>
+        </ion-segment>
+
+    </div>
+
+    <div [ngSwitch]="segment" class="content-segment">
+
+        <div *ngSwitchCase="'nodes'">
+
+            <div class="search-container">
+                <mat-form-field>
+                    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+                </mat-form-field>
+            </div>
+
+            <mat-table #table [dataSource]="nodeDataSource">
+
+                <!-- Name Column -->
+                <ng-container matColumnDef="name">
+                    <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+                    <mat-cell *matCellDef="let node"> {{node.name}} </mat-cell>
+                </ng-container>
+
+                <!-- Description Column -->
+                <ng-container matColumnDef="description">
+                    <mat-header-cell *matHeaderCellDef> Description </mat-header-cell>
+                    <mat-cell *matCellDef="let node"> {{node.description}} </mat-cell>
+                </ng-container>
+
+                <!-- Select Column -->
+                <ng-container matColumnDef="actions">
+                    <mat-header-cell *matHeaderCellDef> Actions </mat-header-cell>
+                    <mat-cell *matCellDef="let node">
+                        <button mat-button color="primary" class="select-button" (click)="selectNode(node)">Select</button>
+                    </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="nodeDisplayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: nodeDisplayedColumns;"></mat-row>
+
+            </mat-table>
+
+        </div>
+
+        <div *ngSwitchCase="'nodeDefinitions'">
+
+            <mat-table *ngIf="!sameTreeIndex" #table [dataSource]="nodeDefinitionDataSource">
+
+                <!-- Name Column -->
+                <ng-container matColumnDef="name">
+                    <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+                    <mat-cell *matCellDef="let nodeDef"> {{nodeDef.name}} </mat-cell>
+                </ng-container>
+
+                <!-- Select Column -->
+                <ng-container matColumnDef="actions">
+                    <mat-header-cell *matHeaderCellDef> Actions </mat-header-cell>
+                    <mat-cell *matCellDef="let nodeDef">
+                        <button mat-button color="primary" class="select-button" (click)="selectNodeDef(nodeDef)">Select</button>
+                    </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="nodeDefinitionDisplayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: nodeDefinitionDisplayedColumns;"></mat-row>
+
+            </mat-table>
+
+        </div>
+
+    </div>
+
+</div>

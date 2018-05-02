@@ -1,0 +1,13 @@
+node-group-editor {
+  ion-list {
+    max-width: 170px;
+  }
+  .node-item {
+    width: 180px;
+    padding-left: 8px;
+    font-size: 0.8em;
+  }
+  .node-item-selected {
+    background-color: #c5c5c5;
+  }
+}

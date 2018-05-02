@@ -1,0 +1,61 @@
+<ion-toolbar color="headerBG">
+  <ion-title class="page-title">
+    Ontology Editor
+  </ion-title>
+  <button *ngIf="user" ion-button solid small color="light" [matTooltip]="lastPublicationText" matTooltipPosition="below" class="publication-button"
+    (click)="publishNewVersion()">
+    Publish
+  </button>
+  <ion-segment [(ngModel)]="topNodeDef" (ionChange)="topNodeDefChange($event)" color="light"
+    class="toolbar-segment">
+    <ion-segment-button *ngFor="let topNodeDefElt of topNodeDefList" [value]="topNodeDefElt">
+      {{topNodeDefElt | friendlyCase}}
+    </ion-segment-button>
+  </ion-segment>
+</ion-toolbar>
+
+<ion-content padding>
+
+  <ion-grid fixed>
+    <ion-row>
+      <span *ngFor="let nodeDef of nodeDefinitions" class="nodeDef-container">
+        <ion-col *ngIf="nodeDef.treeIndex === topNodeDefTreeIndex">
+          <ion-row>
+            <ion-col class="nodeDef-header">
+              <div class="nodeDef-header-container">
+                <p ion-text color="light" class="nodeDef-title">{{nodeDef.name}}</p>
+                <button *ngIf="user" ion-button class="add-list-button" (click)="addList(nodeDef)">
+                  <ion-icon name="add" color="light"></ion-icon>
+                </button>
+              </div>
+            </ion-col>
+          </ion-row>
+          <ion-row class="nodeDef-row">
+            <ion-col *ngFor="let list of nodeDef.lists;let listIndex=index" class="nodeList-container">
+              <ion-searchbar (ionInput)="filterNodes($event, list)" class="node-searchbar"></ion-searchbar>
+              <ion-list class="node-list">
+                <span *ngFor="let node of list.nodes">
+                  <ion-item *ngIf="!(node.isFilteredOut || node.isHidden)" [ngClass]="{'node-item': true, 'node-item-selected': node.isSelected}"
+                    [matTooltip]="node.name" matTooltipPosition="below" (click)="selectNode(node, nodeDef.treeIndex)">{{node.name}}
+                    <ion-icon *ngIf="user" item-right color="softDark" name="create" class="edit-icon" (click)="editNode(node, nodeDef.treeIndex, false)"></ion-icon>
+                    <ion-icon *ngIf="!user" item-right color="softDark" name="eye" class="edit-icon" (click)="editNode(node, nodeDef.treeIndex, true)"></ion-icon>                    
+                  </ion-item>
+                </span>
+              </ion-list>
+              <button *ngIf="user" ion-button color="light" class="add-node-button" (click)="addNode(nodeDef.index, listIndex, nodeDef.isNodeGroupDefinition)">
+                <ion-icon name="add"></ion-icon>
+              </button>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+      </span>
+    </ion-row>
+  </ion-grid>
+
+  <div class="footer-container">
+    <p ion-text color="softDark">
+      Copyright 2018 B.TIB
+    </p>
+  </div>
+
+</ion-content>

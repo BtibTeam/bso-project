@@ -1,0 +1,47 @@
+<div class="example-container">
+  <div class="example-header">
+    <mat-form-field>
+      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+    </mat-form-field>
+  </div>
+
+  <mat-table #table [dataSource]="dataSource">
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="tag">
+      <mat-header-cell *matHeaderCellDef> Tag </mat-header-cell>
+      <mat-cell *matCellDef="let addon"> {{addon.id}} </mat-cell>
+    </ng-container>
+
+    <!-- Type Column -->
+    <ng-container matColumnDef="kind">
+      <mat-header-cell *matHeaderCellDef> Kind </mat-header-cell>
+      <mat-cell *matCellDef="let addon"> {{addon.kind}} </mat-cell>
+    </ng-container>
+
+    <!-- Description Column -->
+    <ng-container matColumnDef="description">
+      <mat-header-cell *matHeaderCellDef> Description </mat-header-cell>
+      <mat-cell *matCellDef="let addon"> {{addon.description}} </mat-cell>
+    </ng-container>
+
+    <!-- Edit Column -->
+    <ng-container matColumnDef="actions">
+      <mat-header-cell *matHeaderCellDef> Actions </mat-header-cell>
+      <mat-cell *matCellDef="let addon">
+        <button *ngIf="!readonly" ion-button clear color="danger" (click)="deleteAddOn(addon)">
+          <ion-icon name="trash"></ion-icon>
+        </button>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+  </mat-table>
+
+  <button *ngIf="!readonly" ion-button color="light" class="add-node-button" (click)="addAddOn()">
+    <ion-icon name="add"></ion-icon>
+  </button>
+
+</div>

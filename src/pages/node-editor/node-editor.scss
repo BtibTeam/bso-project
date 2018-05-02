@@ -1,0 +1,49 @@
+page-node-editor {
+  .editor-card {
+    margin: 0;
+    width: 100%;
+    .node-grid {
+      padding: 0px;
+      .header-row {
+        background-color: map-get($colors, headerBG);
+        padding: 16px 16px 16px 0px;
+        position: relative;
+        .delete-button {
+          position: absolute;
+          z-index: 1;
+          right: 0px;
+          font-size: 1.6em;
+        }
+        .header-segment {
+          margin: 16px 0px 0px 16px;
+          padding-right: 16px;
+          ion-segment-button {
+            font-weight: 400;
+          }
+        }
+        .item-input-has-focus .label-md[floating],
+        .input-has-focus .label-md[floating] {
+          color: map-get($colors, light);
+        }
+      }
+      .content-segment {
+        margin: 16px;
+        .relation-label {
+          padding-left: 16px;
+        }
+        relation-manager .demo-chip-list {
+          padding: 0px 16px;
+          .mat-form-field-infix {
+            border-top: 0px;
+          }
+        }
+      }
+      .saving-row {
+        margin: 16px;
+        .add-button {
+          font-size: 0.8em;
+        }
+      }
+    }
+  }
+}
