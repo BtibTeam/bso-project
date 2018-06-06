@@ -47,11 +47,31 @@ mat-sidenav {
       }
     }
   }
+  .site-title {
+    padding: 0;
+    div {
+      font-size: 1em;
+      font-weight: 400;
+    }
+    a {
+      margin: 0;
+      padding: 0;
+    }
+  }
   .update-text {
     position: relative;
     float: right;
     font-size: 0.9em;
     margin: 8px 8px 8px 0px;
+  }
+  .link {
+    font-size: 1em;
+    font-weight: 400;
+    text-transform: none;
+    margin-right: 8px;
+    ion-icon {
+      margin-left: 4px;
+    }
   }
 }
 
@@ -62,11 +82,6 @@ mat-sidenav {
 
 .fixed-content {
   margin-top: 42px;
-}
-
-.title div {
-  font-size: 1.1em;
-  font-weight: 400;
 }
 
 .popover-content {
