@@ -9,7 +9,6 @@ import { FirestoreProvider } from '../firestore/firestore';
 
 // RxJs
 import Rx from 'rxjs/Rx';
-import { Observable } from 'rxjs';
 
 @Injectable()
 export class ConfigProvider {
@@ -18,7 +17,7 @@ export class ConfigProvider {
     private firestorePvd: FirestoreProvider) {
   }
 
-  public config$: Observable<Config> = Rx.Observable.empty();
+  public config$: Rx.Observable<Config> = Rx.Observable.empty();
 
   ////////////////////////////////////////////////////////////////
   // Public
@@ -40,7 +39,7 @@ export class ConfigProvider {
    */
   public updateVersion(config: Config): Promise<void> {
 
-    return this.firestorePvd.set(JSON.parse(JSON.stringify(config)), 'config/parameters');
+    return this.firestorePvd.update(JSON.parse(JSON.stringify(config)), 'config/parameters');
 
   }
 

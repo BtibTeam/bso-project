@@ -51,7 +51,7 @@ page-ontology-creator {
               align-items: center;
               .nodeDef-title {
                 padding-left: 8px;
-                font-size: 1em;
+                font-size: 0.9em;
                 text-transform: uppercase;
                 font-weight: 400;
               }
@@ -75,22 +75,24 @@ page-ontology-creator {
             .nodeList-container {
               margin-right: 2px; //max-width: 160px;
               .node-searchbar {
-                width: 160px;
+                width: 120px;
                 padding: 0;
                 border-bottom: 3px solid #e9e9e9;
                 input {
-                  font-size: 0.9em;
+                  font-size: 0.8em;
                   box-shadow: none;
                   -webkit-box-shadow: none;
+                  padding: 4px 8px 4px 55px;
                 }
               }
               .node-list {
                 overflow-y: auto;
-                max-height: 300px;
+                max-height: calc(100vh - 375px);
                 .node-item {
-                  width: 160px;
+                  width: 120px;
                   padding-left: 8px;
-                  font-size: 0.8em;
+                  font-size: 0.7em;
+                  min-height: 32px;
                   color: map-get($colors, softDark);
                 }
                 .edit-icon {

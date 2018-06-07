@@ -1,3 +1,55 @@
-<button ion-button (click)="openPage('OntologyCreatorPage')">
-  Ontology Creator
-</button>
+<ion-grid>
+  <ion-row>
+    <ion-col>
+      <div class="main-container">
+        <h1 class="page-title">
+          Building Semantic Ontology Project
+        </h1>
+        <h2 class="page-subtitle">
+          is an open-source initiative aimed to ease the process of tagging data in buildings based on Project Haystack.
+          <br>
+          <br> The goal of the project is to
+          <li>To define a structure of all the elements used in a BMS</li>
+          <li>To define types to define multi-tags entities</li>
+          <li>To handle the translations so the user uses its own language to do the tagging while keeping standardised tags</li>
+        </h2>
+        <button ion-button color="headerBG" (click)="openPage('OntologyCreatorPage')">
+          Access Ontology
+        </button>
+      </div>
+    </ion-col>
+    <ion-col>
+      <div class="main-container release-notes-container">
+        <h4 class="release-notes-title">
+          Last Release Notes
+        </h4>
+        <ion-list>
+          <ion-item *ngFor="let changelog of changelogs">
+            <ion-avatar item-start>
+              <p class="release-version-text">
+                v{{changelog.version}}
+              </p>
+              <p class="release-date-text">
+                {{changelog.date | date}}
+              </p>
+            </ion-avatar>
+            <div>
+              <p>
+                {{changelog.text}}
+              </p>
+            </div>
+          </ion-item>
+        </ion-list>
+      </div>
+    </ion-col>
+  </ion-row>
+
+  <ion-row class="presentation-row">
+    <div class="presentation-container">
+      <iframe frameborder="0" width="1200" height="675" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
+        src="https://view.genial.ly/5b17803e6e8c5807e452064f" type="text/html" allowscriptaccess="always" allowfullscreen="true"
+        scrolling="yes" allownetworking="all"></iframe>
+    </div>
+  </ion-row>
+
+</ion-grid>

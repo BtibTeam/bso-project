@@ -26,6 +26,7 @@ import { FirestoreProvider } from '../providers/firestore/firestore';
 import { AddonsDataProvider } from '../providers/addons-data/addons-data';
 import { ConfigProvider } from '../providers/config/config';
 import { FireAuthProvider } from '../providers/fire-auth/fire-auth';
+import { ChangelogProvider } from '../providers/change-log/change-log';
 
 // Firestore config
 const config = {
@@ -66,6 +67,7 @@ const config = {
     AddonsDataProvider,
     ConfigProvider,
     FireAuthProvider,
+    ChangelogProvider
   ]
 })
 export class AppModule { }
