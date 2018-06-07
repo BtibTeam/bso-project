@@ -3,13 +3,14 @@ import { Component, Output, EventEmitter, Input, OnChanges } from '@angular/core
 import { FormBuilder, Validators } from '@angular/forms';
 
 // Ionic
-import { AlertController, IonicPage, ViewController, NavParams } from 'ionic-angular';
+import { AlertController, IonicPage, ViewController, NavParams, ModalController } from 'ionic-angular';
 
 // Models
 import { Node, NodeSnapshot, NodeTranslation } from '../../model/node-model';
 import { Tag } from '../../model/tag-model';
 import { Relation } from '../../model/relation-model';
 import { NodeGroup } from '../../model/node-group-model';
+import { AddOnChange } from '../../components/addons-manager/addons-manager';
 
 @IonicPage()
 @Component({
@@ -22,7 +23,7 @@ export class NodeEditorPage {
   private originalNode: Node; // The original node
   private node: Node = new Node(); // The copy of the node to work on
   private readonly: boolean = false;
-  
+
   private editForm: any;
   private segment: string = 'nodeRelations';
 
@@ -30,6 +31,7 @@ export class NodeEditorPage {
     private formBuilder: FormBuilder,
     private alertCtrl: AlertController,
     private viewCtrl: ViewController,
+    private modalCtrl: ModalController,
     private params: NavParams,
   ) {
 
@@ -102,16 +104,16 @@ export class NodeEditorPage {
    * Update tags when they have changed
    * @param tags 
    */
-  protected updateTags(tags: Tag[]): void {
-    this.node.tags = tags;
+  protected updateTags(changes: AddOnChange): void {
+    this.node.tags = changes.newAddOns as Tag[];
   }
 
   /**
  * Update relations when they have changed
  * @param tags 
  */
-  protected updateRelations(relations: Relation[]): void {
-    this.node.relations = relations;
+  protected updateRelations(changes: AddOnChange): void {
+    this.node.relations = changes.newAddOns as Relation[];
   }
 
   /**
@@ -128,6 +130,23 @@ export class NodeEditorPage {
    */
   protected updateTranslations(translations: NodeTranslation[]): void {
     this.node.translations = translations;
+  }
+
+  /**
+   * Open the popup to submit a new modification request
+   */
+  protected createRequest(): void {
+
+    let nodeEditorModal = this.modalCtrl.create('CreateRequestPage', {
+      'node': this.node
+    });
+    nodeEditorModal.present();
+    nodeEditorModal.onDidDismiss(data => {
+      if (data) {
+        // TODO
+      }
+    });
+
   }
 
   ////////////////////////////////////////////////////////////////
