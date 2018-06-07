@@ -12,7 +12,6 @@ import { FirestoreProvider } from '../firestore/firestore';
 
 // RxJs
 import Rx from 'rxjs/Rx';
-import { Observable } from 'rxjs';
 
 @Injectable()
 export class ChangelogProvider {
@@ -21,7 +20,7 @@ export class ChangelogProvider {
     private firestorePvd: FirestoreProvider) {
   }
 
-  public changelogs$: Observable<ChangelogItem[]> = Rx.Observable.empty();
+  public changelogs$: Rx.Observable<ChangelogItem[]> = Rx.Observable.empty();
 
   ////////////////////////////////////////////////////////////////
   // Public
@@ -47,11 +46,11 @@ export class ChangelogProvider {
   }
 
   /**
-   * Update the version
-   * @param version 
+   * Update the changelog
+   * @param changelog 
    * @return a void promise
    */
-  public updateChangelog(changelog: ChangelogItem): Promise<void> {
+  public createChangelog(changelog: ChangelogItem): Promise<void> {
 
     return this.firestorePvd.set(JSON.parse(JSON.stringify(changelog)), 'changelog/' + this.firestorePvd.generateId());
 
