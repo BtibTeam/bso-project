@@ -13,27 +13,29 @@
     <ion-list>
 
       <ion-item-group class="header-group">
-
-        <p ion-text color="softDark">Before submitting a modification, please check the open ones</p>
-        <p ion-text color="softDark">If none is already submitted, select the object below and fill in the fields as precised as possible</p>
-
+        <ul>
+          <li ion-text color="softDark">Before submitting a modification, please check the open ones</li>
+          <li ion-text color="softDark">If none is already submitted, select the object below and fill in the fields as precised as possible</li>
+          <li ion-text color="softDark">Please, fill only one change at once</li>
+        </ul>
       </ion-item-group>
 
       <ion-item-group>
 
         <mat-form-field>
-          <mat-select [(ngModel)]="request.object" placeholder="Which part would you like to update ?">
+          <mat-select [(ngModel)]="request.subject" placeholder="Which part would you like to update ?">
             <mat-option [value]="0">General</mat-option>
             <mat-option [value]="1">Relations</mat-option>
             <mat-option [value]="2">Translations</mat-option>
-            <mat-option [value]="3">Addons</mat-option>
+            <mat-option [value]="3">Source Tags</mat-option>
+            <mat-option [value]="4">Source Relations</mat-option>
           </mat-select>
         </mat-form-field>
 
       </ion-item-group>
 
       <!-- General -->
-      <span *ngIf="request.object === 0">
+      <span *ngIf="request.subject === 0">
 
         <mat-form-field>
           <mat-select [(ngModel)]="request.field" placeholder="Which field ?">
@@ -75,7 +77,7 @@
 
 
       <!-- Relations -->
-      <span *ngIf="request.object === 1">
+      <span *ngIf="request.subject === 1">
 
         <mat-form-field>
           <mat-select [(ngModel)]="request.field" placeholder="Which relation ?">
@@ -87,19 +89,19 @@
 
         <!-- isIn Relations -->
         <relation-manager *ngIf="request.field === 'isIn' " [nodes]="node.isIn" [showOnlySameTree]="true" [onlyAscendantNodes]="true"
-          [treeIndex]="node.treeIndex" [nodeDefIndex]="node.nodeDefIndex" [listIndex]="node.listIndex" [readonly]="false"></relation-manager>
+          [treeIndex]="node.treeIndex" [nodeDefIndex]="node.nodeDefIndex" [listIndex]="node.listIndex" [readonly]="false" (relationChanged)="changeNodeRelations($event, 'isIn')"></relation-manager>
         <!-- isNot Relations -->
         <relation-manager *ngIf="request.field === 'isNot'" [nodes]="node.isNot" [nodeDefs]="node.isNotDef" [showNodeDef]="true"
-          [treeIndex]="node.treeIndex" [nodeDefIndex]="node.nodeDefIndex" [listIndex]="node.listIndex" [readonly]="false"></relation-manager>
+          [treeIndex]="node.treeIndex" [nodeDefIndex]="node.nodeDefIndex" [listIndex]="node.listIndex" [readonly]="false" (relationChanged)="changeNodeRelations($event, 'isNot')"></relation-manager>
         <!-- mayBe Relations -->
         <relation-manager *ngIf="request.field === 'mayBe'" [nodes]="node.mayBe" [showOnlySameTree]="false" [treeIndex]="node.treeIndex"
-          [nodeDefIndex]="node.nodeDefIndex" [listIndex]="node.listIndex" [readonly]="false"></relation-manager>
+          [nodeDefIndex]="node.nodeDefIndex" [listIndex]="node.listIndex" [readonly]="false" (relationChanged)="changeNodeRelations($event, 'mayBe')"></relation-manager>
 
       </span>
 
 
       <!-- Translations -->
-      <span *ngIf="request.object === 2">
+      <span *ngIf="request.subject === 2">
 
         <div>
           <mat-form-field>
@@ -173,11 +175,20 @@
       </span>
 
       <!-- Source Tags -->
-      <span *ngIf="request.object === 3">
+      <span *ngIf="request.subject === 3">
 
-        <!-- Source Tags -->
         <div>
-          <addons-manager [addons]="node.tags" type="tags" [readonly]="false" (onChange)="updateTags($event)">
+          <addons-manager [originalAddons]="node.tags" type="tags" [readonly]="false" (onChange)="changeAddons($event, 'source tags')">
+          </addons-manager>
+        </div>
+
+      </span>
+
+      <!-- Source Relations -->
+      <span *ngIf="request.subject === 4">
+
+        <div>
+          <addons-manager [originalAddons]="node.relations" type="relations" [readonly]="false" (onChange)="changeAddons($event, 'source relations')">
           </addons-manager>
         </div>
 
