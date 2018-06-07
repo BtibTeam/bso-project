@@ -21,6 +21,10 @@
             <ion-textarea textarea-autogrow formControlName="description" color="light" [readonly]="readonly"></ion-textarea>
           </ion-item>
 
+          <button *ngIf="readonly" ion-button solid small color="light" class="request-button" (click)="createRequest()">
+            Submit a modification
+          </button>
+
           <!-- Segment -->
           <ion-segment [(ngModel)]="segment" [ngModelOptions]="{standalone:true}" color="light" class="header-segment">
             <ion-segment-button value="nodeRelations">
