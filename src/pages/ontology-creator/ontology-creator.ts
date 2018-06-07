@@ -16,6 +16,7 @@ import { Config } from '../../model/config-model';
 import { NodeHandlerProvider } from '../../providers/node-handler/node-handler';
 import { NodeDataProvider } from '../../providers/node-data/node-data';
 import { ConfigProvider } from '../../providers/config/config';
+import { ChangelogProvider } from '../../providers/change-log/change-log';
 
 // RxJs
 import { Observable } from 'rxjs/Observable';
@@ -24,6 +25,7 @@ import { Observable } from 'rxjs/Observable';
 import { ListUtil } from '../../utils/list-util';
 import { ViewUtil } from '../../utils/view-util';
 import { AngularFireAuth } from 'angularfire2/auth';
+import { ChangelogItem } from '../../model/change-log-model';
 
 @IonicPage()
 @Component({
@@ -52,7 +54,8 @@ export class OntologyCreatorPage implements OnInit {
     private nodeHandlerPvd: NodeHandlerProvider,
     private afAuth: AngularFireAuth,
     private configPvd: ConfigProvider,
-    private nodeDataPvd: NodeDataProvider) {
+    private nodeDataPvd: NodeDataProvider,
+    private changelogPvd: ChangelogProvider) {
 
     afAuth.authState.subscribe(_user => {
       this.user = _user;
@@ -243,7 +246,6 @@ export class OntologyCreatorPage implements OnInit {
     // Present an alert to the user to get the name of the node to create
     let alert = this.alertCtrl.create({
       title: 'Publish a new version',
-      subTitle: 'Current version: ' + this.config.version,
       inputs: [
         {
           name: 'version',
@@ -269,17 +271,19 @@ export class OntologyCreatorPage implements OnInit {
 
             this.config.version = data.version;
             this.config.lastPublication = new Date(Date.now());
-            this.config.changelog.splice(0, 1, {
-              version: this.config.version,
-              date: this.config.lastPublication,
-              text: data.changelog
-            });
+
+            let changelog = new ChangelogItem();
+            changelog.text = data.changelog;
+            changelog.version = this.config.version;
+            changelog.date = this.config.lastPublication;
 
             // Create the node in the database and update the related node
             this.configPvd.updateVersion(this.config).then(() => {
-              this.loading.dismiss();
-              this.loading = null;
-              this.nodeHandlerPvd.unselectAllNodes();
+              this.changelogPvd.updateChangelog(changelog).then(() => {
+                this.loading.dismiss();
+                this.loading = null;
+                this.nodeHandlerPvd.unselectAllNodes();
+              });
             });
           }
         }
