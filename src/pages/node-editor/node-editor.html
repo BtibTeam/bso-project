@@ -61,13 +61,13 @@
 
           <!-- Source Tags -->
           <div *ngSwitchCase="'sourceTags'">
-            <addons-manager [addons]="node.tags" type="tags" [readonly]="readonly" (onChange)="updateTags($event)">
+            <addons-manager [originalAddons]="node.tags" type="tags" [readonly]="readonly" (onChange)="updateTags($event)">
             </addons-manager>
           </div>
 
           <!-- Source Relations -->
           <div *ngSwitchCase="'sourceRelations'">
-            <addons-manager [addons]="node.relations" type="relations" [readonly]="readonly" (onChange)="updateRelations($event)">
+            <addons-manager [originalAddons]="node.relations" type="relations" [readonly]="readonly" (onChange)="updateRelations($event)">
             </addons-manager>
           </div>
 
