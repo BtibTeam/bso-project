@@ -1,11 +1,14 @@
 // Angular
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 
 // AngularFire
 import { AngularFireAuth } from 'angularfire2/auth';
 
 // Firestore
 import User from 'firebase/auth';
+
+// Ionic
+import { NavController, Nav } from 'ionic-angular';
 
 // Models
 import { Config } from '../model/config-model';
@@ -21,6 +24,9 @@ import { ConfigProvider } from '../providers/config/config';
 })
 export class MyApp {
 
+  // Children
+  @ViewChild(Nav) navCtrl: Nav;
+  
   private rootPage: any = HomePage;
   private opened: boolean = false;
 
@@ -67,6 +73,14 @@ export class MyApp {
   */
   protected switchAccountSideBar(): void {
     this.opened = !this.opened;
+  }
+
+  /**
+   * Open the given page
+   * @param page 
+   */
+  protected openPage(page: string): void {
+    this.navCtrl.setRoot(page);
   }
 
 }
