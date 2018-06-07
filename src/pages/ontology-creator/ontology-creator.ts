@@ -279,7 +279,7 @@ export class OntologyCreatorPage implements OnInit {
 
             // Create the node in the database and update the related node
             this.configPvd.updateVersion(this.config).then(() => {
-              this.changelogPvd.updateChangelog(changelog).then(() => {
+              this.changelogPvd.createChangelog(changelog).then(() => {
                 this.loading.dismiss();
                 this.loading = null;
                 this.nodeHandlerPvd.unselectAllNodes();
