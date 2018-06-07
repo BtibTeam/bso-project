@@ -2,8 +2,11 @@
 export class ModificationRequest {
 
     public id: string = '';
+    public originalNodeId: string = '';
+    public originalNodeName: string = ''; 
+    public publicId: string = ''; // BSO-xxx
     public timestamp: Date = new Date();
-    public object: RequestObjectEnum = -1;
+    public subject: RequestSubjectEnum = -1;
     public language: string = 'en';
     public newLanguage: boolean = false;
     public field: string = '';
@@ -12,10 +15,16 @@ export class ModificationRequest {
 
 }
 
-export enum RequestObjectEnum {
+export enum RequestSubjectEnum {
     general = 0,
     relation,
     translation,
-    addOn
+    sourceTags,
+    sourceRelations
+}
+
+export enum RelationChangeEnum {
+    addRelation = 0,
+    deleteRelation = 1,
 }
 
