@@ -29,6 +29,9 @@
   }
 }
 
+////////////////////////////////////////////////////////////////
+//Document Level Style
+////////////////////////////////////////////////////////////////
 mat-sidenav {
   width: 300px;
 }
@@ -49,7 +52,14 @@ mat-sidenav {
   }
   .site-title {
     padding: 0;
+    .header-logo {
+      width: 16px;
+      height: 16px;
+      margin-right: 8px;
+    }
     div {
+      display: flex;
+      align-items: center;
       font-size: 1em;
       font-weight: 400;
     }
