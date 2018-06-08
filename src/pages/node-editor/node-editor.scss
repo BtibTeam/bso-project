@@ -2,6 +2,7 @@ page-node-editor {
   .editor-card {
     margin: 0;
     width: 100%;
+    min-height: 100%;
     .node-grid {
       padding: 0px;
       .header-row {
@@ -13,6 +14,11 @@ page-node-editor {
           z-index: 1;
           right: 0px;
           font-size: 1.6em;
+        }
+        .request-button {
+          position: absolute;
+          top: 16px;
+          right: 16px;
         }
         .header-segment {
           margin: 16px 0px 0px 16px;

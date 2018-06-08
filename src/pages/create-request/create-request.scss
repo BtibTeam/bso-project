@@ -1,0 +1,20 @@
+page-create-request {
+  .header-group {
+    border-bottom: 1px solid lightgray;
+    margin-bottom: 16px;
+  }
+  /**Override**/
+  .mat-input-container {
+    min-width: 400px;
+  }
+  .mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label,
+  .mat-form-field-empty.mat-form-field-label {
+    font-size: 1.2em;
+  }
+  .saving-row {
+    margin: 16px;
+    .add-button {
+      font-size: 0.8em;
+    }
+  }
+}

@@ -1,5 +1,5 @@
 // Angular
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 // Angular Material
 import { MatTableDataSource, MatDialog } from '@angular/material';
@@ -10,6 +10,7 @@ import { NodeSelectorList } from '../node-selector-list/node-selector-list';
 // Models
 import { Node, NodeSnapshot } from '../../model/node-model';
 import { NodeDefinitionSnapshot } from '../../model/node-definition-model';
+import { RelationChangeEnum } from '../../model/modification-request-model';
 
 @Component({
   selector: 'relation-manager',
@@ -28,6 +29,10 @@ export class RelationManager {
   @Input('listIndex') private listIndex: number = -1;
   @Input('readonly') private readonly: boolean = true;
 
+  // Outputs
+  @Output() relationChanged: EventEmitter<RelationChange> = new EventEmitter<RelationChange>()
+
+  // Internal variables
   private removable: boolean = true; // Whether chips can be removed
 
   constructor(
@@ -49,6 +54,10 @@ export class RelationManager {
     const index = this.nodes.indexOf(nodeSnap);
     if (index > -1) {
       this.nodes.splice(index, 1);
+      this.relationChanged.emit({
+        change: RelationChangeEnum.deleteRelation,
+        entityName: nodeSnap.name
+      });
     }
   }
 
@@ -61,6 +70,10 @@ export class RelationManager {
     const index = this.nodeDefs.indexOf(nodeDefSnap);
     if (index > -1) {
       this.nodeDefs.splice(index, 1);
+      this.relationChanged.emit({
+        change: RelationChangeEnum.deleteRelation,
+        entityName: nodeDefSnap.name
+      });
     }
   }
 
@@ -86,15 +99,25 @@ export class RelationManager {
     // Retrieve the selected addon if there is one
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
+        let name: string = '';
         if (result.node) {
           this.nodes.push(NodeSnapshot.generateSnapshot(result.node));
+          name = result.node.name;
         } else if (result.nodeDef) {
           this.nodeDefs.push(NodeDefinitionSnapshot.generateSnapshot(result.nodeDef));
+          name = result.node.name;
         }
+        this.relationChanged.emit({
+          change: RelationChangeEnum.addRelation,
+          entityName: name
+        });
       }
     });
   }
 
+}
 
-
+export interface RelationChange {
+  change: RelationChangeEnum,
+  entityName: string,
 }

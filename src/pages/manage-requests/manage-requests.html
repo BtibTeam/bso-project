@@ -1,0 +1,74 @@
+<ion-content padding>
+
+  <div class="main-container">
+    <div class="header">
+      <mat-form-field>
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+      </mat-form-field>
+    </div>
+
+    <mat-table #table [dataSource]="dataSource">
+
+      <!-- Timestamp Column -->
+      <ng-container matColumnDef="timestamp">
+        <mat-header-cell *matHeaderCellDef> Timestamp </mat-header-cell>
+        <mat-cell *matCellDef="let request"> {{request.timestamp | date}} </mat-cell>
+      </ng-container>
+
+      <!-- Id Column -->
+      <ng-container matColumnDef="publicId">
+        <mat-header-cell *matHeaderCellDef> ID </mat-header-cell>
+        <mat-cell *matCellDef="let request"> {{ request.id }} </mat-cell>
+      </ng-container>
+
+      <!-- Subject Column -->
+      <ng-container matColumnDef="subject">
+        <mat-header-cell *matHeaderCellDef> Subject </mat-header-cell>
+        <mat-cell *matCellDef="let request"> {{request.subject}} </mat-cell>
+      </ng-container>
+
+      <!-- Language Column -->
+      <ng-container matColumnDef="language">
+        <mat-header-cell *matHeaderCellDef> Language </mat-header-cell>
+        <mat-cell *matCellDef="let request"> {{request.language}} </mat-cell>
+      </ng-container>
+
+      <!-- New language Column -->
+      <ng-container matColumnDef="newLanguage">
+        <mat-header-cell *matHeaderCellDef> New Language </mat-header-cell>
+        <mat-cell *matCellDef="let request"> {{ request.newLanguage }} </mat-cell>
+      </ng-container>
+
+      <!-- Original Node Column -->
+      <ng-container matColumnDef="originalNodeName">
+        <mat-header-cell *matHeaderCellDef> Node </mat-header-cell>
+        <mat-cell *matCellDef="let request"> {{request.originalNodeName}} </mat-cell>
+      </ng-container>
+
+      <!-- Field Node Column -->
+      <ng-container matColumnDef="field">
+        <mat-header-cell *matHeaderCellDef> Field </mat-header-cell>
+        <mat-cell *matCellDef="let request"> {{request.field}} </mat-cell>
+      </ng-container>
+
+      <!-- Value 1 Column -->
+      <ng-container matColumnDef="value1">
+        <mat-header-cell *matHeaderCellDef> Change 1 </mat-header-cell>
+        <mat-cell *matCellDef="let request"> {{request.value1}} </mat-cell>
+      </ng-container>
+
+      <!-- Value 2 Column -->
+      <ng-container matColumnDef="value2">
+        <mat-header-cell *matHeaderCellDef> Change 2 </mat-header-cell>
+        <mat-cell *matCellDef="let request"> {{request.value2}} </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+    </mat-table>
+
+  </div>
+
+
+</ion-content>

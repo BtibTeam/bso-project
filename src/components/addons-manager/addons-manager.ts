@@ -1,5 +1,5 @@
 // Angular
-import { Component, Input, OnChanges, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 
 // Angular Material
 import { MatTableDataSource, MatDialog } from '@angular/material';
@@ -15,16 +15,18 @@ import { Tag } from '../../model/tag-model';
   selector: 'addons-manager',
   templateUrl: 'addons-manager.html'
 })
-export class AddonsManager implements OnChanges {
+export class AddonsManager implements OnInit {
 
   // Output events
-  @Output() private onChange: EventEmitter<Addon[]> = new EventEmitter<Addon[]>();
+  @Output() private onChange: EventEmitter<AddOnChange> = new EventEmitter<AddOnChange>();
 
   // Input values
-  @Input('addons') private addons: Addon[];
+  @Input('originalAddons') private originalAddons: Addon[];
   @Input('type') private type: string;
   @Input('readonly') private readonly: boolean = true;
-  
+
+  // Internal variables
+  private addons: Addon[];
   private text: string;
   public displayedColumns = ['tag', 'kind', 'description', 'actions'];
   public dataSource = new MatTableDataSource();
@@ -38,13 +40,9 @@ export class AddonsManager implements OnChanges {
   // Life Cycles
   ////////////////////////////////////////////////////////////////
 
-  public ngOnChanges(changes): void {
-    if (changes.addons) {
-      if (changes.addons.currentValue) {
-        this.addons = changes.addons.currentValue;
-        this.dataSource = new MatTableDataSource(this.addons);
-      }
-    }
+  public ngOnInit(): void {
+    this.addons = JSON.parse(JSON.stringify(this.originalAddons));
+    this.dataSource = new MatTableDataSource(this.addons);
   }
 
   ////////////////////////////////////////////////////////////////
@@ -102,7 +100,15 @@ export class AddonsManager implements OnChanges {
    * Refresh the DataTableSource
    */
   private refreshTableDataSource(): void {
-    this.onChange.emit(this.addons);
+    this.onChange.emit({
+      originalAddOns: this.originalAddons,
+      newAddOns: this.addons
+    });
     this.dataSource = new MatTableDataSource(this.addons);
   }
+}
+
+export interface AddOnChange {
+  originalAddOns: Addon[],
+  newAddOns: Addon[]
 }
